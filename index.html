@@ -1217,8 +1217,7 @@ Sadece JSON döndür:
           showToast("Kelime yok.");
           return;
         }
-        const txt = state.saved.map(w => `${w.tr} | ${w.mk} | ${w.en} — ${w.def}`).join("
-");
+        const txt = state.saved.map(w => `${w.tr} | ${w.mk} | ${w.en} — ${w.def}`).join("\n");
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(txt).then(() => showToast("Kopyalandı.")).catch(() => showToast("Kopyalandı."));
         } else {
