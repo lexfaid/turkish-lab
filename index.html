@@ -1,2465 +1,1360 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LinguaTR — Turkish Learning Platform</title>
-<style>
-:root {
-  --bg: #090a0f;
-  --surface: #0e111a;
-  --card: #131724;
-  --card-hover: #191e2f;
-  --elevated: #1f253a;
-  --line: rgba(255, 255, 255, 0.09);
-  --line-strong: rgba(255, 255, 255, 0.22);
-  --ink: #f4f6fb;
-  --muted: #9ea6bc;
-  --dim: #6c748c;
-  --radius-lg: 16px;
-  --radius-md: 11px;
-  --radius-sm: 8px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
-
-button, input, select, textarea {
-  font: inherit;
-  color: inherit;
-}
-
-button {
-  cursor: pointer;
-  border: 0;
-  background: none;
-  padding: 0;
-}
-
-button:disabled {
-  opacity: 0.38;
-  cursor: not-allowed;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.36);
-}
-
-/* Smooth Animations */
-@keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes gentleBob {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-3px);
-  }
-}
-
-.anim-float {
-  animation: gentleBob 4s ease-in-out infinite;
-}
-
-/* Layout */
-.app {
-  display: flex;
-  min-height: 100vh;
-  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.04), transparent 45%), var(--bg);
-}
-
-.sidebar {
-  width: 256px;
-  background: var(--surface);
-  border-right: 1px solid var(--line);
-  padding: 22px 15px;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  inset: 0 auto 0 0;
-  z-index: 60;
-  overflow-y: auto;
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.brand {
-  padding: 4px 10px 20px;
-  font-weight: 900;
-  font-size: 22px;
-  letter-spacing: -0.5px;
-  color: #ffffff;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 10px;
-  transition: transform 0.2s ease;
-}
-
-.brand:hover {
-  transform: translateX(2px);
-}
-
-.navlabel {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.4px;
-  color: var(--dim);
-  padding: 14px 12px 6px;
-  text-transform: uppercase;
-}
-
-.nav {
-  display: grid;
-  gap: 4px;
-}
-
-.nav button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  color: var(--muted);
-  text-align: left;
-  font-weight: 600;
-  font-size: 14px;
-  border: 1px solid transparent;
-  transition: transform 0.16s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
-}
-
-.nav button:hover {
-  background: var(--card-hover);
-  color: #ffffff;
-  transform: translateX(3px);
-}
-
-.nav button.active {
-  background: #ffffff;
-  color: #090a0f;
-  font-weight: 750;
-  border-color: #ffffff;
-}
-
-.nav .marker {
-  font-size: 11px;
-  opacity: 0.65;
-  transition: transform 0.18s ease;
-}
-
-.nav button:hover .marker {
-  transform: translateX(2px);
-}
-
-.sidebottom {
-  margin-top: auto;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  transition: border-color 0.2s ease;
-}
-
-.sidebottom:hover {
-  border-color: var(--line-strong);
-}
-
-.sidebottom b {
-  display: block;
-  font-size: 13px;
-  margin-bottom: 4px;
-  color: #ffffff;
-}
-
-.sidebottom small {
-  color: var(--muted);
-  font-size: 12px;
-  display: block;
-}
-
-.main {
-  margin-left: 256px;
-  width: calc(100% - 256px);
-  padding: 22px 32px 56px;
-  max-width: 1520px;
-}
-
-/* Topbar */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--line);
-}
-
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.crumb {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.topright {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-select, input, textarea {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 8px 12px;
-  color: var(--ink);
-  outline: none;
-  transition: border-color 0.18s ease, background 0.18s ease;
-}
-
-select:hover, input:hover, textarea:hover {
-  border-color: var(--line-strong);
-}
-
-select:focus, input:focus, textarea:focus {
-  border-color: #ffffff;
-  background: var(--elevated);
-}
-
-.mobilebrand {
-  display: none;
-  font-weight: 900;
-  font-size: 18px;
-  color: #ffffff;
-}
-
-.hamb {
-  display: none;
-  background: var(--card);
-  border: 1px solid var(--line);
-  padding: 7px 11px;
-  border-radius: 9px;
-  font-size: 13px;
-  font-weight: 700;
-  transition: border-color 0.18s ease;
-}
-
-.hamb:hover {
-  border-color: #ffffff;
-}
-
-/* Pages & Headings */
-.page {
-  display: none;
-}
-
-.page.active {
-  display: block;
-  animation: fadeSlideUp 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.welcome {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 20px;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.eyebrow {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-
-.welcome h1 {
-  font-size: 28px;
-  line-height: 1.15;
-  letter-spacing: -0.6px;
-  margin: 6px 0 4px;
-  color: #ffffff;
-}
-
-.welcome p {
-  color: var(--muted);
-  margin: 0;
-  font-size: 14px;
-}
-
-/* Grids & Cards */
-.grid {
-  display: grid;
-  gap: 16px;
-}
-
-.stats {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-bottom: 18px;
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 18px;
-  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease, background 0.2s ease;
-}
-
-.card:hover {
-  border-color: var(--line-strong);
-  transform: translateY(-2px);
-}
-
-.stat-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.symbol {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  color: var(--muted);
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  padding: 3px 7px;
-}
-
-.stat-val {
-  display: block;
-  font-size: 27px;
-  font-weight: 850;
-  margin-top: 10px;
-  letter-spacing: -0.6px;
-  color: #ffffff;
-}
-
-.sub {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.contentgrid {
-  grid-template-columns: 1.35fr 1fr;
-  margin-bottom: 18px;
-}
-
-.sectionhead {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-  gap: 10px;
-}
-
-.sectionhead h2 {
-  font-size: 17px;
-  margin: 0;
-  color: #ffffff;
-}
-
-.subtle {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-/* Spotlight / Level Word Card */
-.wordcard {
-  background: linear-gradient(155deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01)), var(--card);
-  border: 1px solid var(--line-strong);
-  position: relative;
-  overflow: hidden;
-  min-height: 235px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.wordcard h2 {
-  font-size: 34px;
-  margin: 8px 0 4px;
-  color: #ffffff;
-  letter-spacing: -0.6px;
-  transition: transform 0.2s ease;
-}
-
-.wordcard:hover h2 {
-  transform: translateX(3px);
-}
-
-.meaning {
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.ex-box {
-  margin-top: 12px;
-  padding: 12px 14px;
-  border-radius: 11px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  font-size: 13px;
-}
-
-.wordactions {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-}
-
-/* Buttons & Badges */
-.btn {
-  background: #ffffff;
-  color: #090a0f;
-  padding: 9px 14px;
-  border-radius: 10px;
-  font-weight: 750;
-  font-size: 13px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border: 1px solid #ffffff;
-  transition: transform 0.14s ease, background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
-}
-
-.btn:hover:not(:disabled) {
-  background: #e2e6f0;
-  border-color: #e2e6f0;
-  transform: translateY(-1px);
-}
-
-.btn:active:not(:disabled) {
-  transform: scale(0.97);
-}
-
-.btn.ghost {
-  background: var(--surface);
-  color: var(--ink);
-  border: 1px solid var(--line-strong);
-}
-
-.btn.ghost:hover:not(:disabled) {
-  background: var(--elevated);
-  border-color: #ffffff;
-}
-
-.btn.small {
-  padding: 7px 11px;
-  font-size: 12px;
-}
-
-.pill {
-  font-size: 11px;
-  font-weight: 800;
-  padding: 4px 10px;
-  background: var(--elevated);
-  color: #ffffff;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-}
-
-.tag {
-  font-size: 10px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: var(--elevated);
-  color: #ffffff;
-  border: 1px solid var(--line);
-  font-weight: 800;
-  display: inline-block;
-}
-
-/* Progress & Skills */
-.progressrow {
-  display: flex;
-  justify-content: space-between;
-  margin: 12px 0 6px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.bar {
-  height: 8px;
-  border-radius: 999px;
-  background: var(--surface);
-  overflow: hidden;
-}
-
-.bar i {
-  display: block;
-  height: 100%;
-  background: #ffffff;
-  border-radius: 999px;
-  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.skilllist {
-  display: grid;
-  gap: 13px;
-  margin-top: 12px;
-}
-
-.skill {
-  display: grid;
-  grid-template-columns: 36px 1fr auto;
-  gap: 11px;
-  align-items: center;
-}
-
-.skillicon {
-  height: 36px;
-  width: 36px;
-  border-radius: 9px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  display: grid;
-  place-items: center;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.skill b {
-  font-size: 13px;
-  display: block;
-}
-
-.skill small {
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.percent {
-  font-size: 12px;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-/* Quick Actions & Cards */
-.quickgrid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.quick {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px;
-  text-align: left;
-}
-
-.quick:hover {
-  border-color: #ffffff;
-  background: var(--card-hover);
-}
-
-.qicon {
-  height: 38px;
-  width: 38px;
-  border-radius: 10px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  display: grid;
-  place-items: center;
-  font-size: 11px;
-  font-weight: 850;
-  flex-shrink: 0;
-}
-
-.quick b {
-  display: block;
-  font-size: 13px;
-}
-
-.quick small {
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.cards3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.feature {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.feature h3 {
-  margin: 6px 0 4px;
-  font-size: 16px;
-}
-
-.feature p {
-  color: var(--muted);
-  font-size: 13px;
-  margin: 0;
-}
-
-/* Lessons */
-.lessonlist {
-  display: grid;
-  gap: 10px;
-}
-
-.lesson {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  flex-wrap: wrap;
-  transition: border-color 0.18s ease, transform 0.18s ease;
-}
-
-.lesson:hover {
-  border-color: var(--line-strong);
-  transform: translateX(2px);
-}
-
-.lesson .details {
-  flex: 1;
-  min-width: 180px;
-}
-
-.lesson b {
-  display: block;
-  font-size: 14px;
-}
-
-.lesson small {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-/* Vocabulary & Flashcards */
-.toolbar {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-
-.toolbar input {
-  flex: 1;
-  min-width: 190px;
-}
-
-.wordlist {
-  display: grid;
-  gap: 8px;
-  max-height: 410px;
-  overflow-y: auto;
-}
-
-.worditem {
-  display: grid;
-  grid-template-columns: 1.2fr 1.2fr auto auto;
-  gap: 10px;
-  align-items: center;
-  padding: 12px 14px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  transition: border-color 0.16s ease, background 0.16s ease;
-}
-
-.worditem:hover {
-  border-color: var(--line-strong);
-  background: var(--card-hover);
-}
-
-.worditem b {
-  display: block;
-  font-size: 14px;
-}
-
-.worditem small {
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.flashcard {
-  max-width: 580px;
-  margin: 14px auto 4px;
-  text-align: center;
-  padding: 36px 24px;
-  background: var(--surface);
-  border: 1px solid var(--line-strong);
-  border-radius: 18px;
-  transition: transform 0.22s ease, border-color 0.2s ease;
-}
-
-.flashcard:hover {
-  transform: translateY(-2px);
-  border-color: #ffffff;
-}
-
-.flashcard h2 {
-  font-size: 34px;
-  margin: 12px 0 6px;
-}
-
-.flashcard p {
-  color: var(--muted);
-  margin: 0;
-}
-
-/* Quizzes & Games */
-.quizbox {
-  max-width: 780px;
-  margin: 18px auto 0;
-}
-
-.quizquestion {
-  font-size: 20px;
-  font-weight: 800;
-  margin: 10px 0 16px;
-}
-
-.answers {
-  display: grid;
-  gap: 9px;
-}
-
-.answer {
-  padding: 12px 14px;
-  text-align: left;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  border-radius: 11px;
-  font-weight: 650;
-  transition: border-color 0.16s ease, background 0.16s ease, transform 0.12s ease;
-}
-
-.answer:hover:not(:disabled) {
-  border-color: #ffffff;
-  background: var(--elevated);
-  transform: translateX(2px);
-}
-
-.answer.correct {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #090a0f;
-  font-weight: 800;
-}
-
-.answer.wrong {
-  background: var(--surface);
-  border-color: var(--muted);
-  color: var(--muted);
-  text-decoration: line-through;
-}
-
-.feedback {
-  margin-top: 12px;
-  font-weight: 700;
-  font-size: 13px;
-}
-
-.drop-zone, .chip-bank {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-height: 48px;
-  padding: 10px;
-  border-radius: 12px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  margin: 10px 0;
-  align-items: center;
-}
-
-.chip {
-  padding: 7px 12px;
-  border-radius: 9px;
-  background: var(--elevated);
-  border: 1px solid var(--line-strong);
-  font-weight: 700;
-  font-size: 13px;
-  transition: transform 0.14s ease, background 0.16s ease, color 0.16s ease;
-}
-
-.chip:hover {
-  background: #ffffff;
-  color: #090a0f;
-  transform: translateY(-1px);
-}
-
-/* Letters Grid */
-.letters-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-  gap: 10px;
-}
-
-.letter-box {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 13px;
-  text-align: left;
-  transition: border-color 0.16s ease, transform 0.16s ease;
-}
-
-.letter-box:hover {
-  border-color: #ffffff;
-  transform: translateY(-2px);
-}
-
-.letter-box strong {
-  font-size: 20px;
-  color: #ffffff;
-  display: block;
-}
-
-.letter-box span {
-  font-size: 12px;
-  color: var(--muted);
-  display: block;
-  margin-top: 3px;
-}
-
-/* Modal & Toast */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(5px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  z-index: 120;
-}
-
-.modal-backdrop.open {
-  display: flex;
-  animation: fadeSlideUp 0.2s ease;
-}
-
-.modal {
-  background: var(--card);
-  border: 1px solid var(--line-strong);
-  border-radius: 16px;
-  max-width: 560px;
-  width: 100%;
-  padding: 22px;
-}
-
-.modal h3 {
-  margin: 8px 0;
-  font-size: 20px;
-}
-
-.modal-ex {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  padding: 12px;
-  margin: 14px 0;
-  font-size: 13px;
-}
-
-.toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #ffffff;
-  color: #090a0f;
-  border: 1px solid #ffffff;
-  padding: 10px 15px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 800;
-  z-index: 150;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(8px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.footer {
-  margin-top: 36px;
-  color: var(--dim);
-  font-size: 12px;
-  text-align: center;
-}
-
-@media (max-width: 1080px) {
-  .stats, .quickgrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .contentgrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 820px) {
-  .sidebar {
-    transform: translateX(-100%);
-  }
-  .sidebar.open {
-    transform: translateX(0);
-  }
-  .main {
-    margin-left: 0;
-    width: 100%;
-    padding: 16px 15px 48px;
-  }
-  .hamb {
-    display: inline-flex;
-  }
-  .mobilebrand {
-    display: inline-flex;
-  }
-  .crumb {
-    display: none;
-  }
-  .cards3 {
-    grid-template-columns: 1fr;
-  }
-  .worditem {
-    grid-template-columns: 1fr auto auto;
-  }
-  .worditem .tr-mean {
-    display: none;
-  }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Lexfaid — Türkçe · Makedonca · İngilizce AI Öğrenme Alanı</title>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #12141c;
+      --surface-2: #181b26;
+      --surface-3: #1f2332;
+      --border: #262b3d;
+      --border-light: #343b54;
+      --text: #f3f5f9;
+      --text-muted: #939bb2;
+      --accent: #ffffff;
+      --accent-text: #0b0c10;
+      --primary: #6366f1;
+      --primary-soft: rgba(99, 102, 241, 0.14);
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.14);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      padding-bottom: 92px;
+    }
+
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 20px 16px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 18px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-soft);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #a5b4fc;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+    }
+
+    .ai-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Controls Bar */
+    .controls-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .select-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .select-box:focus {
+      border-color: var(--primary);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .stat-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .stat-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Main Word Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .word-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .level-pill {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .card-actions-top {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-outline-sm {
+      background: var(--surface-2);
+      border: 1px solid var(--border-light);
+      color: var(--text);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .btn-outline-sm:active {
+      transform: scale(0.97);
+    }
+
+    .btn-ai-gen {
+      background: var(--primary-soft);
+      border: 1px solid rgba(99, 102, 241, 0.45);
+      color: #c7d2fe;
+    }
+
+    .word-main {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .word-pos {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* Trilingual Badges */
+    .trilingual-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .lang-pill {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .lang-pill-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .lang-pill-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .definition-box {
+      font-size: 13px;
+      color: #d1d5db;
+      background: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid var(--primary);
+      padding: 8px 12px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 12px;
+    }
+
+    .example-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 14px;
+      margin-bottom: 14px;
+    }
+
+    .example-tr {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .example-sub {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      padding: 10px 16px;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 15px;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-secondary.saved {
+      border-color: var(--success);
+      color: var(--success);
+      background: var(--success-soft);
+    }
+
+    /* Live Dictionary Search */
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .input-field {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 11px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+    }
+
+    /* AI Tutor Chat */
+    .ai-presets {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      scrollbar-width: none;
+    }
+
+    .ai-presets::-webkit-scrollbar {
+      display: none;
+    }
+
+    .preset-chip {
+      white-space: nowrap;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .chat-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      max-height: 330px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .msg {
+      padding: 10px 13px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      max-width: 88%;
+      white-space: pre-wrap;
+    }
+
+    .msg.user {
+      background: var(--primary);
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.ai {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    /* Quiz Box */
+    .quiz-option {
+      width: 100%;
+      text-align: left;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .quiz-option.correct {
+      background: var(--success-soft);
+      border-color: var(--success);
+      color: #6ee7b7;
+    }
+
+    .quiz-option.wrong {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: var(--danger);
+      color: #fca5a5;
+    }
+
+    /* Saved Words List */
+    .saved-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Views */
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(18, 20, 28, 0.94);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 10px;
+    }
+
+    .nav-btn.active {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .nav-icon {
+      font-size: 16px;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 200;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 18px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface-3);
+      border: 1px solid var(--border-light);
+      color: var(--text);
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">LinguaTR</div>
 
-    <div class="navlabel" data-i18n="workspace">LEARNING SPACE</div>
-    <nav class="nav" id="mainNav">
-      <button class="active" data-page="dashboard"><span data-i18n="dashboard">Dashboard</span><span class="marker">/</span></button>
-      <button data-page="lessons"><span data-i18n="lessons">Lessons</span><span class="marker">/</span></button>
-      <button data-page="vocabulary"><span data-i18n="vocabulary">Vocabulary</span><span class="marker">/</span></button>
-      <button data-page="grammar"><span data-i18n="grammar">Grammar</span><span class="marker">/</span></button>
-      <button data-page="practice"><span data-i18n="practice">Practice</span><span class="marker">/</span></button>
-      <button data-page="games"><span data-i18n="games">Word games</span><span class="marker">/</span></button>
-    </nav>
+  <div id="toast" class="toast"></div>
 
-    <div class="navlabel" style="margin-top:12px" data-i18n="yourSpace">YOUR SPACE</div>
-    <nav class="nav" id="spaceNav">
-      <button data-page="progress"><span data-i18n="myProgress">My progress</span><span class="marker">/</span></button>
-      <button data-page="culture"><span data-i18n="culture">Turkish culture</span><span class="marker">/</span></button>
-      <button data-page="settings"><span data-i18n="settings">Settings</span><span class="marker">/</span></button>
-    </nav>
-
-    <div class="sidebottom">
-      <b data-i18n="smallSteps">Small steps, big progress.</b>
-      <small data-i18n="keepGoing">Practice a little Turkish every day.</small>
+  <div class="container">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-top">
+        <h1>Türkçe Çalışma Alanı</h1>
+        <button class="ai-badge" onclick="openApiModal()">
+          <span class="ai-dot" id="aiStatusDot"></span>
+          <span>Gemini AI Aktif</span>
+        </button>
+      </div>
+      <p>Seviye seçimi ve canlı AI motoru ile sınırsız Türkçe · Makedonca · İngilizce kelime çalış.</p>
     </div>
-  </aside>
 
-  <main class="main">
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="hamb" id="hamb" aria-label="Menu">MENU</button>
-        <span class="mobilebrand">LinguaTR</span>
-        <div class="crumb" data-i18n="breadcrumb">Learning space / Overview</div>
-      </div>
-
-      <div class="topright">
-        <select class="lang-sync" id="language" aria-label="Interface language">
-          <option value="en">English</option>
-          <option value="tr">Turkce</option>
-          <option value="mk">Makedonski</option>
+    <!-- VIEW 1: ANA EKRAN -->
+    <div id="view-home" class="view active">
+      <div class="controls-row">
+        <select id="levelSelect" class="select-box" onchange="onLevelChange()">
+          <option value="A1">A1 · Başlangıç</option>
+          <option value="A2">A2 · Temel</option>
+          <option value="B1">B1 · Orta</option>
+          <option value="B2">B2 · Orta Üstü</option>
+          <option value="C1">C1 · İleri</option>
+          <option value="C2" selected>C2 · Proficient (Akademik)</option>
         </select>
-      </div>
-    </header>
-
-    <!-- DASHBOARD -->
-    <section class="page active" id="page-dashboard">
-      <div class="welcome">
-        <div>
-          <div class="eyebrow" data-i18n="welcomeBack">LEARNING SPACE</div>
-          <h1 data-i18n="hello">Turkish Workspace</h1>
-          <p data-i18n="ready">Select a level to load level-specific vocabulary and examples.</p>
-        </div>
-        <select class="level-sync" id="level" aria-label="CEFR Level">
-          <option value="A1">A1 · Beginner</option>
-          <option value="A2">A2 · Elementary</option>
-          <option value="B1">B1 · Intermediate</option>
-          <option value="B2">B2 · Upper intermediate</option>
-          <option value="C1">C1 · Advanced</option>
-          <option value="C2">C2 · Proficient</option>
+        <select id="focusSelect" class="select-box" onchange="renderCurrentWord()">
+          <option value="all">Tüm Diller (TR·MK·EN)</option>
+          <option value="mk">Odak: Makedonca (MK)</option>
+          <option value="en">Odak: İngilizce (EN)</option>
         </select>
       </div>
 
-      <div class="grid stats">
-        <div class="card">
-          <div class="stat-top"><small class="sub" data-i18n="wordsLearned">Saved words</small><div class="symbol">WB</div></div>
-          <strong class="stat-val" id="wordCount">0</strong>
-          <small class="sub" id="wordBankMeta">0 / 30 words saved</small>
-        </div>
-        <div class="card">
-          <div class="stat-top"><small class="sub" data-i18n="dayStreak">Active days</small><div class="symbol">LOG</div></div>
-          <strong class="stat-val" id="streak">0</strong>
-          <small class="sub" data-i18n="keepHabit">Recorded study days</small>
-        </div>
-        <div class="card">
-          <div class="stat-top"><small class="sub" data-i18n="xpEarned">Earned XP</small><div class="symbol">XP</div></div>
-          <strong class="stat-val" id="xp">0</strong>
-          <small class="sub" data-i18n="xpSubtitle">From completed actions</small>
-        </div>
-        <div class="card">
-          <div class="stat-top"><small class="sub" data-i18n="lessonsDone">Completed lessons</small><div class="symbol">MOD</div></div>
-          <strong class="stat-val" id="lessonCount">0</strong>
-          <small class="sub" id="lessonMeta">0 / 6 modules finished</small>
-        </div>
-      </div>
-
-      <div class="grid contentgrid">
-        <div class="card wordcard anim-float">
-          <div>
-            <div class="sectionhead" style="margin-bottom:4px">
-              <div class="eyebrow" id="spotlightLevelLabel">A1 WORD (1/5)</div>
-              <button class="btn small ghost" id="nextDailyWord" data-i18n="nextWord">Next in level</button>
-            </div>
-            <h2 id="dailyWord">Merhaba</h2>
-            <div class="meaning" id="dailyMeaning">Hello · Greetings</div>
-            <div class="ex-box">
-              <div id="dailyExTr" style="font-weight:700;color:#ffffff">Merhaba, benim adim Emir.</div>
-              <div id="dailyExEn" style="color:var(--muted);margin-top:3px">Hello, my name is Emir.</div>
-            </div>
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-title">Kayıtlı kelime</span>
+            <span class="stat-tag">WB</span>
           </div>
-
-          <div class="wordactions">
-            <button class="btn" id="hearWord" data-i18n="listen">Listen</button>
-            <button class="btn ghost" id="saveWord" data-i18n="saveWord">Save word</button>
-            <button class="btn ghost" id="shareWord" data-i18n="share">Copy</button>
-          </div>
+          <div class="stat-value" id="statSaved">0</div>
+          <div class="stat-sub">Sınırsız kelime defteri</div>
         </div>
-
-        <div class="card">
-          <div class="sectionhead">
-            <h2 data-i18n="weeklyGoal">Weekly activity</h2>
-            <span class="pill" id="weeklyBadge">0 / 7 days</span>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-title">Aktif gün</span>
+            <span class="stat-tag">LOG</span>
           </div>
-          <div style="font-size:26px;font-weight:850" id="weeklyPct">0%</div>
-          <div class="bar"><i id="weeklyBar" style="width:0%"></i></div>
-          <div class="progressrow">
-            <span data-i18n="weeklyProgress">Tracked days this week</span>
-            <span id="weeklyRatio">0/7</span>
+          <div class="stat-value" id="statDays">1</div>
+          <div class="stat-sub">Kaydedilen çalışma günü</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-title">Kazanılan XP</span>
+            <span class="stat-tag">XP</span>
           </div>
-
-          <div class="sectionhead" style="margin-top:20px">
-            <h2 data-i18n="skillProgress">Measured metrics</h2>
-            <span class="subtle" id="currentLevelBadge">A1</span>
+          <div class="stat-value" id="statXp">145</div>
+          <div class="stat-sub">Tamamlanan işlemlerden</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-title">Biten ders</span>
+            <span class="stat-tag">MOD</span>
           </div>
-          <div class="skilllist">
-            <div class="skill"><div class="skillicon">RD</div><div><b data-i18n="reading">Lessons</b><small data-i18n="readingDesc">Completed modules</small></div><span class="percent" id="skillReadPct">0%</span></div>
-            <div class="skill"><div class="skillicon">QZ</div><div><b data-i18n="listening">Quiz accuracy</b><small data-i18n="listeningDesc">Correct / attempted</small></div><span class="percent" id="skillListenPct">0%</span></div>
-            <div class="skill"><div class="skillicon">SV</div><div><b data-i18n="speaking">Wordbook</b><small data-i18n="speakingDesc">Saved word ratio</small></div><span class="percent" id="skillSpeakPct">0%</span></div>
-          </div>
+          <div class="stat-value" id="statLessons">4</div>
+          <div class="stat-sub" id="statPoolInfo">Canlı AI + Sözlük havuzu</div>
         </div>
       </div>
 
-      <div class="sectionhead">
-        <h2 data-i18n="jumpIn">Modules</h2>
-        <span class="subtle" data-i18n="chooseActivity">Direct navigation</span>
-      </div>
-      <div class="grid quickgrid">
-        <button class="card quick" data-go="vocabulary"><div class="qicon">01</div><div><b data-i18n="dailyReview">Vocabulary & cards</b><small data-i18n="reviewDesc">Filter and star words</small></div></button>
-        <button class="card quick" data-go="games"><div class="qicon">02</div><div><b data-i18n="wordMatch">Word match</b><small data-i18n="matchDesc">Match Turkish pairs</small></div></button>
-        <button class="card quick" data-go="practice"><div class="qicon">03</div><div><b data-i18n="speakNow">Practice zone</b><small data-i18n="speakDesc">Dictation, reading & notes</small></div></button>
-        <button class="card quick" data-go="games"><div class="qicon">04</div><div><b data-i18n="quickQuiz">Vocabulary test</b><small data-i18n="quizDesc">Multiple choice & mistakes</small></div></button>
-      </div>
-    </section>
-
-    <!-- LESSONS -->
-    <section class="page" id="page-lessons">
-      <div class="welcome">
-        <div>
-          <div class="eyebrow" data-i18n="structuredLearning">CURRICULUM</div>
-          <h1 data-i18n="lessonsTitle">Turkish lessons</h1>
-          <p data-i18n="lessonsIntro">Open a module, listen to the sample, and mark complete for +25 XP.</p>
-        </div>
-        <select class="level-sync">
-          <option value="A1">A1 · Beginner</option>
-          <option value="A2">A2 · Elementary</option>
-          <option value="B1">B1 · Intermediate</option>
-          <option value="B2">B2 · Upper intermediate</option>
-          <option value="C1">C1 · Advanced</option>
-          <option value="C2">C2 · Proficient</option>
-        </select>
-      </div>
-
-      <div class="grid cards3">
-        <div class="card feature"><div><div class="qicon">VOC</div><h3 data-i18n="vocabLessons">Vocabulary bank</h3><p data-i18n="vocabLessonsDesc">Filter words by CEFR level and topic, play speech, and save items.</p></div><div><button class="btn small" data-go="vocabulary" data-i18n="explore">Open vocabulary</button></div></div>
-        <div class="card feature"><div><div class="qicon">GRM</div><h3 data-i18n="grammarLessons">Grammar & alphabet</h3><p data-i18n="grammarLessonsDesc">Core sentence rules and special Turkish letters.</p></div><div><button class="btn small" data-go="grammar" data-i18n="startLearning">Open grammar</button></div></div>
-        <div class="card feature"><div><div class="qicon">PRC</div><h3 data-i18n="listenLessons">Listening & dictation</h3><p data-i18n="listenLessonsDesc">Hear phrases at normal or slow speed and type what you hear.</p></div><div><button class="btn small" data-go="practice" data-i18n="practiceNow">Open practice</button></div></div>
-      </div>
-
-      <div class="card" style="margin-top:18px">
-        <div class="sectionhead">
-          <h2 data-i18n="lessonPath">Modules</h2>
-          <span class="pill" id="lessonPill">0 / 6 complete</span>
-        </div>
-        <div class="lessonlist" id="lessonList"></div>
-      </div>
-    </section>
-
-    <!-- VOCABULARY -->
-    <section class="page" id="page-vocabulary">
-      <div class="welcome">
-        <div>
-          <div class="eyebrow" data-i18n="buildWords">WORD BANK</div>
-          <h1 data-i18n="vocabularyTitle">Vocabulary</h1>
-          <p data-i18n="vocabularyIntro">Filter by CEFR level or topic, play speech, and save words.</p>
-        </div>
-        <select class="level-sync">
-          <option value="A1">A1 · Beginner</option>
-          <option value="A2">A2 · Elementary</option>
-          <option value="B1">B1 · Intermediate</option>
-          <option value="B2">B2 · Upper intermediate</option>
-          <option value="C1">C1 · Advanced</option>
-          <option value="C2">C2 · Proficient</option>
-        </select>
-      </div>
-
+      <!-- WORD CARD -->
       <div class="card">
-        <div class="toolbar">
-          <input id="wordSearch" placeholder="Search Turkish or English...">
-          <select id="wordLevel">
-            <option value="All">All levels</option>
-            <option value="A1">A1</option>
-            <option value="A2">A2</option>
-            <option value="B1">B1</option>
-            <option value="B2">B2</option>
-            <option value="C1">C1</option>
-            <option value="C2">C2</option>
-          </select>
-          <select id="wordTopic">
-            <option value="All">All topics</option>
-            <option value="Greetings">Greetings</option>
-            <option value="Food">Food</option>
-            <option value="Travel">Travel</option>
-            <option value="Everyday">Everyday</option>
-            <option value="Feelings">Feelings</option>
-            <option value="Academic">Academic</option>
-          </select>
-        </div>
-        <div class="wordlist" id="wordList"></div>
-      </div>
-
-      <div class="card" style="margin-top:16px">
-        <div class="sectionhead">
-          <h2 data-i18n="flashcards">Flashcards</h2>
-          <span class="subtle" id="flashCounter">1 / 30</span>
-        </div>
-        <div class="flashcard">
-          <div class="eyebrow" id="flashLevel">A1 · GREETINGS</div>
-          <h2 id="flashWord">Merhaba</h2>
-          <p id="flashMeaning">Select reveal to view meaning</p>
-          <div style="display:flex;justify-content:center;gap:9px;margin-top:18px;flex-wrap:wrap">
-            <button class="btn ghost" id="prevFlash">Prev</button>
-            <button class="btn ghost" id="speakFlash">Listen</button>
-            <button class="btn ghost" id="revealFlash" data-i18n="reveal">Reveal</button>
-            <button class="btn" id="nextFlash" data-i18n="nextCard">Next</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:16px">
-        <div class="sectionhead">
-          <h2 data-i18n="savedTitle">Saved wordbook</h2>
-          <span class="pill" id="savedBadgeCount">0 words</span>
-        </div>
-        <div id="savedList" class="wordlist"></div>
-      </div>
-    </section>
-
-    <!-- GRAMMAR -->
-    <section class="page" id="page-grammar">
-      <div class="welcome">
-        <div>
-          <div class="eyebrow" data-i18n="languageStructure">GRAMMAR</div>
-          <h1 data-i18n="grammarTitle">Grammar & alphabet</h1>
-          <p data-i18n="grammarIntro">Open any rule card for details and spoken examples.</p>
-        </div>
-      </div>
-
-      <div class="grid cards3" id="grammarCards"></div>
-
-      <div class="card" style="margin-top:18px">
-        <div class="sectionhead">
-          <h2>Turkish Alphabet Letters</h2>
-          <span class="subtle">Select any tile to hear example</span>
-        </div>
-        <div class="letters-grid" id="lettersGrid"></div>
-      </div>
-    </section>
-
-    <!-- PRACTICE -->
-    <section class="page" id="page-practice">
-      <div class="welcome">
-        <div>
-          <div class="eyebrow" data-i18n="useTurkish">PRACTICE</div>
-          <h1 data-i18n="practiceTitle">Practice zone</h1>
-          <p data-i18n="practiceIntro">Dictation at normal or slow rate, reading comprehension, and notes.</p>
-        </div>
-      </div>
-
-      <div class="grid cards3">
-        <div class="card feature">
-          <div>
-            <div class="qicon">DCT</div>
-            <h3 data-i18n="listenPractice">Dictation</h3>
-            <p data-i18n="listenPracticeDesc">Listen to the sentence and type it below.</p>
-            <p style="color:#ffffff;font-weight:750;margin-top:10px" id="dictTargetDisplay">Bugun hava cok guzel.</p>
-          </div>
-          <div>
-            <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">
-              <button class="btn small" id="listenPhrase">Listen</button>
-              <button class="btn small ghost" id="listenSlow">Slow</button>
-              <button class="btn small ghost" id="nextDictPhrase">Next</button>
-            </div>
-            <input id="dictInput" placeholder="Type Turkish sentence..." style="width:100%;margin-bottom:8px">
-            <button class="btn small" id="checkDictBtn">Verify (+12 XP)</button>
-            <div class="feedback" id="dictFeedback"></div>
+        <div class="word-card-header">
+          <span class="level-pill" id="cardLevelLabel">C2 WORD (1/8)</span>
+          <div class="card-actions-top">
+            <button class="btn-outline-sm btn-ai-gen" id="btnAiNewWord" onclick="generateAiWord()">✨ AI Yeni Kelime</button>
+            <button class="btn-outline-sm" onclick="nextWord()">Seviyedeki sonraki</button>
           </div>
         </div>
 
-        <div class="card feature">
-          <div>
-            <div class="qicon">SPK</div>
-            <h3 data-i18n="pronunciation">Speech check</h3>
-            <p data-i18n="pronunciationDesc">Hear the reference phrase or test microphone recognition.</p>
-            <p style="color:#ffffff;font-weight:750;margin-top:10px">Merhaba, nasilsin?</p>
+        <div class="word-main" id="wordTr">Müstesna</div>
+        <div class="word-pos" id="wordMeta">Sıfat · Akademik & Edebi</div>
+
+        <div class="trilingual-grid">
+          <div class="lang-pill" id="pillMk">
+            <div class="lang-pill-label">🇲🇰 Makedonca</div>
+            <div class="lang-pill-val" id="wordMk">Исклучителен (Isklučitelen)</div>
           </div>
-          <div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn small" id="speakBtn" data-i18n="trySpeaking">Mic check</button>
-              <button class="btn small ghost" id="hearSpeakSample">Listen</button>
-            </div>
-            <div class="feedback" id="speechResult"></div>
+          <div class="lang-pill" id="pillEn">
+            <div class="lang-pill-label">🇬🇧 İngilizce</div>
+            <div class="lang-pill-val" id="wordEn">Exceptional / Extraordinary</div>
           </div>
         </div>
 
-        <div class="card feature">
-          <div>
-            <div class="qicon">RDG</div>
-            <h3 data-i18n="readingPractice">Reading comprehension</h3>
-            <p data-i18n="readingPracticeDesc">Read the passage and choose the matching statement.</p>
-            <p style="color:#ffffff;margin-top:10px;background:var(--surface);padding:10px;border-radius:10px;border:1px solid var(--line)">Ali sabah erken kalkar. Kahvalti yapar ve okula gider.</p>
-          </div>
-          <div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn small" id="readOpt1">1) Erken kalkar</button>
-              <button class="btn small ghost" id="readOpt2">2) Gec yatar</button>
-              <button class="btn small ghost" onclick="speak('Ali sabah erken kalkar. Kahvalti yapar ve okula gider.')">Listen</button>
-            </div>
-            <div id="readFeedback" class="feedback"></div>
-          </div>
+        <div class="definition-box" id="wordDef">
+          Kural dışı olan, benzerlerinden üstünlüğü veya farklılığı ile ayrılan, seçkin.
+        </div>
+
+        <div class="example-box">
+          <div class="example-tr" id="exTr">Bu tarihi yapının mimarisi, döneminin müstesna örneklerinden biridir.</div>
+          <div class="example-sub" id="exMk">🇲🇰 Архитектурата на оваа историска градба е еден од исклучителните примери на своето време.</div>
+          <div class="example-sub" id="exEn">🇬🇧 The architecture of this historical building is one of the exceptional examples of its era.</div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn-primary" onclick="speakWord()">Dinle</button>
+          <button class="btn-secondary" id="btnSaveWord" onclick="toggleSaveCurrentWord()">Kaydet</button>
+          <button class="btn-secondary" onclick="copyCurrentWord()">Kopyala</button>
         </div>
       </div>
 
-      <div class="card" style="margin-top:18px">
-        <div class="sectionhead">
-          <h2 data-i18n="writingPrompt">Notes</h2>
-          <span class="tag">LOCAL</span>
+      <!-- LIVE DICTIONARY SEARCH (API) -->
+      <div class="card">
+        <div class="section-title">
+          <span>Canlı Üçlü Sözlük & API Arama</span>
+          <span class="stat-tag">TR · MK · EN</span>
         </div>
-        <p class="subtle" data-i18n="writeTask">Write notes in Turkish and save to local storage.</p>
-        <textarea id="writing" rows="4" style="width:100%;margin-top:8px" placeholder="Write Turkish notes..."></textarea>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:10px;flex-wrap:wrap">
-          <span class="subtle" id="writingStatus"></span>
-          <button class="btn" id="saveWriting" data-i18n="saveDraft">Save note (+5 XP)</button>
+        <div class="search-bar">
+          <input type="text" id="dictQuery" class="input-field" placeholder="Türkçe, Makedonca veya İngilizce kelime yaz..." onkeydown="if(event.key==='Enter') searchLiveDictionary()" />
+          <button class="btn-primary" id="btnSearchDict" onclick="searchLiveDictionary()">Ara</button>
         </div>
-      </div>
-    </section>
-
-    <!-- GAMES & MINI TESTS -->
-    <section class="page" id="page-games">
-      <div class="welcome">
-        <div>
-          <div class="eyebrow" data-i18n="playAndLearn">EXERCISES</div>
-          <h1 data-i18n="gamesTitle">Tests & word games</h1>
-          <p data-i18n="gamesIntro">Vocabulary test, SOV sentence ordering, and pair matching.</p>
+        <div id="dictResultArea" style="font-size:13px; color:var(--text-muted);">
+          Herhangi bir kelime yazıp aradığında Gemini AI + FreeDictionary + MyMemory API anında 3 dilde karşılık, tanım ve örnek cümle getirir.
         </div>
       </div>
-
-      <div class="grid cards3">
-        <div class="card feature"><div><div class="qicon">Q01</div><h3 data-i18n="quickQuizTitle">Vocabulary test</h3><p data-i18n="quickQuizText">+10 XP per correct answer; incorrect answers log to Mistakes.</p></div><div><button class="btn small" id="startQuiz" data-i18n="startQuiz">Start test</button></div></div>
-        <div class="card feature"><div><div class="qicon">Q02</div><h3 data-i18n="wordBuilder">Sentence builder</h3><p data-i18n="wordBuilderText">Order words into a Turkish sentence (+15 XP).</p></div><div><button class="btn small" id="openBuilderBtn">Open builder</button></div></div>
-        <div class="card feature"><div><div class="qicon">Q03</div><h3 data-i18n="wordMatch">Word match</h3><p data-i18n="wordMatchDesc">Select matching Turkish and English pairs (+8 XP).</p></div><div><button class="btn small" id="resetMatchBtn">New pairs</button></div></div>
-      </div>
-
-      <div class="card quizbox" id="quizCard">
-        <div class="sectionhead">
-          <h2 data-i18n="miniTest">Vocabulary test</h2>
-          <span class="tag" id="quizTag">TEST</span>
-        </div>
-        <div class="subtle" id="quizProgress">Question 1 of 8</div>
-        <div class="quizquestion" id="question">What does "Merhaba" mean?</div>
-        <div class="answers" id="answers"></div>
-        <div class="feedback" id="quizFeedback"></div>
-        <div style="margin-top:14px">
-          <button class="btn" id="nextQuestion" style="display:none" data-i18n="nextQuestion">Next question</button>
-        </div>
-      </div>
-
-      <div class="card quizbox" id="builderCard">
-        <div class="sectionhead">
-          <h2>Sentence Builder</h2>
-          <button class="btn small ghost" id="nextBuilderBtn">Next</button>
-        </div>
-        <div class="subtle" id="builderPrompt">Translate: "I am learning Turkish."</div>
-        <div class="drop-zone" id="builderDrop"></div>
-        <div class="chip-bank" id="builderBank"></div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <button class="btn small" id="checkBuilderBtn">Verify</button>
-          <button class="btn small ghost" id="clearBuilderBtn">Clear</button>
-          <span class="feedback" id="builderFeedback" style="margin:0"></span>
-        </div>
-      </div>
-
-      <div class="card quizbox" id="matchCard">
-        <div class="sectionhead">
-          <h2>Word Match</h2>
-          <button class="btn small ghost" id="shuffleMatchBtn">Shuffle</button>
-        </div>
-        <div id="matchGrid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px"></div>
-        <div class="feedback" id="matchFeedback"></div>
-      </div>
-
-      <div class="card quizbox" id="mistakesCard">
-        <div class="sectionhead">
-          <h2>Mistakes Log</h2>
-          <button class="btn small ghost" id="clearMistakesBtn">Clear</button>
-        </div>
-        <div id="mistakesList" class="subtle">No recorded mistakes.</div>
-      </div>
-    </section>
-
-    <!-- PROGRESS -->
-    <section class="page" id="page-progress">
-      <div class="welcome">
-        <div>
-          <div class="eyebrow" data-i18n="yourJourney">METRICS</div>
-          <h1 data-i18n="progressTitle">Progress</h1>
-          <p data-i18n="progressIntro">Live figures computed from your local actions.</p>
-        </div>
-      </div>
-      <div class="grid stats">
-        <div class="card"><small class="sub" data-i18n="totalXP">Earned XP</small><strong class="stat-val" id="progressXP">0</strong><small class="sub">XP</small></div>
-        <div class="card"><small class="sub" data-i18n="savedWords">Saved words</small><strong class="stat-val" id="savedCount">0</strong><small class="sub" data-i18n="growingVocab">In wordbook</small></div>
-        <div class="card"><small class="sub" data-i18n="quizAccuracy">Quiz accuracy</small><strong class="stat-val" id="accuracy">0%</strong><small class="sub" data-i18n="keepPracticing">Correct / attempted</small></div>
-        <div class="card"><small class="sub" data-i18n="completedLessons">Completed lessons</small><strong class="stat-val" id="progressLessons">0</strong><small class="sub" data-i18n="oneStep">Modules finished</small></div>
-      </div>
-    </section>
-
-    <!-- CULTURE -->
-    <section class="page" id="page-culture">
-      <div class="welcome">
-        <div>
-          <div class="eyebrow">EXPRESSIONS</div>
-          <h1 data-i18n="cultureTitle">Everyday phrases</h1>
-          <p data-i18n="cultureIntro">Common Turkish expressions and their usage.</p>
-        </div>
-      </div>
-      <div class="grid cards3">
-        <div class="card feature"><div><div class="qicon">01</div><h3>Bir cay alabilir miyim?</h3><p data-i18n="teaText">Polite request for tea in cafes, homes, or shops.</p></div><div><button class="btn small ghost" onclick="speak('Bir cay alabilir miyim?')">Listen</button></div></div>
-        <div class="card feature"><div><div class="qicon">02</div><h3>Afiyet olsun</h3><p data-i18n="afiyetText">Said when someone is eating or drinking.</p></div><div><button class="btn small ghost" onclick="speak('Afiyet olsun')">Listen</button></div></div>
-        <div class="card feature"><div><div class="qicon">03</div><h3>Kolay gelsin</h3><p data-i18n="kolayText">Said to someone actively working on a task.</p></div><div><button class="btn small ghost" onclick="speak('Kolay gelsin')">Listen</button></div></div>
-      </div>
-    </section>
-
-    <!-- SETTINGS -->
-    <section class="page" id="page-settings">
-      <div class="welcome">
-        <div>
-          <div class="eyebrow">CONFIGURATION</div>
-          <h1 data-i18n="settingsTitle">Settings</h1>
-          <p data-i18n="settingsIntro">Language, CEFR level, speech test, and local storage.</p>
-        </div>
-      </div>
-      <div class="card" style="max-width:650px">
-        <div class="sectionhead"><h2 data-i18n="siteLanguage">Interface language</h2></div>
-        <p class="subtle" data-i18n="languageHelp">Switch UI text between English, Turkish, and Macedonian.</p>
-        <select class="lang-sync" id="language2" style="margin-top:8px">
-          <option value="en">English</option>
-          <option value="tr">Turkce</option>
-          <option value="mk">Makedonski</option>
-        </select>
-
-        <div class="sectionhead" style="margin-top:22px"><h2 data-i18n="learningLevel">CEFR level</h2></div>
-        <select class="level-sync" id="level2">
-          <option value="A1">A1 · Beginner</option>
-          <option value="A2">A2 · Elementary</option>
-          <option value="B1">B1 · Intermediate</option>
-          <option value="B2">B2 · Upper intermediate</option>
-          <option value="C1">C1 · Advanced</option>
-          <option value="C2">C2 · Proficient</option>
-        </select>
-
-        <div class="sectionhead" style="margin-top:22px"><h2>Speech test</h2></div>
-        <p class="subtle">Tests Turkish speech output on the current device.</p>
-        <button class="btn small ghost" style="margin-top:8px" onclick="speak('Merhaba, bugun Turkce calisiyoruz.')">Listen test</button>
-
-        <div class="sectionhead" style="margin-top:22px"><h2 data-i18n="dataDemo">Local storage</h2></div>
-        <p class="subtle" data-i18n="dataHelp">All counts, saved words, notes, and mistakes start at zero and update only from your actions.</p>
-        <button class="btn ghost small" style="margin-top:10px" id="resetData" data-i18n="resetProgress">Reset all data</button>
-      </div>
-    </section>
-
-    <div class="footer">LinguaTR</div>
-  </main>
-</div>
-
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal">
-    <div class="sectionhead" style="margin-bottom:4px">
-      <span class="tag" id="modalTag">A1</span>
-      <button class="btn small ghost" id="closeModal">Close</button>
     </div>
-    <h3 id="modalTitle">Module</h3>
-    <p id="modalBody" style="color:var(--muted);font-size:14px;margin:0"></p>
-    <div class="modal-ex">
-      <div id="modalExTr" style="font-weight:700;color:#ffffff"></div>
-      <div id="modalExEn" style="color:var(--muted);font-size:12px;margin-top:4px"></div>
+
+    <!-- VIEW 2: YAPAY ZEKA ASİSTANI -->
+    <div id="view-ai" class="view">
+      <div class="card">
+        <div class="section-title">
+          <span>Gemini AI Dil Koçu (TR · MK · EN)</span>
+          <button class="btn-outline-sm" onclick="openApiModal()">API Ayarı</button>
+        </div>
+
+        <div class="ai-presets">
+          <button class="preset-chip" onclick="sendPreset('Bana C2 seviyesinde 5 tane üst düzey akademik Türkçe kelime ver; Makedonca ve İngilizce karşılıklarıyla açıkla.')">C2 Akademik Kelimeler</button>
+          <button class="preset-chip" onclick="sendPreset('Üsküp günlük yaşamında okulda ve yurtta en çok kullanılan 6 Makedonca kalıbı Türkçe ve İngilizce karşılıklarıyla yaz.')">Makedonca Günlük Kalıplar</button>
+          <button class="preset-chip" onclick="sendPreset('Az önceki kelimeyi akademik bir paragrafta kullan ve 3 dilde çevirisini yap.')">Örnek Paragraf Kur</button>
+          <button class="preset-chip" onclick="sendPreset('Bana 3 dilde (TR-MK-EN) deyim ve atasözü karşılaştırması yap.')">Deyim Karşılaştır</button>
+        </div>
+
+        <div class="chat-box" id="aiChatBox">
+          <div class="msg ai">Selam! Gemini AI motoru bağlandı. İster C2 seviyesinde nadir kelimeler üret, ister Makedonca-Türkçe-İngilizce cümle çevirisi ve gramer analizi iste. Ne çalışalım?</div>
+        </div>
+
+        <div class="search-bar" style="margin-bottom:0;">
+          <input type="text" id="aiPromptInput" class="input-field" placeholder="AI'ya sor veya kelime/cümle yaz..." onkeydown="if(event.key==='Enter') sendAiChat()" />
+          <button class="btn-primary" id="btnSendAi" onclick="sendAiChat()">Gönder</button>
+        </div>
+      </div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn small ghost" id="modalSpeak">Listen</button>
-      <button class="btn small" id="modalComplete">Complete (+25 XP)</button>
+
+    <!-- VIEW 3: AI QUIZ -->
+    <div id="view-quiz" class="view">
+      <div class="card">
+        <div class="section-title">
+          <span>Canlı Seviye Testi (<span id="quizLevelTag">C2</span>)</span>
+          <button class="btn-outline-sm btn-ai-gen" id="btnNewQuiz" onclick="loadQuizQuestion()">✨ Yeni Soru</button>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;" id="quizPromptText">
+          Aşağıdaki kelimenin doğru karşılığını seç (+25 XP):
+        </p>
+        <div class="word-main" id="quizWord" style="font-size:26px; margin-bottom:14px;">Tezahür</div>
+        <div id="quizOptions"></div>
+        <div id="quizFeedback" style="font-size:13px; margin-top:10px; font-weight:600;"></div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: KAYITLI KELİMELER -->
+    <div id="view-saved" class="view">
+      <div class="card">
+        <div class="section-title">
+          <span>Kelime Defterim (<span id="savedCountHeader">0</span>)</span>
+          <button class="btn-outline-sm" onclick="exportSavedWords()">Kopyala</button>
+        </div>
+        <div id="savedListContainer">
+          <p style="font-size:13px; color:var(--text-muted);">Henüz kaydedilmiş kelime yok. Ana ekrandan veya sözlük aramasından kelimeleri kaydedebilirsin.</p>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav-home" onclick="switchView('home')">
+      <span class="nav-icon">📚</span>
+      <span>Çalışma</span>
+    </button>
+    <button class="nav-btn" id="nav-ai" onclick="switchView('ai')">
+      <span class="nav-icon">✨</span>
+      <span>Yapay Zeka</span>
+    </button>
+    <button class="nav-btn" id="nav-quiz" onclick="switchView('quiz')">
+      <span class="nav-icon">🎯</span>
+      <span>Quiz</span>
+    </button>
+    <button class="nav-btn" id="nav-saved" onclick="switchView('saved')">
+      <span class="nav-icon">🔖</span>
+      <span>Defterim</span>
+    </button>
+  </nav>
 
-<script>
-const WORDS = [
-  ["Merhaba", "Hello", "Greetings", "A1", "Merhaba, benim adim Emir.", "Hello, my name is Emir."],
-  ["Tesekkurler", "Thank you", "Greetings", "A1", "Yardimin icin tesekkurler.", "Thanks for your help."],
-  ["Lutfen", "Please", "Greetings", "A1", "Lutfen buraya gel.", "Please come here."],
-  ["Gunaydin", "Good morning", "Greetings", "A1", "Gunaydin, bugun nasilsin?", "Good morning, how are you today?"],
-  ["Su", "Water", "Food", "A1", "Bir bardak su lutfen.", "A glass of water please."],
-  ["Alisveris", "Shopping", "Travel", "A2", "Hafta sonu alisveris yapacagiz.", "We will shop on the weekend."],
-  ["Randevu", "Appointment", "Everyday", "A2", "Saat ikide randevum var.", "I have an appointment at two."],
-  ["Yolculuk", "Journey", "Travel", "A2", "Iyi yolculuklar dilerim.", "I wish you a good journey."],
-  ["Lezzetli", "Delicious", "Food", "A2", "Bu yemek cok lezzetli.", "This meal is very delicious."],
-  ["Heyecanli", "Excited", "Feelings", "A2", "Yeni ders icin heyecanliyim.", "I am excited for the lesson."],
-  ["Deneyim", "Experience", "Everyday", "B1", "Bu iyi bir deneyimdi.", "This was a good experience."],
-  ["Karar vermek", "To decide", "Everyday", "B1", "Yarin karar verecegiz.", "We will decide tomorrow."],
-  ["Gelistirmek", "To improve", "Everyday", "B1", "Her gun Turkcemi gelistiriyorum.", "I improve my Turkish every day."],
-  ["Cevre", "Environment", "Everyday", "B1", "Cevreyi temiz tutmaliyiz.", "We should keep the environment clean."],
-  ["Unutmak", "To forget", "Everyday", "B1", "Anahtarimi unuttum.", "I forgot my key."],
-  ["Sorumluluk", "Responsibility", "Everyday", "B2", "Bu gorev buyuk bir sorumluluk.", "This task is a big responsibility."],
-  ["Olasilik", "Probability", "Everyday", "B2", "Yagmur yagma olasiligi yuksek.", "The probability of rain is high."],
-  ["Surdurulebilir", "Sustainable", "Everyday", "B2", "Surdurulebilir cozumler ariyoruz.", "We are looking for sustainable solutions."],
-  ["Arkadas", "Friend", "Everyday", "B2", "Uzun yillardir arkadasiz.", "We have been friends for years."],
-  ["Guzel", "Nice / good", "Everyday", "B2", "Bugun hava oldukca guzel.", "The weather is quite nice today."],
-  ["Ongoru", "Foresight / prediction", "Academic", "C1", "Ongorulerimiz dogru cikti.", "Our predictions proved accurate."],
-  ["Tutarlilik", "Consistency", "Academic", "C1", "Tutarlilik basari getirir.", "Consistency brings success."],
-  ["Nuans", "Nuance", "Academic", "C1", "Iki ifade arasinda net bir nuans var.", "There is a clear nuance between the two expressions."],
-  ["Evet", "Yes", "Academic", "C1", "Evet, bu gorus gecerli.", "Yes, this view is valid."],
-  ["Hayir", "No", "Academic", "C1", "Hayir, bu iddia desteklenmiyor.", "No, this claim is not supported."],
-  ["Mutemadiyen", "Continuously", "Academic", "C2", "Mutemadiyen calisiyor.", "He works continuously."],
-  ["Muphem", "Ambiguous", "Academic", "C2", "Bu ifade biraz muphem kaldi.", "This phrasing remained somewhat ambiguous."],
-  ["Yadsimak", "To deny / reject", "Academic", "C2", "Gercekleri yadsimamak gerekir.", "One should not deny the facts."],
-  ["Ekmek", "Bread", "Academic", "C2", "Ekmek en temel gidalar arasindadir.", "Bread is among the most basic staples."],
-  ["Nasılsin", "How are you", "Academic", "C2", "Kendini nasil hissediyorsun?", "How do you feel?"]
-];
-
-const I18N = {
-  en: {
-    workspace: "LEARNING SPACE", dashboard: "Dashboard", lessons: "Lessons", vocabulary: "Vocabulary",
-    grammar: "Grammar", practice: "Practice", games: "Word games", yourSpace: "YOUR SPACE",
-    myProgress: "Progress", culture: "Everyday phrases", settings: "Settings",
-    smallSteps: "Local progress", keepGoing: "Saved in browser storage.",
-    breadcrumb: "Overview", hello: "Turkish Workspace",
-    ready: "Level selection updates the main word and examples.",
-    wordsLearned: "Saved words", dayStreak: "Active days", keepHabit: "Recorded study days",
-    xpEarned: "Earned XP", xpSubtitle: "From completed actions", lessonsDone: "Completed lessons",
-    nextWord: "Next in level", listen: "Listen", saveWord: "Save word", share: "Copy",
-    weeklyGoal: "Weekly activity", weeklyProgress: "Tracked days this week",
-    skillProgress: "Measured metrics", reading: "Lessons", readingDesc: "Completed modules",
-    listening: "Quiz accuracy", listeningDesc: "Correct / attempted", speaking: "Wordbook",
-    speakingDesc: "Saved word ratio", jumpIn: "Modules", chooseActivity: "Direct navigation",
-    dailyReview: "Vocabulary & cards", reviewDesc: "Filter and star words", wordMatch: "Word match",
-    matchDesc: "Match Turkish pairs", wordMatchDesc: "Select matching Turkish and English pairs (+8 XP).",
-    speakNow: "Practice zone", speakDesc: "Dictation, reading & notes", quickQuiz: "Vocabulary test",
-    quizDesc: "Multiple choice & mistakes", structuredLearning: "CURRICULUM",
-    lessonsTitle: "Turkish lessons", lessonsIntro: "Open a module, listen to the sample, and mark complete for +25 XP.",
-    vocabLessons: "Vocabulary bank", vocabLessonsDesc: "Filter words by CEFR level and topic, play speech, and save items.",
-    explore: "Open vocabulary", grammarLessons: "Grammar & alphabet",
-    grammarLessonsDesc: "Core sentence rules and special Turkish letters.",
-    startLearning: "Open grammar", listenLessons: "Listening & dictation",
-    listenLessonsDesc: "Hear phrases at normal or slow speed and type what you hear.",
-    practiceNow: "Open practice", lessonPath: "Modules",
-    buildWords: "WORD BANK", vocabularyTitle: "Vocabulary",
-    vocabularyIntro: "Filter by CEFR level or topic, play speech, and save words.",
-    flashcards: "Flashcards", reveal: "Reveal", nextCard: "Next",
-    savedTitle: "Saved wordbook", languageStructure: "GRAMMAR",
-    grammarTitle: "Grammar & alphabet", grammarIntro: "Open any rule card for details and spoken examples.",
-    useTurkish: "PRACTICE", practiceTitle: "Practice zone",
-    practiceIntro: "Dictation at normal or slow rate, reading comprehension, and notes.",
-    listenPractice: "Dictation", listenPracticeDesc: "Listen to the sentence and type it below.",
-    pronunciation: "Speech check", pronunciationDesc: "Hear the reference phrase or test microphone recognition.",
-    trySpeaking: "Mic check", readingPractice: "Reading comprehension",
-    readingPracticeDesc: "Read the passage and choose the matching statement.",
-    writingPrompt: "Notes", writeTask: "Write notes in Turkish and save to local storage.",
-    saveDraft: "Save note (+5 XP)", playAndLearn: "EXERCISES", gamesTitle: "Tests & word games",
-    gamesIntro: "Vocabulary test, SOV sentence ordering, and pair matching.",
-    quickQuizTitle: "Vocabulary test", quickQuizText: "+10 XP per correct answer; incorrect answers log to Mistakes.",
-    startQuiz: "Start test", wordBuilder: "Sentence builder",
-    wordBuilderText: "Order words into a Turkish sentence (+15 XP).",
-    miniTest: "Vocabulary test", nextQuestion: "Next question",
-    yourJourney: "METRICS", progressTitle: "Progress",
-    progressIntro: "Live figures computed from your local actions.",
-    totalXP: "Earned XP", savedWords: "Saved words", growingVocab: "In wordbook",
-    quizAccuracy: "Quiz accuracy", keepPracticing: "Correct / attempted",
-    completedLessons: "Completed lessons", oneStep: "Modules finished",
-    cultureTitle: "Everyday phrases", cultureIntro: "Common Turkish expressions and their usage.",
-    teaText: "Polite request for tea in cafes, homes, or shops.",
-    afiyetText: "Said when someone is eating or drinking.",
-    kolayText: "Said to someone actively working on a task.",
-    settingsTitle: "Settings", settingsIntro: "Language, CEFR level, speech test, and local storage.",
-    siteLanguage: "Interface language", languageHelp: "Switch UI text between English, Turkish, and Macedonian.",
-    learningLevel: "CEFR level", dataDemo: "Local storage",
-    dataHelp: "All counts, saved words, notes, and mistakes start at zero and update only from your actions.",
-    resetProgress: "Reset all data"
-  },
-  tr: {
-    workspace: "CALISMA ALANI", dashboard: "Panel", lessons: "Dersler", vocabulary: "Kelimeler",
-    grammar: "Dil bilgisi", practice: "Pratik", games: "Oyunlar", yourSpace: "ALANIN",
-    myProgress: "Ilerleme", culture: "Gunluk ifadeler", settings: "Ayarlar",
-    smallSteps: "Yerel kayit", keepGoing: "Tarayici verisi kullanilir.",
-    breadcrumb: "Genel bakis", hello: "Turkce Calisma Alani",
-    ready: "Seviye secimi ana ekrandaki kelimeyi ve ornegi degistirir.",
-    wordsLearned: "Kayitli kelime", dayStreak: "Aktif gun", keepHabit: "Kaydedilen calisma gunu",
-    xpEarned: "Kazanilan XP", xpSubtitle: "Tamamlanan islemlerden", lessonsDone: "Biten ders",
-    nextWord: "Seviyedeki sonraki", listen: "Dinle", saveWord: "Kaydet", share: "Kopyala",
-    weeklyGoal: "Haftalik aktivite", weeklyProgress: "Bu hafta kayitli gun",
-    skillProgress: "Olculen metrikler", reading: "Dersler", readingDesc: "Tamamlanan modul",
-    listening: "Test dogrulugu", listeningDesc: "Dogru / denenen", speaking: "Kelime defteri",
-    speakingDesc: "Kayitli kelime orani", jumpIn: "Moduller", chooseActivity: "Dogrudan gecis",
-    dailyReview: "Kelimeler ve kartlar", reviewDesc: "Filtrele ve kaydet", wordMatch: "Eslestirme",
-    matchDesc: "Turkce-Ingilizce eslestir", wordMatchDesc: "Eslesen ciftleri sec (+8 XP).",
-    speakNow: "Pratik alani", speakDesc: "Dikte, okuma ve notlar", quickQuiz: "Kelime testi",
-    quizDesc: "Coktan secmeli ve hatalar", structuredLearning: "MUFREDAT",
-    lessonsTitle: "Turkce dersler", lessonsIntro: "Modulu ac, ornegi dinle ve tamamla (+25 XP).",
-    vocabLessons: "Kelime bankasi", vocabLessonsDesc: "Seviye ve konuya gore filtrele, dinle, kaydet.",
-    explore: "Kelimelere git", grammarLessons: "Dil bilgisi ve alfabe",
-    grammarLessonsDesc: "Temel cumle yapisi ve Turkce harfler.",
-    startLearning: "Dil bilgisine git", listenLessons: "Dinleme ve dikte",
-    listenLessonsDesc: "Normal veya yavas hizda dinle ve yaz.",
-    practiceNow: "Pratige git", lessonPath: "Moduller",
-    buildWords: "KELIME BANKASI", vocabularyTitle: "Kelimeler",
-    vocabularyIntro: "Seviye veya konuya gore filtrele, dinle ve kaydet.",
-    flashcards: "Kartlar", reveal: "Goster", nextCard: "Sonraki",
-    savedTitle: "Kayitli kelimeler", languageStructure: "DIL BILGISI",
-    grammarTitle: "Dil bilgisi ve alfabe", grammarIntro: "Kural detaylari ve ornek ses icin karta tikla.",
-    useTurkish: "PRATIK", practiceTitle: "Pratik alani",
-    practiceIntro: "Dikte, okuma anlama ve not defteri.",
-    listenPractice: "Dikte", listenPracticeDesc: "Cumleyi dinle ve asagiya yaz.",
-    pronunciation: "Ses kontrolu", pronunciationDesc: "Ornek cumleyi dinle veya mikrofonu test et.",
-    trySpeaking: "Mikrofon", readingPractice: "Okuma anlama",
-    readingPracticeDesc: "Metni oku ve dogru secenegi isaretle.",
-    writingPrompt: "Notlar", writeTask: "Turkce not yaz ve yerel olarak kaydet.",
-    saveDraft: "Notu kaydet (+5 XP)", playAndLearn: "EGZERSIZLER", gamesTitle: "Testler ve oyunlar",
-    gamesIntro: "Kelime testi, cumle kurma ve eslestirme.",
-    quickQuizTitle: "Kelime testi", quickQuizText: "Dogru yanita +10 XP; yanlislar Hatalar listesine eklenir.",
-    startQuiz: "Teste basla", wordBuilder: "Cumle kurucu",
-    wordBuilderText: "Kelimeleri Turkce siraya diz (+15 XP).",
-    miniTest: "Kelime testi", nextQuestion: "Sonraki soru",
-    yourJourney: "METRIKLER", progressTitle: "Ilerleme",
-    progressIntro: "Yaptigin islemlere gore hesaplanan degerler.",
-    totalXP: "Kazanilan XP", savedWords: "Kayitli kelime", growingVocab: "Defterde",
-    quizAccuracy: "Test dogrulugu", keepPracticing: "Dogru / toplam",
-    completedLessons: "Biten ders", oneStep: "Tamamlanan modul",
-    cultureTitle: "Gunluk ifadeler", cultureIntro: "Sik kullanilan Turkce ifadeler.",
-    teaText: "Kafede, evde veya is yerinde cay istemek icin kullanilir.",
-    afiyetText: "Yemek veya icecek tuketirken soylenir.",
-    kolayText: "Calisan birine kolaylik dilemek icin soylenir.",
-    settingsTitle: "Ayarlar", settingsIntro: "Dil, seviye, ses testi ve yerel veriler.",
-    siteLanguage: "Arayuz dili", languageHelp: "Ingilizce, Turkce veya Makedonca sec.",
-    learningLevel: "CEFR seviyesi", dataDemo: "Yerel veriler",
-    dataHelp: "Tum sayaclar sifirdan baslar ve sadece islemlerinle artar.",
-    resetProgress: "Verileri sifirla"
-  },
-  mk: {
-    workspace: "ПРОСТОР ЗА УЧЕЊЕ", dashboard: "Панел", lessons: "Лекции", vocabulary: "Зборови",
-    grammar: "Граматика", practice: "Вежбање", games: "Игри", yourSpace: "ТВОЈ ПРОСТОР",
-    myProgress: "Напредок", culture: "Секојдневни фрази", settings: "Поставки",
-    smallSteps: "Локални податоци", keepGoing: "Се чува во прелистувачот.",
-    breadcrumb: "Преглед", hello: "Турски простор",
-    ready: "Изборот на ниво го менува зборот и примерите на почетната.",
-    wordsLearned: "Зачувани зборови", dayStreak: "Активни денови", keepHabit: "Запишани денови",
-    xpEarned: "Освоени XP", xpSubtitle: "Од извршени активности", lessonsDone: "Завршени лекции",
-    nextWord: "Следен во нивото", listen: "Слушај", saveWord: "Зачувај", share: "Копирај",
-    weeklyGoal: "Неделна активност", weeklyProgress: "Забележани денови неделава",
-    skillProgress: "Мерени вредности", reading: "Лекции", readingDesc: "Завршени модули",
-    listening: "Точност на тест", listeningDesc: "Точни / одговорени", speaking: "Речник",
-    speakingDesc: "Однос на зачувани зборови", jumpIn: "Модули", chooseActivity: "Директен пристап",
-    dailyReview: "Зборови и картички", reviewDesc: "Филтрирај и зачувај", wordMatch: "Поврзи зборови",
-    matchDesc: "Поврзи турски и англиски", wordMatchDesc: "Избери соодветни парови (+8 XP).",
-    speakNow: "Вежбање", speakDesc: "Диктат, читање и белешки", quickQuiz: "Тест со зборови",
-    quizDesc: "Избор и грешки", structuredLearning: "ПРОГРАМА",
-    lessonsTitle: "Турски лекции", lessonsIntro: "Отвори модул, слушни пример и означи завршено (+25 XP).",
-    vocabLessons: "База на зборови", vocabLessonsDesc: "Филтрирај по ниво и тема, слушај и зачувај.",
-    explore: "Кон зборови", grammarLessons: "Граматика и азбука",
-    grammarLessonsDesc: "Основен ред на зборови и турски букви.",
-    startLearning: "Кон граматика", listenLessons: "Слушање и диктат",
-    listenLessonsDesc: "Слушај нормално или бавно и напиши.",
-    practiceNow: "Кон вежбање", lessonPath: "Модули",
-    buildWords: "БАЗА НА ЗБОРОВИ", vocabularyTitle: "Зборови",
-    vocabularyIntro: "Филтрирај по ниво или тема, слушај и зачувај.",
-    flashcards: "Картички", reveal: "Прикажи", nextCard: "Следна",
-    savedTitle: "Зачуван речник", languageStructure: "ГРАМАТИКА",
-    grammarTitle: "Граматика и азбука", grammarIntro: "Кликни на картичка за правило и пример.",
-    useTurkish: "ВЕЖБАЊЕ", practiceTitle: "Просторот за вежбање",
-    practiceIntro: "Диктат, читање со разбирање и белешки.",
-    listenPractice: "Диктат", listenPracticeDesc: "Слушни ја реченицата и напиши ја.",
-    pronunciation: "Проверка на глас", pronunciationDesc: "Слушни пример или тестирај микрофон.",
-    trySpeaking: "Микрофон", readingPractice: "Читање со разбирање",
-    readingPracticeDesc: "Прочитај го текстот и избери одговор.",
-    writingPrompt: "Белешки", writeTask: "Пишувај белешки на турски и зачувај локално.",
-    saveDraft: "Зачувај белешка (+5 XP)", playAndLearn: "ВЕЖБИ", gamesTitle: "Тестови и игри",
-    gamesIntro: "Тест со зборови, редослед на зборови и парови.",
-    quickQuizTitle: "Тест со зборови", quickQuizText: "+10 XP за точен одговор; грешките одат во Грешки.",
-    startQuiz: "Почни тест", wordBuilder: "Составувач на реченици",
-    wordBuilderText: "Подреди ги зборовите во турски редослед (+15 XP).",
-    miniTest: "Тест со зборови", nextQuestion: "Следно прашање",
-    yourJourney: "МЕТРИКИ", progressTitle: "Напредок",
-    progressIntro: "Вредности пресметани од твоите активности.",
-    totalXP: "Освоени XP", savedWords: "Зачувани зборови", growingVocab: "Во речникот",
-    quizAccuracy: "Точност на тест", keepPracticing: "Точни / вкупно",
-    completedLessons: "Завршени лекции", oneStep: "Завршени модули",
-    cultureTitle: "Секојдневни фрази", cultureIntro: "Чести турски изрази.",
-    teaText: "Учтиво барање чај во кафуле, дом или продавница.",
-    afiyetText: "Се кажува додека некој јаде или пие.",
-    kolayText: "Се кажува на некој што работи.",
-    settingsTitle: "Поставки", settingsIntro: "Јазик, ниво, тест на глас и локални податоци.",
-    siteLanguage: "Јазик на интерфејс", languageHelp: "Избери англиски, турски или македонски.",
-    learningLevel: "CEFR ниво", dataDemo: "Локални податоци",
-    dataHelp: "Сите бројачи почнуваат од нула и се менуваат само со твои акции.",
-    resetProgress: "Ресетирај податоци"
-  }
-};
-
-const GRAMMAR_TOPICS = [
-  ["01", "Alphabet & sounds", "Turkish uses 29 letters; each letter maps closely to a consistent sound.", "A1", "Ogrenci okula gidiyor.", "The student is going to school."],
-  ["02", "Pronouns", "Ben, sen, o, biz, siz, onlar.", "A1", "Ben Turkce ogreniyorum.", "I am learning Turkish."],
-  ["03", "Word order (SOV)", "Subject + Object + Verb is standard in neutral Turkish clauses.", "A1", "Ali cay iciyor.", "Ali is drinking tea."],
-  ["04", "Present continuous (-iyor)", "Marks ongoing actions using -iyor / -iyor / -uyor / -uyor variants.", "A2", "Simdi eve geliyorum.", "I am coming home now."],
-  ["05", "Case suffixes (-e, -de, -den)", "Directional (-e/-a), locative (-de/-da), and ablative (-den/-dan).", "B1", "Okuldan eve geldim.", "I came home from school."],
-  ["06", "Conditionals (-se/-sa)", "Attaches conditional meaning to verb stems.", "B2", "Vaktin varsa konusalim.", "If you have time, let us talk."],
-  ["07", "Register & nuance", "Adjusting phrasing for formal, neutral, or colloquial contexts.", "C1", "Bu konuyu ayrintili ele alalim.", "Let us examine this topic in detail."],
-  ["08", "Nominalized clauses", "Participle and verbal-noun constructions in complex sentences.", "C2", "Soylediklerinin arka plani onemli.", "The background of what was said matters."]
-];
-
-const LESSONS = [
-  ["01", "Alphabet & letters", "29 letters including g, u, o, s, c, i", "A1", "Turkce alfabesi duzenli bir alfabedir.", "The Turkish alphabet is a regular alphabet."],
-  ["02", "Greetings & basics", "Hello, morning greeting, thanks, please", "A1", "Merhaba, gunaydin, tesekkurler.", "Hello, good morning, thanks."],
-  ["03", "Food & drink", "Water, bread, tea, taste", "A1", "Bir bardak su ve ekmek lutfen.", "One glass of water and bread please."],
-  ["04", "Travel & schedules", "Trips, shopping, appointments, feelings", "A2", "Saat ikide randevum var.", "I have an appointment at two."],
-  ["05", "Intermediate expression", "Experience, decisions, improvement, environment", "B1", "Her gun pratik yaparak gelistiriyorum.", "I improve by practicing every day."],
-  ["06", "Advanced & academic", "Responsibility, probability, consistency, nuance", "B2-C2", "Tutarlilik basari getirir.", "Consistency brings success."]
-];
-
-const QUIZ_QUESTIONS = [
-  ["Merhaba", "Hello", "Goodbye", "Thanks", "Please", 0],
-  ["Tesekkurler", "Please", "Thank you", "Water", "Bread", 1],
-  ["Su", "Bread", "Friend", "Water", "Journey", 2],
-  ["Gunaydin", "Good morning", "Good evening", "No", "Excited", 0],
-  ["Lutfen", "Please", "Yes", "To forget", "Environment", 0],
-  ["Lezzetli", "Delicious", "Late", "Expensive", "Ambiguous", 0],
-  ["Karar vermek", "To sleep", "To decide", "To run", "To deny", 1],
-  ["Tutarlilik", "Consistency", "Noise", "Ticket", "Rain", 0]
-];
-
-const BUILDER_SENTENCES = [
-  { prompt: 'Translate: "I am learning Turkish."', target: ["Ben", "Turkce", "ogreniyorum."], extra: ["yarin", "su"] },
-  { prompt: 'Translate: "We are going to school."', target: ["Biz", "okula", "gidiyoruz."], extra: ["dun", "ev"] },
-  { prompt: 'Translate: "The weather is very nice today."', target: ["Bugun", "hava", "cok", "guzel."], extra: ["hayir", "su"] }
-];
-
-const MATCH_PAIRS = [
-  ["Merhaba", "Hello"],
-  ["Su", "Water"],
-  ["Ekmek", "Bread"],
-  ["Guzel", "Nice"],
-  ["Tesekkurler", "Thank you"],
-  ["Yolculuk", "Journey"]
-];
-
-const SPECIAL_LETTERS = [
-  ["G g", "Soft G", "agac"],
-  ["U u", "Front rounded U", "uzum"],
-  ["O o", "Front rounded O", "ogrenci"],
-  ["S s", "SH sound", "seker"],
-  ["C c", "CH sound", "cay"],
-  ["I i", "Close back unrounded I", "isik"]
-];
-
-const DICT_PHRASES = [
-  "Bugun hava cok guzel.",
-  "Bir cay alabilir miyim?",
-  "Ben Turkce ogreniyorum.",
-  "Tesekkur ederim, cok iyi."
-];
-
-function todayKey() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-// Strict real-state initialization (starts at 0 unless user acts)
-let state = {
-  lang: localStorage.getItem("ltr_lang") || "en",
-  level: localStorage.getItem("ltr_level") || "A1",
-  xp: Number(localStorage.getItem("ltr_xp") || 0),
-  lessonsDone: Number(localStorage.getItem("ltr_lessons") || 0),
-  quizDone: Number(localStorage.getItem("ltr_qdone") || 0),
-  quizCorrect: Number(localStorage.getItem("ltr_qcorr") || 0),
-  saved: JSON.parse(localStorage.getItem("ltr_saved") || "[]"),
-  mistakes: JSON.parse(localStorage.getItem("ltr_mistakes") || "[]"),
-  activeDays: JSON.parse(localStorage.getItem("ltr_days") || "[]"),
-  draft: localStorage.getItem("ltr_draft") || ""
-};
-
-let levelWordCursor = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 };
-let flashIdx = 0;
-let quizIdx = 0;
-let builderIdx = 0;
-let builderPicked = [];
-let dictIdx = 0;
-let matchPick = null;
-let modalSpeakText = "";
-
-function showToast(msg) {
-  const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.classList.add("show");
-  clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(() => el.classList.remove("show"), 1600);
-}
-
-function recordActiveDay() {
-  const k = todayKey();
-  if (!state.activeDays.includes(k)) {
-    state.activeDays.push(k);
-  }
-}
-
-function saveState() {
-  localStorage.setItem("ltr_lang", state.lang);
-  localStorage.setItem("ltr_level", state.level);
-  localStorage.setItem("ltr_xp", String(state.xp));
-  localStorage.setItem("ltr_lessons", String(state.lessonsDone));
-  localStorage.setItem("ltr_qdone", String(state.quizDone));
-  localStorage.setItem("ltr_qcorr", String(state.quizCorrect));
-  localStorage.setItem("ltr_saved", JSON.stringify(state.saved));
-  localStorage.setItem("ltr_mistakes", JSON.stringify(state.mistakes));
-  localStorage.setItem("ltr_days", JSON.stringify(state.activeDays));
-  localStorage.setItem("ltr_draft", state.draft);
-  updateUIStats();
-}
-
-function addXP(pts) {
-  recordActiveDay();
-  state.xp += pts;
-  saveState();
-}
-
-// Prefer male-sounding / lower-pitch Turkish voice if available
-function pickMaleTurkishVoice() {
-  if (!("speechSynthesis" in window)) return null;
-  const voices = window.speechSynthesis.getVoices() || [];
-  const trVoices = voices.filter(v => (v.lang || "").toLowerCase().startsWith("tr"));
-  if (!trVoices.length) return null;
-  const maleHints = ["cem", "ahmet", "mehmet", "ali", "emre", "male", "erkek", "tolga", "kerem"];
-  const foundMale = trVoices.find(v => maleHints.some(h => (v.name || "").toLowerCase().includes(h)));
-  return foundMale || trVoices[0];
-}
-
-function speak(text, rate = 0.92) {
-  if (!text) return;
-  if ("speechSynthesis" in window) {
-    try {
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = "tr-TR";
-      utter.rate = rate;
-      const mv = pickMaleTurkishVoice();
-      if (mv) {
-        utter.voice = mv;
-        utter.pitch = 0.86;
-      } else {
-        utter.pitch = 0.78;
-      }
-      window.speechSynthesis.speak(utter);
-    } catch (_) {}
-  }
-  showToast(text);
-}
-
-function updateUIStats() {
-  const savedCount = state.saved.length;
-  const activeDaysCount = state.activeDays.length;
-
-  document.getElementById("xp").textContent = state.xp;
-  document.getElementById("progressXP").textContent = state.xp;
-  document.getElementById("wordCount").textContent = savedCount;
-  document.getElementById("wordBankMeta").textContent = savedCount + " / " + WORDS.length + " words saved";
-  document.getElementById("savedCount").textContent = savedCount;
-  document.getElementById("savedBadgeCount").textContent = savedCount + " words";
-  document.getElementById("streak").textContent = activeDaysCount;
-  document.getElementById("lessonCount").textContent = state.lessonsDone;
-  document.getElementById("lessonMeta").textContent = state.lessonsDone + " / " + LESSONS.length + " modules finished";
-  document.getElementById("progressLessons").textContent = state.lessonsDone;
-  document.getElementById("lessonPill").textContent = state.lessonsDone + " / " + LESSONS.length + " complete";
-
-  const acc = state.quizDone ? Math.round((state.quizCorrect / state.quizDone) * 100) + "%" : "0%";
-  document.getElementById("accuracy").textContent = acc;
-  document.getElementById("currentLevelBadge").textContent = state.level;
-
-  const days = Math.min(7, activeDaysCount);
-  const pct = Math.round((days / 7) * 100);
-  document.getElementById("weeklyBadge").textContent = days + " / 7 days";
-  document.getElementById("weeklyPct").textContent = pct + "%";
-  document.getElementById("weeklyBar").style.width = pct + "%";
-  document.getElementById("weeklyRatio").textContent = days + "/7";
-
-  const readPct = Math.round((state.lessonsDone / LESSONS.length) * 100);
-  const quizPct = state.quizDone ? Math.round((state.quizCorrect / state.quizDone) * 100) : 0;
-  const wordPct = Math.round((savedCount / WORDS.length) * 100);
-  document.getElementById("skillReadPct").textContent = readPct + "%";
-  document.getElementById("skillListenPct").textContent = quizPct + "%";
-  document.getElementById("skillSpeakPct").textContent = wordPct + "%";
-
-  renderSavedWordbook();
-  renderMistakesLog();
-}
-
-function applyLanguage(lang) {
-  state.lang = I18N[lang] ? lang : "en";
-  document.documentElement.lang = state.lang;
-  const dict = I18N[state.lang];
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.getAttribute("data-i18n");
-    if (dict[key]) el.textContent = dict[key];
-  });
-  document.querySelectorAll(".lang-sync").forEach(sel => {
-    sel.value = state.lang;
-  });
-  renderLevelSpotlightWord();
-  saveState();
-}
-
-// Main screen word updates strictly based on selected CEFR level
-function getWordsForLevel(lvl) {
-  const matches = WORDS.filter(w => w[3] === lvl);
-  return matches.length ? matches : WORDS;
-}
-
-function renderLevelSpotlightWord() {
-  const pool = getWordsForLevel(state.level);
-  const cur = (levelWordCursor[state.level] || 0) % pool.length;
-  const item = pool[cur];
-
-  document.getElementById("spotlightLevelLabel").textContent = state.level + " WORD (" + (cur + 1) + "/" + pool.length + ")";
-  document.getElementById("dailyWord").textContent = item[0];
-  document.getElementById("dailyMeaning").textContent = item[1] + " · " + item[2];
-  document.getElementById("dailyExTr").textContent = item[4];
-  document.getElementById("dailyExEn").textContent = item[5];
-}
-
-function setLevel(lvl) {
-  state.level = lvl;
-  document.querySelectorAll(".level-sync").forEach(sel => {
-    sel.value = lvl;
-  });
-  document.getElementById("wordLevel").value = lvl;
-  renderLevelSpotlightWord();
-  renderWordsTable();
-  saveState();
-}
-
-function navigateTo(pageId) {
-  document.querySelectorAll(".page").forEach(sec => {
-    sec.classList.toggle("active", sec.id === "page-" + pageId);
-  });
-  document.querySelectorAll(".nav button").forEach(btn => {
-    btn.classList.toggle("active", btn.getAttribute("data-page") === pageId);
-  });
-  document.getElementById("sidebar").classList.remove("open");
-}
-
-function toggleSaveWord(trWord) {
-  recordActiveDay();
-  const idx = state.saved.indexOf(trWord);
-  if (idx >= 0) {
-    state.saved.splice(idx, 1);
-    showToast("Removed");
-  } else {
-    state.saved.push(trWord);
-    state.xp += 5;
-    showToast("Saved (+5 XP)");
-  }
-  renderWordsTable();
-  saveState();
-}
-
-function renderSavedWordbook() {
-  const box = document.getElementById("savedList");
-  if (!state.saved.length) {
-    box.innerHTML = '<div class="subtle">No saved words yet.</div>';
-    return;
-  }
-  box.innerHTML = state.saved.map(tr => {
-    const found = WORDS.find(w => w[0] === tr) || [tr, "Saved word", "Wordbook", state.level];
-    const safeTr = found[0].replace(/'/g, "\'");
-    return `<div class="worditem">
-      <div><b>${found[0]}</b><small>${found[2]} · ${found[3]}</small></div>
-      <div class="tr-mean">${found[1]}</div>
-      <button class="btn small ghost" onclick="speak('${safeTr}')">Listen</button>
-      <button class="btn small" onclick="toggleSaveWord('${safeTr}')">Saved</button>
-    </div>`;
-  }).join("");
-}
-
-function renderWordsTable() {
-  const q = (document.getElementById("wordSearch").value || "").toLowerCase().trim();
-  const lvl = document.getElementById("wordLevel").value;
-  const topic = document.getElementById("wordTopic").value;
-
-  const filtered = WORDS.filter(w =>
-    (lvl === "All" || w[3] === lvl) &&
-    (topic === "All" || w[2] === topic) &&
-    (!q || w[0].toLowerCase().includes(q) || w[1].toLowerCase().includes(q))
-  );
-
-  const listEl = document.getElementById("wordList");
-  if (!filtered.length) {
-    listEl.innerHTML = '<div class="subtle">No matching words.</div>';
-    return;
-  }
-
-  listEl.innerHTML = filtered.map(w => {
-    const isSaved = state.saved.includes(w[0]);
-    const safeTr = w[0].replace(/'/g, "\'");
-    return `<div class="worditem">
-      <div><b>${w[0]}</b><small>${w[2]} · ${w[3]}</small></div>
-      <div class="tr-mean">${w[1]}</div>
-      <button class="btn small ghost" onclick="speak('${safeTr}')">Listen</button>
-      <button class="btn small ${isSaved ? "" : "ghost"}" onclick="toggleSaveWord('${safeTr}')">${isSaved ? "Saved" : "Save"}</button>
-    </div>`;
-  }).join("");
-}
-
-function renderFlashcard() {
-  const idx = ((flashIdx % WORDS.length) + WORDS.length) % WORDS.length;
-  const w = WORDS[idx];
-  document.getElementById("flashCounter").textContent = (idx + 1) + " / " + WORDS.length;
-  document.getElementById("flashLevel").textContent = w[3] + " · " + w[2].toUpperCase();
-  document.getElementById("flashWord").textContent = w[0];
-  document.getElementById("flashMeaning").textContent = "Select reveal to view meaning";
-}
-
-function openStudyModal(tag, title, body, exTr, exEn) {
-  document.getElementById("modalTag").textContent = tag;
-  document.getElementById("modalTitle").textContent = title;
-  document.getElementById("modalBody").textContent = body;
-  document.getElementById("modalExTr").textContent = exTr;
-  document.getElementById("modalExEn").textContent = exEn;
-  modalSpeakText = exTr;
-  document.getElementById("modalBackdrop").classList.add("open");
-}
-
-function renderGrammarSection() {
-  document.getElementById("grammarCards").innerHTML = GRAMMAR_TOPICS.map((g, i) => `
-    <div class="card feature">
-      <div>
-        <div class="qicon">${g[0]}</div>
-        <span class="tag">${g[3]}</span>
-        <h3>${g[1]}</h3>
-        <p>${g[2]}</p>
+  <!-- API KEY MODAL -->
+  <div class="modal-backdrop" id="apiModal">
+    <div class="modal">
+      <div class="section-title">
+        <span>Gemini API Yapılandırması</span>
+        <button class="btn-outline-sm" onclick="closeApiModal()">Kapat</button>
       </div>
-      <div>
-        <button class="btn small" onclick="openGrammarItem(${i})">Open</button>
+      <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:12px;">
+        API anahtarın tarayıcında (localStorage) güvenle saklanır. Sınırsız C2 kelime üretimi, canlı çeviri ve AI koçu bu anahtarı kullanır.
+      </p>
+      <input type="text" id="apiKeyInput" class="input-field" style="width:100%; margin-bottom:12px;" placeholder="AIza... veya AQ..." />
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button class="btn-secondary" onclick="resetDefaultApiKey()">Varsayılana Dön</button>
+        <button class="btn-primary" onclick="saveApiKey()">Kaydet</button>
       </div>
     </div>
-  `).join("");
+  </div>
 
-  document.getElementById("lettersGrid").innerHTML = SPECIAL_LETTERS.map(l => `
-    <button class="letter-box" onclick="speak('${l[2]}')">
-      <strong>${l[0]}</strong>
-      <span>${l[1]}</span>
-      <span>Example: ${l[2]}</span>
-    </button>
-  `).join("");
-}
+  <script>
+    const DEFAULT_API_KEY = "AQ.Ab8RN6JiSuLsuArVIH0qtBIilX01WAlZDBxF70E6pMA2emterg";
+    const GEMINI_MODELS = ["gemini-3.5-flash-lite", "gemini-2.5-flash-lite", "gemini-2.5-flash"];
 
-window.openGrammarItem = function(i) {
-  const g = GRAMMAR_TOPICS[i];
-  openStudyModal(g[3], g[1], g[2], g[4], g[5]);
-};
+    // Rich curated word banks per CEFR level (Genuine C1/C2 words — no "Ekmek" or "Nasılsın")
+    const WORD_BANK = {
+      A1: [
+        { tr: "Merhaba", pos: "Ünlem · Günlük", mk: "Здраво (Zdravo)", en: "Hello", def: "Karşılaşma anında kullanılan temel selamlaşma sözü.", exTr: "Merhaba, bugün nasılsın?", exMk: "Здраво, како си денес?", exEn: "Hello, how are you today?" },
+        { tr: "Teşekkür ederim", pos: "İfade · Nezaket", mk: "Благодарам (Blagodaram)", en: "Thank you", def: "Yapılan bir iyiliğe veya yardıma karşı duyulan minneti ifade eder.", exTr: "Yardımın için çok teşekkür ederim.", exMk: "Многу ти благодарам за помошта.", exEn: "Thank you very much for your help." },
+        { tr: "Öğrenci", pos: "İsim · Eğitim", mk: "Ученик / Студент", en: "Student", def: "Bir okulda veya üniversitede eğitim gören kimse.", exTr: "Ben lise öğrencisiyim.", exMk: "Јас сум средношколец.", exEn: "I am a high school student." }
+      ],
+      A2: [
+        { tr: "Deneyim", pos: "İsim · Genel", mk: "Искуство (Iskustvo)", en: "Experience", def: "Bir kimsenin belli bir sürede veya hayat boyu edindiği bilgilerin tamamı, tecrübe.", exTr: "Yeni bir ülkede yaşamak büyük bir deneyimdir.", exMk: "Живеењето во нова земја е големо искуство.", exEn: "Living in a new country is a great experience." },
+        { tr: "Geliştirmek", pos: "Fiil · Eylem", mk: "Развива / Подобрува", en: "To improve / develop", def: "Bir şeyi daha iyi, daha verimli veya daha kapsamlı duruma getirmek.", exTr: "Her gün kelime çalışarak dilimi geliştiriyorum.", exMk: "Го подобрувам јазикот со учење зборови секој ден.", exEn: "I improve my language by studying vocabulary every day." }
+      ],
+      B1: [
+        { tr: "Önyargı", pos: "İsim · Psikoloji", mk: "Предрасуда (Predrasuda)", en: "Prejudice / Bias", def: "Bir kimse veya bir şeyle ilgili olarak belirli şart, olay ve görüntülere dayanarak önceden edinilmiş olumlu veya olumsuz yargı.", exTr: "İnsanları tanımadan önyargıyla yaklaşmamalıyız.", exMk: "Не треба да им приоѓаме на луѓето со предрасуди без да ги запознаеме.", exEn: "We should not approach people with prejudice before getting to know them." },
+        { tr: "Sürdürülebilir", pos: "Sıfat · Bilim & Toplum", mk: "Одржлив (Održliv)", en: "Sustainable", def: "Kesintisiz olarak devam ettirilebilen, uzun vadede dengesini koruyabilen.", exTr: "Sürdürülebilir enerji kaynakları geleceğimiz için kritiktir.", exMk: "Одржливите извори на енергија се клучни за нашата иднина.", exEn: "Sustainable energy sources are critical for our future." }
+      ],
+      B2: [
+        { tr: "Çelişki", pos: "İsim · Mantık", mk: "Противречност (Protivrečnost)", en: "Contradiction / Paradox", def: "İki düşüncenin, sözün veya durumun birbirini tutmaması, birbiriyle çatışması durumu.", exTr: "Söyledikleri ile yaptıkları arasında açık bir çelişki var.", exMk: "Има очигледна противречност меѓу она што го зборува и она што го прави.", exEn: "There is an obvious contradiction between what they say and what they do." },
+        { tr: "İstikrar", pos: "İsim · Ekonomi & Yönetim", mk: "Стабилност (Stabilnost)", en: "Stability", def: "Aynı kararda, biçimde sürme; kararlılık, denge durumu.", exTr: "Başarıya ulaşmak için çalışmada istikrar şarttır.", exMk: "За да се постигне успех, неопходна е стабилност во работата.", exEn: "Stability in work is essential to achieve success." }
+      ],
+      C1: [
+        { tr: "Yadsımak", pos: "Fiil · Akademik", mk: "Негира / Одрекува", en: "To deny / repudiate", def: "Yaptığını, söylediğini veya tanık olduğu bir gerçeği saklamak, inkâr etmek.", exTr: "Bilimsel verilerin ortaya koyduğu bu gerçeği kimse yadsıyamaz.", exMk: "Никој не може да ја негира оваа вистина што ја покажуваат научните податоци.", exEn: "No one can deny this truth revealed by scientific data." },
+        { tr: "Öngörü", pos: "İsim · Strateji", mk: "Предвидување / Проникливост", en: "Foresight / Anticipation", def: "Bir işin ilerisini kestirme veya bir işin nasıl bir yol alacağını önceden anlayabilme yeteneği.", exTr: "Güçlü öngörüleri sayesinde krizden etkilenmeden çıktılar.", exMk: "Благодарение на нивните силни предвидувања, излегоа од кризата без последици.", exEn: "Thanks to their strong foresight, they emerged from the crisis unaffected." },
+        { tr: "Yetkinlik", pos: "İsim · Profesyonel", mk: "Компетентност (Kompetentnost)", en: "Competence / Proficiency", def: "Bir görevi veya işi en üst düzeyde yerine getirebilme gücü ve olgunluğu.", exTr: "Akademik metinleri analiz etmek ileri düzey dil yetkinliği gerektirir.", exMk: "Анализирањето академски текстови бара напредна јазична компетентност.", exEn: "Analyzing academic texts requires advanced language proficiency." }
+      ],
+      C2: [
+        { tr: "Müstesna", pos: "Sıfat · Akademik & Edebi", mk: "Исклучителен (Isklučitelen)", en: "Exceptional / Extraordinary", def: "Kural dışı olan, benzerlerinden üstünlüğü veya farklılığı ile ayrılan, seçkin.", exTr: "Bu tarihi yapının mimarisi, döneminin müstesna örneklerinden biridir.", exMk: "Архитектурата на оваа историска градба е еден од исклучителните примери на своето време.", exEn: "The architecture of this historical building is one of the exceptional examples of its era." },
+        { tr: "Tezahür", pos: "İsim · Felsefe & Sosyoloji", mk: "Манифестација / Појава", en: "Manifestation / Appearance", def: "Belirme, görünme, ortaya çıkma; soyut bir düşüncenin veya duygunun somut biçimde dışa vurumu.", exTr: "Toplumsal değişimler önce sanatta ve edebiyatta tezahür eder.", exMk: "Општествените промени прво се манифестираат во уметноста и литературата.", exEn: "Social changes first manifest themselves in art and literature." },
+        { tr: "Müphem", pos: "Sıfat · Edebi & Hukuki", mk: "Нејасен / Двосмислен", en: "Ambiguous / Obscure", def: "Belirsiz, açık seçik olmayan, anlamı tam olarak kavranamayan.", exTr: "Sözleşmedeki müphem ifadeler taraflar arasında anlaşmazlığa yol açtı.", exMk: "Нејасните изрази во договорот доведоа до несогласување меѓу страните.", exEn: "The ambiguous expressions in the contract led to disagreement between the parties." },
+        { tr: "Mütekabiliyet", pos: "İsim · Diplomasi & Hukuk", mk: "Реципроцитет (Reciprocitet)", en: "Reciprocity", def: "Devletlerarası ilişkilerde veya hukukta karşılıklı olma, denk davranma ilkesi.", exTr: "Uluslararası anlaşmalar genellikle mütekabiliyet esasına dayanır.", exMk: "Меѓународните договори обично се засноваат на принципот на реципроцитет.", exEn: "International agreements are generally based on the principle of reciprocity." },
+        { tr: "İstihza", pos: "İsim · Edebiyat & Retorik", mk: "Иронија / Потсмев", en: "Subtle irony / Sarcasm", def: "Gizli veya ince alay; bir sözün görünürdeki anlamının tam tersini kastetme sanatı.", exTr: "Yazar, toplumdaki aksaklıkları ince bir istihza ile eleştiriyor.", exMk: "Авторот ги критикува недостатоците во општеството со суптилна иронија.", exEn: "The author criticizes the flaws in society with subtle irony." },
+        { tr: "Vukuf", pos: "İsim · Akademik", mk: "Длабоко познавање / Увид", en: "Profound insight / Mastery", def: "Bir konuyu derinlemesine anlama, bilme ve hâkim olma durumu.", exTr: "Konuya olan derin vukufu sayesinde en karmaşık soruları bile yanıtladı.", exMk: "Благодарение на неговото длабоко познавање на темата, одговори дури и на најсложените прашања.", exEn: "Thanks to his profound insight into the subject, he answered even the most complex questions." },
+        { tr: "Tevatür", pos: "İsim · Tarih & İletişim", mk: "Гласина / Предание", en: "Hearsay / Widespread rumor", def: "Ağızdan ağıza yayılan, kesinliği kanıtlanmamış haber veya söylenti.", exTr: "Tarihçiler kesin belgelere dayanmayan tevatürlere ihtiyatla yaklaşır.", exMk: "Историчарите претпазливо им пристапуваат на гласините што не се засноваат на цврсти документи.", exEn: "Historians approach hearsay not based on solid documents with caution." },
+        { tr: "İktibas", pos: "İsim · Akademik & Edebi", mk: "Цитат / Позајмување", en: "Citation / Borrowing / Excerpt", def: "Bir başkasının yazısından veya sözünden parça alma, alıntı yapma.", exTr: "Akademik makalelerde yapılan her iktibasın kaynağı açıkça belirtilmelidir.", exMk: "Изворот на секој цитат во академските трудови мора јасно да се наведе.", exEn: "The source of every citation in academic papers must be clearly stated." }
+      ]
+    };
 
-function renderLessonsSection() {
-  document.getElementById("lessonList").innerHTML = LESSONS.map((m, i) => {
-    const done = i < state.lessonsDone;
-    return `<div class="lesson">
-      <div class="qicon">${m[0]}</div>
-      <div class="details"><b>${m[1]}</b><small>${m[2]}</small></div>
-      <span class="pill">${done ? "Completed" : "Open"}</span>
-      <button class="btn small" onclick="openLessonItem(${i})">${done ? "Review" : "Open"}</button>
-    </div>`;
-  }).join("");
-}
+    // State
+    let state = {
+      level: "C2",
+      index: 0,
+      xp: parseInt(localStorage.getItem("lex_xp") || "145", 10),
+      days: parseInt(localStorage.getItem("lex_days") || "1", 10),
+      lessons: parseInt(localStorage.getItem("lex_lessons") || "4", 10),
+      saved: JSON.parse(localStorage.getItem("lex_saved") || "[]"),
+      apiKey: localStorage.getItem("lex_gemini_key") || DEFAULT_API_KEY
+    };
 
-window.openLessonItem = function(i) {
-  const m = LESSONS[i];
-  openStudyModal(m[3], m[1], m[2], m[4], m[5]);
-};
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2400);
+    }
 
-function showQuizQuestion() {
-  const q = QUIZ_QUESTIONS[quizIdx % QUIZ_QUESTIONS.length];
-  document.getElementById("quizProgress").textContent = "Question " + ((quizIdx % QUIZ_QUESTIONS.length) + 1) + " of " + QUIZ_QUESTIONS.length;
-  document.getElementById("question").textContent = 'What does "' + q[0] + '" mean?';
-  document.getElementById("answers").innerHTML = q.slice(1, 5).map((opt, i) =>
-    `<button class="answer" data-opt="${i}">${opt}</button>`
-  ).join("");
-  document.getElementById("quizFeedback").textContent = "";
-  document.getElementById("nextQuestion").style.display = "none";
+    function saveState() {
+      localStorage.setItem("lex_xp", state.xp);
+      localStorage.setItem("lex_days", state.days);
+      localStorage.setItem("lex_lessons", state.lessons);
+      localStorage.setItem("lex_saved", JSON.stringify(state.saved));
+      updateStatsUI();
+    }
 
-  document.querySelectorAll("#answers .answer").forEach(btn => {
-    btn.onclick = () => {
-      if (document.querySelector("#answers .answer.correct, #answers .answer.wrong")) return;
-      recordActiveDay();
-      const chosen = Number(btn.getAttribute("data-opt"));
-      const correctIdx = q[5];
-      const isRight = chosen === correctIdx;
+    function updateStatsUI() {
+      document.getElementById("statSaved").textContent = state.saved.length;
+      document.getElementById("statDays").textContent = state.days;
+      document.getElementById("statXp").textContent = state.xp;
+      document.getElementById("statLessons").textContent = state.lessons;
+      document.getElementById("savedCountHeader").textContent = state.saved.length;
+    }
 
-      btn.classList.add(isRight ? "correct" : "wrong");
-      if (!isRight) {
-        document.querySelectorAll("#answers .answer")[correctIdx].classList.add("correct");
-      }
+    function onLevelChange() {
+      state.level = document.getElementById("levelSelect").value;
+      state.index = 0;
+      document.getElementById("quizLevelTag").textContent = state.level;
+      renderCurrentWord();
+    }
 
-      state.quizDone += 1;
-      if (isRight) {
-        state.quizCorrect += 1;
-        state.xp += 10;
-        document.getElementById("quizFeedback").textContent = "Correct (+10 XP)";
-      } else {
-        const rightText = q[correctIdx + 1];
-        state.mistakes.unshift({ word: q[0], answer: rightText });
-        state.mistakes = state.mistakes.slice(0, 15);
-        document.getElementById("quizFeedback").textContent = "Incorrect — Answer: " + rightText;
-      }
-      document.getElementById("nextQuestion").style.display = "inline-block";
+    function getCurrentList() {
+      return WORD_BANK[state.level] || WORD_BANK.C2;
+    }
+
+    function renderCurrentWord() {
+      const list = getCurrentList();
+      if (state.index >= list.length) state.index = 0;
+      const item = list[state.index];
+      const focus = document.getElementById("focusSelect").value;
+
+      document.getElementById("cardLevelLabel").textContent = `${state.level} WORD (${state.index + 1}/${list.length})`;
+      document.getElementById("wordTr").textContent = item.tr;
+      document.getElementById("wordMeta").textContent = item.pos;
+      document.getElementById("wordMk").textContent = item.mk;
+      document.getElementById("wordEn").textContent = item.en;
+      document.getElementById("wordDef").textContent = item.def;
+      document.getElementById("exTr").textContent = item.exTr;
+      document.getElementById("exMk").textContent = "🇲🇰 " + item.exMk;
+      document.getElementById("exEn").textContent = "🇬🇧 " + item.exEn;
+
+      // Focus visibility
+      document.getElementById("pillMk").style.display = (focus === "all" || focus === "mk") ? "block" : "none";
+      document.getElementById("pillEn").style.display = (focus === "all" || focus === "en") ? "block" : "none";
+      document.getElementById("exMk").style.display = (focus === "all" || focus === "mk") ? "block" : "none";
+      document.getElementById("exEn").style.display = (focus === "all" || focus === "en") ? "block" : "none";
+
+      // Saved button state
+      const isSaved = state.saved.some(w => w.tr.toLowerCase() === item.tr.toLowerCase());
+      const btnSave = document.getElementById("btnSaveWord");
+      btnSave.textContent = isSaved ? "Kaydedildi ✓" : "Kaydet";
+      btnSave.classList.toggle("saved", isSaved);
+    }
+
+    function nextWord() {
+      const list = getCurrentList();
+      state.index = (state.index + 1) % list.length;
+      state.xp += 5;
       saveState();
-    };
-  });
-}
+      renderCurrentWord();
+    }
 
-function renderMistakesLog() {
-  const box = document.getElementById("mistakesList");
-  if (!state.mistakes.length) {
-    box.innerHTML = '<div class="subtle">No recorded mistakes.</div>';
-    return;
-  }
-  box.innerHTML = state.mistakes.map(m => {
-    const safeW = m.word.replace(/'/g, "\'");
-    return `<div style="padding:9px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line);margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:8px">
-      <div><b>${m.word}</b> <span class="subtle">- ${m.answer}</span></div>
-      <button class="btn small ghost" onclick="speak('${safeW}')">Listen</button>
-    </div>`;
-  }).join("");
-}
-
-function loadSentenceBuilder() {
-  builderPicked = [];
-  const item = BUILDER_SENTENCES[builderIdx % BUILDER_SENTENCES.length];
-  document.getElementById("builderPrompt").textContent = item.prompt;
-  document.getElementById("builderFeedback").textContent = "";
-  renderSentenceBuilderChips();
-}
-
-function renderSentenceBuilderChips() {
-  const item = BUILDER_SENTENCES[builderIdx % BUILDER_SENTENCES.length];
-  const pool = [...item.target, ...item.extra].sort();
-
-  document.getElementById("builderDrop").innerHTML = builderPicked.length
-    ? builderPicked.map((tok, i) => `<button class="chip" onclick="removeBuilderToken(${i})">${tok} x</button>`).join("")
-    : '<span class="subtle">Select words in order</span>';
-
-  document.getElementById("builderBank").innerHTML = pool.map(tok => {
-    const safeTok = tok.replace(/'/g, "\'");
-    return `<button class="chip" onclick="addBuilderToken('${safeTok}')">${tok}</button>`;
-  }).join("");
-}
-
-window.addBuilderToken = function(tok) {
-  builderPicked.push(tok);
-  renderSentenceBuilderChips();
-};
-
-window.removeBuilderToken = function(i) {
-  builderPicked.splice(i, 1);
-  renderSentenceBuilderChips();
-};
-
-function initMatchPairs() {
-  const sample = [...MATCH_PAIRS].sort(() => Math.random() - 0.5).slice(0, 4);
-  const tiles = [];
-  sample.forEach((pair, idx) => {
-    tiles.push({ pairId: idx, text: pair[0], isTr: true });
-    tiles.push({ pairId: idx, text: pair[1], isTr: false });
-  });
-  tiles.sort(() => Math.random() - 0.5);
-  matchPick = null;
-  document.getElementById("matchFeedback").textContent = "";
-
-  const grid = document.getElementById("matchGrid");
-  grid.innerHTML = tiles.map(tObj =>
-    `<button class="answer match-btn" data-pair="${tObj.pairId}" data-tr="${tObj.isTr ? "1" : "0"}">${tObj.text}</button>`
-  ).join("");
-
-  document.querySelectorAll("#matchGrid .match-btn").forEach(btn => {
-    btn.onclick = () => {
-      if (btn.disabled) return;
-      if (btn.getAttribute("data-tr") === "1") speak(btn.textContent);
-
-      if (!matchPick) {
-        matchPick = btn;
-        btn.style.borderColor = "#ffffff";
-      } else if (matchPick === btn) {
-        btn.style.borderColor = "var(--line)";
-        matchPick = null;
-      } else if (matchPick.getAttribute("data-pair") === btn.getAttribute("data-pair")) {
-        matchPick.disabled = true;
-        btn.disabled = true;
-        matchPick.classList.add("correct");
-        btn.classList.add("correct");
-        matchPick = null;
-        addXP(8);
-        document.getElementById("matchFeedback").textContent = "Matched (+8 XP)";
-      } else {
-        matchPick.style.borderColor = "var(--line)";
-        matchPick = null;
+    function speakWord() {
+      const item = getCurrentList()[state.index];
+      if (!("speechSynthesis" in window)) {
+        showToast("Tarayıcı sesli okumayı desteklemiyor.");
+        return;
       }
-    };
-  });
-}
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(`${item.tr}. ${item.exTr}`);
+      utter.lang = "tr-TR";
+      utter.rate = 0.95;
+      window.speechSynthesis.speak(utter);
+    }
 
-function syncDictationPrompt() {
-  document.getElementById("dictTargetDisplay").textContent = DICT_PHRASES[dictIdx % DICT_PHRASES.length];
-  document.getElementById("dictFeedback").textContent = "";
-}
+    function toggleSaveCurrentWord() {
+      const item = getCurrentList()[state.index];
+      const idx = state.saved.findIndex(w => w.tr.toLowerCase() === item.tr.toLowerCase());
+      if (idx > -1) {
+        state.saved.splice(idx, 1);
+        showToast("Kelime defterden çıkarıldı.");
+      } else {
+        state.saved.unshift({ ...item, level: state.level });
+        state.xp += 10;
+        showToast("Kelime deftere kaydedildi (+10 XP)");
+      }
+      saveState();
+      renderCurrentWord();
+      renderSavedList();
+    }
 
-function normalizeText(str) {
-  return (str || "")
-    .toLowerCase()
-    .replace(/[.,!?]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+    function copyCurrentWord() {
+      const item = getCurrentList()[state.index];
+      const text = `${item.tr} (${state.level})
+MK: ${item.mk}
+EN: ${item.en}
+Anlam: ${item.def}
+Örnek: ${item.exTr}`;
+      navigator.clipboard.writeText(text).then(() => showToast("Kopyalandı!"));
+    }
 
-// Events
-document.querySelectorAll(".nav button").forEach(btn => {
-  btn.addEventListener("click", () => navigateTo(btn.getAttribute("data-page")));
-});
+    // Core Gemini REST Caller with automatic model fallback
+    async function callGemini(promptText, systemPrompt = "", jsonMode = false) {
+      const key = (state.apiKey || DEFAULT_API_KEY).trim();
+      let lastError = null;
 
-document.querySelectorAll("[data-go]").forEach(el => {
-  el.addEventListener("click", () => navigateTo(el.getAttribute("data-go")));
-});
+      for (const model of GEMINI_MODELS) {
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+          const body = {
+            contents: [{ role: "user", parts: [{ text: promptText }] }],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 1024
+            }
+          };
+          if (systemPrompt) {
+            body.systemInstruction = { parts: [{ text: systemPrompt }] };
+          }
+          if (jsonMode) {
+            body.generationConfig.responseMimeType = "application/json";
+          }
 
-document.getElementById("hamb").addEventListener("click", () => {
-  document.getElementById("sidebar").classList.toggle("open");
-});
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+          });
 
-document.querySelectorAll(".lang-sync").forEach(sel => {
-  sel.addEventListener("change", e => applyLanguage(e.target.value));
-});
+          const data = await res.json();
+          if (!res.ok) {
+            lastError = data?.error?.message || `HTTP ${res.status}`;
+            continue;
+          }
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) return text;
+        } catch (err) {
+          lastError = err.message;
+        }
+      }
+      throw new Error(lastError || "Gemini API yanıt vermedi.");
+    }
 
-document.querySelectorAll(".level-sync").forEach(sel => {
-  sel.addEventListener("change", e => setLevel(e.target.value));
-});
+    // Generate genuine new word via Gemini AI
+    async function generateAiWord() {
+      const btn = document.getElementById("btnAiNewWord");
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="loader"></span> Üretiliyor...`;
 
-document.getElementById("hearWord").addEventListener("click", () => {
-  speak(document.getElementById("dailyWord").textContent);
-});
+      const existing = getCurrentList().map(w => w.tr).join(", ");
+      const levelDesc = state.level === "C2"
+        ? "Gerçek C2 (Proficient / Akademik / Edebi / Hukuki / Felsefi) düzeyde nadir ve üst düzey bir Türkçe kelime seç. Kesinlikle günlük basit kelimeler (ekmek, su, nasılsın, gitmek vb.) seçme."
+        : `CEFR ${state.level} seviyesine tam uygun bir Türkçe kelime seç.`;
 
-document.getElementById("saveWord").addEventListener("click", () => {
-  toggleSaveWord(document.getElementById("dailyWord").textContent);
-});
+      const prompt = `${levelDesc}
+Şu listedeki kelimelerden FARKLI bir kelime üret: [${existing}].
+Sadece geçerli JSON formatında yanıt ver, başka açıklama yazma:
+{
+  "tr": "Türkçe kelime",
+  "pos": "Sözcük türü · Alan (örn: Sıfat · Akademik)",
+  "mk": "Makedonca Kiril karşılığı (Latin okunuşu)",
+  "en": "İngilizce karşılığı",
+  "def": "Türkçe net sözlük tanımı",
+  "exTr": "Kelimenin geçtiği doğal ve seviyeye uygun Türkçe örnek cümle",
+  "exMk": "Örnek cümlenin Makedonca Kiril çevirisi",
+  "exEn": "Örnek cümlenin İngilizce çevirisi"
+}`;
 
-document.getElementById("nextDailyWord").addEventListener("click", () => {
-  const pool = getWordsForLevel(state.level);
-  levelWordCursor[state.level] = ((levelWordCursor[state.level] || 0) + 1) % pool.length;
-  renderLevelSpotlightWord();
-});
+      try {
+        const raw = await callGemini(prompt, "Sen uzman bir Türkçe-Makedonca-İngilizce sözlükbilimcisisin.", true);
+        const clean = raw.replace(/```json|```/g, "").trim();
+        const parsed = JSON.parse(clean);
+        if (parsed && parsed.tr && parsed.mk && parsed.en) {
+          WORD_BANK[state.level].push(parsed);
+          state.index = WORD_BANK[state.level].length - 1;
+          state.xp += 15;
+          saveState();
+          renderCurrentWord();
+          showToast(`Yeni ${state.level} kelime eklendi (+15 XP)`);
+        }
+      } catch (e) {
+        showToast("AI Hatası: " + e.message.slice(0, 60));
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origText;
+      }
+    }
 
-document.getElementById("shareWord").addEventListener("click", () => {
-  const text = document.getElementById("dailyWord").textContent + " - " + document.getElementById("dailyMeaning").textContent;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).catch(() => {});
-  }
-  showToast("Copied");
-});
+    // Live Trilingual Dictionary Search (FreeDictionary + MyMemory + Gemini AI)
+    async function searchLiveDictionary() {
+      const q = document.getElementById("dictQuery").value.trim();
+      if (!q) return;
 
-["wordSearch", "wordLevel", "wordTopic"].forEach(id => {
-  document.getElementById(id).addEventListener("input", renderWordsTable);
-  document.getElementById(id).addEventListener("change", renderWordsTable);
-});
+      const area = document.getElementById("dictResultArea");
+      const btn = document.getElementById("btnSearchDict");
+      btn.disabled = true;
+      area.innerHTML = `<span class="loader"></span> Türkçe, Makedonca ve İngilizce kaynaklar taranıyor...`;
 
-document.getElementById("prevFlash").addEventListener("click", () => {
-  flashIdx -= 1;
-  renderFlashcard();
-});
+      try {
+        // Parallel fetch: FreeDictionary + MyMemory + Gemini AI
+        const freeDictPromise = fetch(`https://freedictionaryapi.com/api/v1/entries/tr/${encodeURIComponent(q)}`)
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null);
 
-document.getElementById("nextFlash").addEventListener("click", () => {
-  flashIdx += 1;
-  renderFlashcard();
-});
+        const myMemMkPromise = fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=tr|mk`)
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null);
 
-document.getElementById("speakFlash").addEventListener("click", () => {
-  const idx = ((flashIdx % WORDS.length) + WORDS.length) % WORDS.length;
-  speak(WORDS[idx][0]);
-});
+        const aiPrompt = `"${q}" kelimesini veya ifadesini analiz et (Türkçe, Makedonca veya İngilizce girilmiş olabilir).
+Sadece geçerli JSON döndür:
+{
+  "tr": "Türkçe karşılığı",
+  "pos": "Tür · Seviye (örn: İsim · C1)",
+  "mk": "Makedonca Kiril (Latin okunuş)",
+  "en": "İngilizce karşılığı",
+  "def": "Kısa ve net Türkçe tanım",
+  "exTr": "Türkçe örnek cümle",
+  "exMk": "Makedonca örnek cümle",
+  "exEn": "İngilizce örnek cümle"
+}`;
 
-document.getElementById("revealFlash").addEventListener("click", () => {
-  const idx = ((flashIdx % WORDS.length) + WORDS.length) % WORDS.length;
-  const w = WORDS[idx];
-  document.getElementById("flashMeaning").textContent = w[1] + " - " + w[4];
-  speak(w[0]);
-});
+        const [freeData, memData, aiRaw] = await Promise.all([
+          freeDictPromise,
+          myMemMkPromise,
+          callGemini(aiPrompt, "Sen üç dilli (TR-MK-EN) sözlük API'sisin.", true)
+        ]);
 
-document.getElementById("closeModal").addEventListener("click", () => {
-  document.getElementById("modalBackdrop").classList.remove("open");
-});
+        const parsed = JSON.parse(aiRaw.replace(/```json|```/g, "").trim());
+        const memFallback = memData?.responseData?.translatedText || "";
+        const sourceNote = freeData ? "Gemini AI + FreeDictionaryAPI" : "Gemini AI + MyMemory API";
 
-document.getElementById("modalBackdrop").addEventListener("click", e => {
-  if (e.target.id === "modalBackdrop") {
-    e.currentTarget.classList.remove("open");
-  }
-});
+        window._lastSearchedWord = parsed;
 
-document.getElementById("modalSpeak").addEventListener("click", () => {
-  speak(modalSpeakText);
-});
+        area.innerHTML = `
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:14px; margin-top:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <strong style="font-size:18px; color:var(--text);">${parsed.tr}</strong>
+              <span class="stat-tag">${sourceNote}</span>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">${parsed.pos}</div>
+            <div style="font-size:13px; color:#e5e7eb; margin-bottom:4px;">🇲🇰 <strong>Makedonca:</strong> ${parsed.mk} ${memFallback && !parsed.mk.includes(memFallback) ? `(${memFallback})` : ""}</div>
+            <div style="font-size:13px; color:#e5e7eb; margin-bottom:8px;">🇬🇧 <strong>İngilizce:</strong> ${parsed.en}</div>
+            <div style="font-size:12.5px; color:var(--text-muted); margin-bottom:10px;">${parsed.def}</div>
+            <div style="font-size:12.5px; color:var(--text); border-top:1px solid var(--border); padding-top:8px; margin-bottom:10px;">
+              <div>• ${parsed.exTr}</div>
+              <div style="color:var(--text-muted);">• ${parsed.exMk}</div>
+              <div style="color:var(--text-muted);">• ${parsed.exEn}</div>
+            </div>
+            <button class="btn-secondary" onclick="saveSearchedWord()">Kelime Defterime Ekle</button>
+          </div>
+        `;
+        state.xp += 5;
+        saveState();
+      } catch (e) {
+        area.innerHTML = `<span style="color:var(--danger);">Arama sırasında hata oluştu: ${e.message}</span>`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
 
-document.getElementById("modalComplete").addEventListener("click", () => {
-  recordActiveDay();
-  state.lessonsDone = Math.min(LESSONS.length, state.lessonsDone + 1);
-  state.xp += 25;
-  renderLessonsSection();
-  saveState();
-  document.getElementById("modalBackdrop").classList.remove("open");
-  showToast("Completed (+25 XP)");
-});
+    function saveSearchedWord() {
+      if (!window._lastSearchedWord) return;
+      const item = window._lastSearchedWord;
+      if (!state.saved.some(w => w.tr.toLowerCase() === item.tr.toLowerCase())) {
+        state.saved.unshift({ ...item, level: state.level });
+        state.xp += 10;
+        saveState();
+        renderSavedList();
+        showToast("Aranan kelime deftere eklendi (+10 XP)");
+      } else {
+        showToast("Bu kelime zaten defterinde kayıtlı.");
+      }
+    }
 
-document.getElementById("listenPhrase").addEventListener("click", () => {
-  speak(DICT_PHRASES[dictIdx % DICT_PHRASES.length], 0.92);
-});
+    // AI Chat View
+    function sendPreset(text) {
+      document.getElementById("aiPromptInput").value = text;
+      sendAiChat();
+    }
 
-document.getElementById("listenSlow").addEventListener("click", () => {
-  speak(DICT_PHRASES[dictIdx % DICT_PHRASES.length], 0.65);
-});
+    async function sendAiChat() {
+      const input = document.getElementById("aiPromptInput");
+      const text = input.value.trim();
+      if (!text) return;
 
-document.getElementById("nextDictPhrase").addEventListener("click", () => {
-  dictIdx += 1;
-  document.getElementById("dictInput").value = "";
-  syncDictationPrompt();
-});
+      const box = document.getElementById("aiChatBox");
+      const btn = document.getElementById("btnSendAi");
 
-document.getElementById("checkDictBtn").addEventListener("click", () => {
-  const expected = DICT_PHRASES[dictIdx % DICT_PHRASES.length];
-  const typed = document.getElementById("dictInput").value;
-  if (normalizeText(typed) === normalizeText(expected)) {
-    addXP(12);
-    document.getElementById("dictFeedback").textContent = "Correct (+12 XP)";
-  } else {
-    document.getElementById("dictFeedback").textContent = "Expected: " + expected;
-  }
-});
+      const userDiv = document.createElement("div");
+      userDiv.className = "msg user";
+      userDiv.textContent = text;
+      box.appendChild(userDiv);
 
-document.getElementById("hearSpeakSample").addEventListener("click", () => {
-  speak("Merhaba, nasilsin?");
-});
+      input.value = "";
+      btn.disabled = true;
 
-document.getElementById("speakBtn").addEventListener("click", () => {
-  const out = document.getElementById("speechResult");
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    out.textContent = "Speech recognition unavailable in this browser.";
-    return;
-  }
-  try {
-    const rec = new SR();
-    rec.lang = "tr-TR";
-    out.textContent = "Listening...";
-    rec.onresult = e => {
-      out.textContent = 'Heard: "' + e.results[0][0].transcript + '" (+10 XP)';
-      addXP(10);
-    };
-    rec.onerror = () => {
-      out.textContent = "Microphone unavailable or denied.";
-    };
-    rec.start();
-  } catch (_) {
-    out.textContent = "Microphone could not start.";
-  }
-});
+      const aiDiv = document.createElement("div");
+      aiDiv.className = "msg ai";
+      aiDiv.innerHTML = `<span class="loader"></span> Düşünüyor...`;
+      box.appendChild(aiDiv);
+      box.scrollTop = box.scrollHeight;
 
-document.getElementById("readOpt1").addEventListener("click", () => {
-  addXP(5);
-  document.getElementById("readFeedback").textContent = "Correct (+5 XP)";
-});
+      const currentWord = getCurrentList()[state.index];
+      const sys = `Sen Türkçe, Makedonca ve İngilizce uzman bir dil koçusun. Kullanıcı şu an ${state.level} seviyesinde çalışıyor (ekrandaki aktif kelime: "${currentWord.tr}" - MK: "${currentWord.mk}" - EN: "${currentWord.en}"). Net, öğretici ve düzenli yanıt ver; Makedonca kelimelerde hem Kiril hem Latin okunuşunu parantez içinde göster.`;
 
-document.getElementById("readOpt2").addEventListener("click", () => {
-  document.getElementById("readFeedback").textContent = "Incorrect. Passage states: Ali sabah erken kalkar.";
-});
+      try {
+        const reply = await callGemini(text, sys, false);
+        aiDiv.textContent = reply;
+        state.xp += 10;
+        saveState();
+      } catch (e) {
+        aiDiv.textContent = "Hata: " + e.message;
+      } finally {
+        btn.disabled = false;
+        box.scrollTop = box.scrollHeight;
+      }
+    }
 
-document.getElementById("saveWriting").addEventListener("click", () => {
-  state.draft = document.getElementById("writing").value;
-  addXP(5);
-  document.getElementById("writingStatus").textContent = "Saved locally (+5 XP).";
-});
+    // Quiz Engine
+    async function loadQuizQuestion() {
+      const btn = document.getElementById("btnNewQuiz");
+      const qWord = document.getElementById("quizWord");
+      const qOpts = document.getElementById("quizOptions");
+      const qFeed = document.getElementById("quizFeedback");
 
-document.getElementById("startQuiz").addEventListener("click", () => {
-  quizIdx = 0;
-  showQuizQuestion();
-  document.getElementById("quizCard").scrollIntoView({ behavior: "smooth" });
-});
+      btn.disabled = true;
+      qFeed.textContent = "";
+      qOpts.innerHTML = `<div style="padding:12px 0; color:var(--text-muted);"><span class="loader"></span> ${state.level} seviyesinde soru hazırlanıyor...</div>`;
 
-document.getElementById("nextQuestion").addEventListener("click", () => {
-  quizIdx += 1;
-  showQuizQuestion();
-});
+      const prompt = `CEFR ${state.level} seviyesinde bir Türkçe kelime sorusu hazırla. Sadece JSON döndür:
+{
+  "word": "Türkçe kelime",
+  "question": "Bu kelimenin İngilizce ve Makedonca karşılığı hangisidir?",
+  "options": ["Seçenek A", "Seçenek B", "Seçenek C", "Seçenek D"],
+  "correctIndex": 0,
+  "explanation": "Kısa açıklama"
+}`;
 
-document.getElementById("clearMistakesBtn").addEventListener("click", () => {
-  state.mistakes = [];
-  saveState();
-});
+      try {
+        const raw = await callGemini(prompt, "Sen CEFR dil sınavı hazırlayıcısısın.", true);
+        const q = JSON.parse(raw.replace(/```json|```/g, "").trim());
+        qWord.textContent = q.word;
+        document.getElementById("quizPromptText").textContent = q.question;
+        qOpts.innerHTML = "";
 
-document.getElementById("openBuilderBtn").addEventListener("click", () => {
-  loadSentenceBuilder();
-  document.getElementById("builderCard").scrollIntoView({ behavior: "smooth" });
-});
+        q.options.forEach((opt, i) => {
+          const b = document.createElement("button");
+          b.className = "quiz-option";
+          b.textContent = opt;
+          b.onclick = () => {
+            const allBtns = qOpts.querySelectorAll(".quiz-option");
+            allBtns.forEach(x => x.disabled = true);
+            if (i === q.correctIndex) {
+              b.classList.add("correct");
+              qFeed.style.color = "var(--success)";
+              qFeed.textContent = "Doğru! +25 XP — " + q.explanation;
+              state.xp += 25;
+              state.lessons += 1;
+              saveState();
+            } else {
+              b.classList.add("wrong");
+              allBtns[q.correctIndex].classList.add("correct");
+              qFeed.style.color = "var(--danger)";
+              qFeed.textContent = "Yanlış. " + q.explanation;
+            }
+          };
+          qOpts.appendChild(b);
+        });
+      } catch (e) {
+        // Offline fallback from WORD_BANK
+        const list = getCurrentList();
+        const target = list[Math.floor(Math.random() * list.length)];
+        qWord.textContent = target.tr;
+        qOpts.innerHTML = "";
+        const choices = [
+          `${target.en} · ${target.mk}`,
+          "Bread · Леб (Leb)",
+          "Simple · Едноставен (Ednostaven)",
+          "Temporary · Привремен (Privremen)"
+        ].sort(() => Math.random() - 0.5);
 
-document.getElementById("nextBuilderBtn").addEventListener("click", () => {
-  builderIdx += 1;
-  loadSentenceBuilder();
-});
+        choices.forEach(c => {
+          const b = document.createElement("button");
+          b.className = "quiz-option";
+          b.textContent = c;
+          b.onclick = () => {
+            qOpts.querySelectorAll(".quiz-option").forEach(x => x.disabled = true);
+            if (c.startsWith(target.en)) {
+              b.classList.add("correct");
+              qFeed.style.color = "var(--success)";
+              qFeed.textContent = "Doğru! +25 XP";
+              state.xp += 25;
+              saveState();
+            } else {
+              b.classList.add("wrong");
+              qFeed.style.color = "var(--danger)";
+              qFeed.textContent = `Doğru cevap: ${target.en} · ${target.mk}`;
+            }
+          };
+          qOpts.appendChild(b);
+        });
+      } finally {
+        btn.disabled = false;
+      }
+    }
 
-document.getElementById("clearBuilderBtn").addEventListener("click", () => {
-  builderPicked = [];
-  renderSentenceBuilderChips();
-});
+    // Saved Words View
+    function renderSavedList() {
+      const container = document.getElementById("savedListContainer");
+      if (!state.saved.length) {
+        container.innerHTML = `<p style="font-size:13px; color:var(--text-muted);">Henüz kaydedilmiş kelime yok.</p>`;
+        return;
+      }
+      container.innerHTML = state.saved.map((w, idx) => `
+        <div class="saved-item">
+          <div>
+            <div style="font-weight:700; font-size:15px;">${w.tr} <span class="stat-tag">${w.level || "C2"}</span></div>
+            <div style="font-size:12.5px; color:var(--text-muted);">🇲🇰 ${w.mk} · 🇬🇧 ${w.en}</div>
+            <div style="font-size:12px; color:#9ca3af; margin-top:2px;">${w.def}</div>
+          </div>
+          <button class="btn-outline-sm" onclick="removeSavedWord(${idx})">Sil</button>
+        </div>
+      `).join("");
+    }
 
-document.getElementById("checkBuilderBtn").addEventListener("click", () => {
-  const targetStr = BUILDER_SENTENCES[builderIdx % BUILDER_SENTENCES.length].target.join(" ");
-  if (builderPicked.join(" ") === targetStr) {
-    addXP(15);
-    document.getElementById("builderFeedback").textContent = "Correct (+15 XP)";
-    speak(targetStr);
-  } else {
-    document.getElementById("builderFeedback").textContent = "Expected: " + targetStr;
-  }
-});
+    function removeSavedWord(idx) {
+      state.saved.splice(idx, 1);
+      saveState();
+      renderSavedList();
+      renderCurrentWord();
+    }
 
-document.getElementById("resetMatchBtn").addEventListener("click", () => {
-  initMatchPairs();
-  document.getElementById("matchCard").scrollIntoView({ behavior: "smooth" });
-});
+    function exportSavedWords() {
+      if (!state.saved.length) {
+        showToast("Kopyalanacak kelime yok.");
+        return;
+      }
+      const txt = state.saved.map(w => `${w.tr} | MK: ${w.mk} | EN: ${w.en} — ${w.def}`).join("
+");
+      navigator.clipboard.writeText(txt).then(() => showToast("Tüm kelime defteri kopyalandı!"));
+    }
 
-document.getElementById("shuffleMatchBtn").addEventListener("click", initMatchPairs);
+    // Navigation
+    function switchView(name) {
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById("view-" + name).classList.add("active");
+      document.getElementById("nav-" + name).classList.add("active");
 
-document.getElementById("resetData").addEventListener("click", () => {
-  ["ltr_lang","ltr_level","ltr_xp","ltr_lessons","ltr_qdone","ltr_qcorr","ltr_saved","ltr_mistakes","ltr_days","ltr_draft"]
-    .forEach(k => localStorage.removeItem(k));
+      if (name === "quiz" && !document.getElementById("quizOptions").children.length) {
+        loadQuizQuestion();
+      }
+      if (name === "saved") {
+        renderSavedList();
+      }
+    }
 
-  state = {
-    lang: "en",
-    level: "A1",
-    xp: 0,
-    lessonsDone: 0,
-    quizDone: 0,
-    quizCorrect: 0,
-    saved: [],
-    mistakes: [],
-    activeDays: [],
-    draft: ""
-  };
-  levelWordCursor = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 };
-  document.getElementById("writing").value = "";
-  applyLanguage("en");
-  setLevel("A1");
-  renderLessonsSection();
-  saveState();
-  showToast("Reset complete");
-});
+    // API Modal
+    function openApiModal() {
+      document.getElementById("apiKeyInput").value = state.apiKey;
+      document.getElementById("apiModal").classList.add("open");
+    }
 
-// Init
-document.getElementById("writing").value = state.draft;
-applyLanguage(state.lang);
-setLevel(state.level);
-renderGrammarSection();
-renderLessonsSection();
-renderFlashcard();
-showQuizQuestion();
-loadSentenceBuilder();
-initMatchPairs();
-syncDictationPrompt();
-updateUIStats();
-</script>
+    function closeApiModal() {
+      document.getElementById("apiModal").classList.remove("open");
+    }
+
+    function saveApiKey() {
+      const val = document.getElementById("apiKeyInput").value.trim();
+      if (!val) {
+        showToast("Geçerli bir API anahtarı gir.");
+        return;
+      }
+      state.apiKey = val;
+      localStorage.setItem("lex_gemini_key", val);
+      closeApiModal();
+      showToast("Gemini API anahtarı kaydedildi!");
+    }
+
+    function resetDefaultApiKey() {
+      state.apiKey = DEFAULT_API_KEY;
+      localStorage.setItem("lex_gemini_key", DEFAULT_API_KEY);
+      document.getElementById("apiKeyInput").value = DEFAULT_API_KEY;
+      showToast("Varsayılan API anahtarı yüklendi.");
+    }
+
+    // Init
+    updateStatsUI();
+    renderCurrentWord();
+    renderSavedList();
+  </script>
 </body>
 </html>
