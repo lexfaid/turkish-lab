@@ -1,296 +1,1337 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="tr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101827">
-  <meta name="description" content="A clean, interactive workspace for learning Turkish from A1 to C2.">
-  <title>LinguaTR — Learn Turkish</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Türkçe Çalışma Alanı — TR · MK · EN</title>
   <style>
-    :root{
-      --bg:#f4f6fb;--surface:#fff;--surface-soft:#f8f9fd;--ink:#172033;--muted:#778198;
-      --line:#e8ebf3;--navy:#101827;--navy-2:#1b2941;--primary:#6558e8;--primary-soft:#efedff;
-      --mint:#dff7ef;--green:#168768;--orange:#ffb45c;--red:#d95c68;--shadow:0 14px 40px rgba(31,43,75,.08);
-      --radius:22px;
+    :root {
+      --bg: #0b0c10;
+      --surface: #12141c;
+      --surface-2: #181b26;
+      --surface-3: #1f2332;
+      --border: #262b3d;
+      --border-light: #343b54;
+      --text: #f3f5f9;
+      --text-muted: #939bb2;
+      --accent: #ffffff;
+      --accent-text: #0b0c10;
+      --primary: #6366f1;
+      --primary-soft: rgba(99, 102, 241, 0.14);
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.14);
+      --danger: #ef4444;
+      --radius: 16px;
     }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.5;padding-bottom:88px}
-    button,input,select,textarea{font:inherit}
-    button{cursor:pointer;-webkit-tap-highlight-color:transparent}
-    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(101,88,232,.25);outline-offset:2px}
-    .app{width:min(1120px,100%);margin:0 auto;padding:24px 26px 30px}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:26px}
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .brand-mark{width:44px;height:44px;border-radius:15px;background:linear-gradient(140deg,#7568f3,#4b43c9);display:grid;place-items:center;color:#fff;font-size:19px;font-weight:850;box-shadow:0 8px 18px rgba(101,88,232,.24)}
-    .brand-name{font-size:19px;font-weight:850;letter-spacing:-.6px}.brand-sub{font-size:11px;color:var(--muted);margin-top:1px}
-    .top-controls{display:flex;align-items:center;gap:9px}
-    .select{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;color:var(--ink);font-size:13px;font-weight:700;max-width:150px}
-    .hero{position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(115deg,#131f34 0%,#202d4a 62%,#5148b7 120%);color:#fff;padding:28px 30px;margin-bottom:18px;box-shadow:0 16px 35px rgba(22,31,55,.13)}
-    .hero:after{content:"";position:absolute;width:260px;height:260px;border:1px solid rgba(255,255,255,.12);border-radius:50%;right:-70px;top:-115px;box-shadow:0 0 0 35px rgba(255,255,255,.035),0 0 0 72px rgba(255,255,255,.025)}
-    .hero-content{position:relative;z-index:1;max-width:650px}.eyebrow{font-size:11px;letter-spacing:1.7px;text-transform:uppercase;color:#c8caff;font-weight:800}
-    .hero h1{font-size:clamp(25px,4vw,38px);letter-spacing:-1.2px;line-height:1.12;margin:10px 0 9px}.hero p{color:#d4d9e8;font-size:14px;max-width:510px;margin:0 0 19px}
-    .hero-actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:10px 15px;font-size:13px;font-weight:800;transition:transform .15s,box-shadow .15s,background .15s}.btn:active{transform:scale(.98)}
-    .btn-white{background:#fff;color:#24264a}.btn-ghost{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff}.btn-primary{background:var(--primary);color:#fff;box-shadow:0 7px 15px rgba(101,88,232,.18)}.btn-soft{background:var(--primary-soft);color:var(--primary)}.btn-light{background:var(--surface-soft);border:1px solid var(--line);color:var(--ink)}.btn-danger{background:#fff0f1;color:var(--red)}.btn-small{padding:8px 11px;font-size:12px;border-radius:10px}
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 17px;box-shadow:0 4px 15px rgba(31,43,75,.025)}.stat-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;font-weight:750}.stat-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:var(--primary-soft);color:var(--primary);font-size:15px}.stat-value{font-size:27px;font-weight:850;letter-spacing:-.8px;margin-top:6px;line-height:1.15}.stat-note{font-size:11px;color:var(--muted);margin-top:4px}
-    .page{display:none;animation:appear .22s ease}.page.active{display:block}@keyframes appear{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
-    .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 0 12px}.section-head h2{margin:0;font-size:18px;letter-spacing:-.45px}.section-head p{margin:3px 0 0;color:var(--muted);font-size:12px}.section-kicker{font-size:10px;color:var(--primary);font-weight:850;letter-spacing:1.3px;text-transform:uppercase;margin-bottom:4px}
-    .home-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:16px;align-items:stretch}.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:0 4px 18px rgba(31,43,75,.025)}
-    .word-panel{background:linear-gradient(160deg,#fff,#fbfaff);position:relative;overflow:hidden}.word-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.level-chip{display:inline-flex;align-items:center;border-radius:999px;padding:6px 10px;background:var(--primary-soft);color:var(--primary);font-size:10px;letter-spacing:.8px;font-weight:900}.word-count{font-size:11px;color:var(--muted);font-weight:700}
-    .word-title{font-size:clamp(29px,5vw,42px);letter-spacing:-1.2px;font-weight:900;margin:17px 0 2px;line-height:1.08}.word-pos{font-size:12px;color:var(--muted);margin-bottom:15px}.translations{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px}.translation{border:1px solid var(--line);background:#fff;border-radius:13px;padding:10px 12px;min-width:0}.translation small{display:block;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;font-weight:850;margin-bottom:3px}.translation strong{font-size:14px;overflow-wrap:anywhere}.definition{background:#f6f5ff;border-left:3px solid var(--primary);border-radius:0 11px 11px 0;padding:10px 12px;color:#45436a;font-size:13px;margin-bottom:12px}.example{background:#f8f9fc;border:1px solid var(--line);border-radius:13px;padding:12px 13px;margin-bottom:14px}.example strong{display:block;font-size:13px;margin-bottom:4px}.example span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.word-actions{display:flex;gap:8px;flex-wrap:wrap}
-    .side-stack{display:flex;flex-direction:column;gap:13px}.mini-panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:17px;flex:1}.mini-title{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:850;margin-bottom:8px}.mini-icon{width:33px;height:33px;border-radius:11px;background:#fff3e5;color:#c78028;display:grid;place-items:center}.mini-panel p{font-size:12px;color:var(--muted);margin:0 0 12px}.progress-line{height:7px;background:#eef0f7;border-radius:20px;overflow:hidden;margin:10px 0 6px}.progress-fill{height:100%;background:linear-gradient(90deg,#6558e8,#a49bff);border-radius:20px;width:0%;transition:width .25s}.progress-caption{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;font-weight:700}
-    .search-row{display:flex;gap:9px;margin-bottom:13px}.search{flex:1;min-width:0;background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 14px;font-size:13px;color:var(--ink)}.search::placeholder,textarea::placeholder{color:#a3aabd}.filter-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.filter-chip{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:7px 11px;font-size:11px;font-weight:800}.filter-chip.active{background:var(--primary-soft);border-color:#d8d4ff;color:var(--primary)}
-    .word-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.word-row{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;justify-content:space-between;gap:10px;align-items:center;min-width:0}.word-row-main{min-width:0}.word-row h3{font-size:15px;margin:0 0 2px;letter-spacing:-.2px}.word-row p{font-size:11px;color:var(--muted);margin:0;overflow-wrap:anywhere}.word-row-meta{font-size:9px;color:var(--primary);font-weight:850;letter-spacing:.7px;text-transform:uppercase;margin-bottom:4px}.word-row-actions{display:flex;gap:5px;flex-shrink:0}.icon-btn{width:34px;height:34px;border:1px solid var(--line);background:#fff;border-radius:10px;color:#6f7890;display:grid;place-items:center;font-size:15px}.icon-btn.saved{color:var(--primary);background:var(--primary-soft);border-color:#ddd9ff}.empty{grid-column:1/-1;text-align:center;padding:34px 15px;color:var(--muted);border:1px dashed #d9deea;border-radius:16px;font-size:13px}
-    .practice-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:15px}.flashcard-wrap{perspective:1000px;width:100%;display:block;border:0;background:transparent;padding:0;text-align:left}.flashcard{width:100%;min-height:265px;border:0;background:transparent;padding:0;text-align:left;position:relative;transform-style:preserve-3d;transition:transform .5s}.flashcard.flipped{transform:rotateY(180deg)}.flash-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:23px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(145deg,#18243b,#293c60);color:#fff;box-shadow:var(--shadow)}.flash-back{transform:rotateY(180deg);background:linear-gradient(145deg,#5148bf,#786be9)}.flash-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#c8caff;font-weight:850}.flash-word{font-size:34px;font-weight:900;margin:12px 0 6px;letter-spacing:-1px}.flash-hint{color:#d7dbee;font-size:12px}.flash-translation{font-size:20px;font-weight:850;margin:9px 0}.flash-example{font-size:12px;color:#e5e7ff;max-width:330px}.flash-controls{display:flex;justify-content:center;gap:8px;margin-top:13px}.lesson-list{display:flex;flex-direction:column;gap:9px}.lesson{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fff}.lesson-top{display:flex;justify-content:space-between;gap:10px;align-items:start}.lesson h3{font-size:13px;margin:0 0 3px}.lesson p{font-size:11px;color:var(--muted);margin:0}.lesson.done{background:#f2fbf7;border-color:#d8f0e6}.lesson.done .lesson-status{color:var(--green)}.lesson-status{font-size:10px;color:var(--primary);font-weight:850;white-space:nowrap}
-    .quiz-card{max-width:720px;margin:0 auto}.quiz-progress{height:6px;background:#eef0f7;border-radius:10px;overflow:hidden;margin:13px 0 20px}.quiz-progress>span{display:block;height:100%;background:var(--primary);width:0;transition:width .2s}.quiz-question{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:1px;text-transform:uppercase}.quiz-word{font-size:clamp(28px,5vw,40px);font-weight:900;letter-spacing:-1px;margin:8px 0 18px}.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:9px}.quiz-option{border:1px solid var(--line);background:#fff;border-radius:13px;padding:13px;text-align:left;font-size:13px;font-weight:750;color:var(--ink);min-height:49px}.quiz-option:hover:not(:disabled){border-color:#bdb7ff;background:#faf9ff}.quiz-option.correct{background:#e8f8f1;border-color:#8bd5b8;color:#126c50}.quiz-option.wrong{background:#fff0f1;border-color:#f2b4bb;color:#b23f4e}.quiz-feedback{min-height:24px;margin-top:13px;font-size:12px;font-weight:800}.quiz-footer{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:13px}.notebook-list{display:flex;flex-direction:column;gap:9px}.saved-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);border-radius:14px;padding:13px;background:#fff}.saved-row strong{font-size:14px}.saved-row p{margin:2px 0 0;font-size:11px;color:var(--muted)}
-    .writing-box textarea{width:100%;min-height:145px;resize:vertical;border:1px solid var(--line);border-radius:13px;padding:13px;color:var(--ink);background:#fff;font-size:13px;line-height:1.6}.writing-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px;color:var(--muted);font-size:11px}
-    .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:flex;justify-content:center;gap:8px;padding:9px 12px calc(9px + env(safe-area-inset-bottom))}.nav-btn{min-width:82px;border:0;background:transparent;color:#8992a7;border-radius:13px;padding:7px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:800}.nav-btn .nav-ico{font-size:17px;line-height:1.15}.nav-btn.active{color:var(--primary);background:var(--primary-soft)}
-    .toast{position:fixed;left:50%;bottom:100px;transform:translate(-50%,10px);background:#172239;color:#fff;border-radius:999px;padding:10px 16px;font-size:12px;font-weight:750;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:100;max-width:90vw;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(12,18,32,.55);z-index:80;display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.open{display:flex}.modal{background:#fff;width:min(440px,100%);border-radius:22px;padding:22px;box-shadow:0 22px 70px rgba(0,0,0,.2)}.modal h2{font-size:19px;margin:0 0 5px}.modal p{font-size:12px;color:var(--muted);margin:0 0 17px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}
-    .footer{text-align:center;color:#9aa2b5;font-size:10px;padding:24px 0 5px}
-    @media(min-width:900px){body{padding-bottom:25px}.bottom-nav{position:static;background:transparent;border:0;backdrop-filter:none;justify-content:flex-start;padding:0 0 18px;gap:7px}.nav-btn{flex-direction:row;min-width:0;padding:9px 14px;font-size:12px;gap:7px}.nav-btn .nav-ico{font-size:15px}.topbar{margin-bottom:20px}.hero{padding:34px 38px}.footer{padding-bottom:10px}}
-    @media(max-width:700px){.app{padding:17px 14px 22px}.topbar{margin-bottom:17px}.brand-sub{display:none}.brand-mark{width:39px;height:39px}.brand-name{font-size:17px}.select{padding:9px 9px;font-size:11px;max-width:122px}.hero{padding:24px 21px;border-radius:23px}.hero p{font-size:12px}.stats{grid-template-columns:repeat(2,1fr);gap:9px}.stat{padding:13px}.stat-value{font-size:24px}.home-grid,.practice-grid{grid-template-columns:1fr}.side-stack{display:grid;grid-template-columns:1fr 1fr}.panel{padding:16px}.word-list{grid-template-columns:1fr}.word-row{padding:12px}.section-head{margin-top:21px}.bottom-nav{justify-content:space-around;gap:0;padding-left:5px;padding-right:5px}.nav-btn{min-width:0;flex:1;padding:7px 3px;font-size:9px}.quiz-options{grid-template-columns:1fr}.flashcard{min-height:245px}}
-    @media(max-width:380px){.top-controls{gap:5px}.select{max-width:108px}.side-stack{grid-template-columns:1fr}.word-actions .btn{flex:1}.hero h1{font-size:25px}}
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      padding-bottom: 92px;
+    }
+
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 20px 16px;
+    }
+
+    .header {
+      margin-bottom: 18px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .btn-key-subtle {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .controls-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .select-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .stat-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .stat-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .word-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .level-pill {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .card-actions-top {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-outline-sm {
+      background: var(--surface-2);
+      border: 1px solid var(--border-light);
+      color: var(--text);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-outline-sm.accent-soft {
+      background: var(--primary-soft);
+      border-color: rgba(99, 102, 241, 0.45);
+      color: #c7d2fe;
+    }
+
+    .word-main {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .word-pos {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .trilingual-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .lang-pill {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .lang-pill-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .lang-pill-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .definition-box {
+      font-size: 13.5px;
+      color: #d1d5db;
+      background: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid var(--primary);
+      padding: 8px 12px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 12px;
+    }
+
+    .example-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 14px;
+      margin-bottom: 14px;
+    }
+
+    .example-tr {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .example-sub {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      padding: 10px 16px;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 15px;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-secondary.saved {
+      border-color: var(--success);
+      color: var(--success);
+      background: var(--success-soft);
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .input-field {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 11px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+    }
+
+    .ai-presets {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      scrollbar-width: none;
+    }
+
+    .ai-presets::-webkit-scrollbar {
+      display: none;
+    }
+
+    .preset-chip {
+      white-space: nowrap;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .chat-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      max-height: 330px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .msg {
+      padding: 10px 13px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      max-width: 88%;
+      white-space: pre-wrap;
+    }
+
+    .msg.user {
+      background: var(--primary);
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.ai {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .quiz-option {
+      width: 100%;
+      text-align: left;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .quiz-option.correct {
+      background: var(--success-soft);
+      border-color: var(--success);
+      color: #6ee7b7;
+    }
+
+    .quiz-option.wrong {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: var(--danger);
+      color: #fca5a5;
+    }
+
+    .saved-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .view { display: none; }
+    .mini-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .mini-actions button, .topic-chip { background:var(--surface-2); color:var(--text); border:1px solid var(--border-light); border-radius:10px; padding:9px 12px; font-size:12px; font-weight:650; }
+    .topic-chip.active { background:var(--primary-soft); border-color:var(--primary); }
+    .practice-word { font-size:28px; font-weight:800; margin:12px 0; }
+    .muted { color:var(--text-muted); font-size:12px; }
+    .progress-line { height:7px; background:var(--surface-3); border-radius:9px; overflow:hidden; margin-top:8px; }
+    .progress-line span { display:block; height:100%; width:0; background:var(--primary); }
+    .writing-hints { color:var(--text-muted); font-size:12px; margin:8px 0; line-height:1.8; }
+    .text-area { width:100%; min-height:100px; background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:12px; font:inherit; }
+
+
+    .view.active {
+      display: block;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(18, 20, 28, 0.94);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 10px;
+    }
+
+    .nav-btn.active {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .nav-icon {
+      font-size: 16px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 200;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 18px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface-3);
+      border: 1px solid var(--border-light);
+      color: var(--text);
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
-  <main class="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">TR</div>
-        <div><div class="brand-name">LinguaTR</div><div class="brand-sub" data-i18n="brandSub">A practical Turkish learning space</div></div>
+
+  <div id="toast" class="toast"></div>
+
+  <div class="container">
+    <div class="header">
+      <div class="header-top">
+        <h1>Türkçe Çalışma Alanı</h1>
+        <button type="button" class="btn-key-subtle" id="btnOpenKey">Anahtar</button>
       </div>
-      <div class="top-controls">
-        <select id="uiLanguage" class="select" aria-label="Interface language">
-          <option value="en">English</option><option value="tr">Türkçe</option><option value="mk">Македонски</option>
+      <p>Seviye seçerek Türkçe, Makedonca ve İngilizce kelime çalış.</p>
+    </div>
+
+    <div id="view-home" class="view active">
+      <div class="controls-row">
+        <select id="levelSelect" class="select-box">
+          <option value="A1">A1 · Başlangıç</option>
+          <option value="A2">A2 · Temel</option>
+          <option value="B1">B1 · Orta</option>
+          <option value="B2">B2 · Orta Üstü</option>
+          <option value="C1">C1 · İleri</option>
+          <option value="C2" selected>C2 · Akademik</option>
         </select>
-        <select id="levelSelect" class="select" aria-label="Turkish level">
-          <option value="A1">A1 · Beginner</option><option value="A2">A2 · Elementary</option><option value="B1">B1 · Intermediate</option><option value="B2">B2 · Upper intermediate</option><option value="C1">C1 · Advanced</option><option value="C2">C2 · Proficient</option>
+        <select id="categorySelect" class="select-box">
+          <option value="all">Tüm kategoriler</option><option value="Selamlaşma">Selamlaşma</option><option value="Yemek">Yemek</option><option value="Seyahat">Seyahat</option><option value="Alışveriş">Alışveriş</option><option value="Günlük hayat">Günlük hayat</option><option value="Okul">Okul</option>
+        </select>
+        <select id="focusSelect" class="select-box">
+          <option value="all">TR · MK · EN</option>
+          <option value="mk">Makedonca (MK)</option>
+          <option value="en">İngilizce (EN)</option>
         </select>
       </div>
-    </header>
 
-    <nav class="bottom-nav" aria-label="Main navigation">
-      <button class="nav-btn active" data-page="home"><span class="nav-ico">⌂</span><span data-i18n="navHome">Home</span></button>
-      <button class="nav-btn" data-page="words"><span class="nav-ico">▤</span><span data-i18n="navWords">Words</span></button>
-      <button class="nav-btn" data-page="practice"><span class="nav-ico">✦</span><span data-i18n="navPractice">Practice</span></button>
-      <button class="nav-btn" data-page="quiz"><span class="nav-ico">◎</span><span data-i18n="navQuiz">Quiz</span></button>
-      <button class="nav-btn" data-page="saved"><span class="nav-ico">▣</span><span data-i18n="navSaved">Notebook</span></button>
-    </nav>
-
-    <section id="page-home" class="page active">
-      <section class="hero">
-        <div class="hero-content">
-          <div class="eyebrow" data-i18n="heroEyebrow">YOUR TURKISH JOURNEY</div>
-          <h1 data-i18n="heroTitle">A little Turkish, every day.</h1>
-          <p data-i18n="heroText">Build your vocabulary, practise useful grammar and track your progress from A1 to C2.</p>
-          <div class="hero-actions"><button class="btn btn-white" data-go="words" data-i18n="exploreWords">Explore words</button><button class="btn btn-ghost" data-go="practice" data-i18n="startPractice">Start practice</button></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-title">Kayıtlı kelime</span>
+            <span class="stat-tag">WB</span>
+          </div>
+          <div class="stat-value" id="statSaved">0</div>
+          <div class="stat-sub">Kelime defteri</div>
         </div>
-      </section>
-
-      <section class="stats" aria-label="Your progress">
-        <div class="stat"><div class="stat-head"><span data-i18n="statSaved">Saved words</span><span class="stat-icon">▣</span></div><div class="stat-value" id="statSaved">0</div><div class="stat-note" data-i18n="statSavedNote">In your notebook</div></div>
-        <div class="stat"><div class="stat-head"><span data-i18n="statXP">Total XP</span><span class="stat-icon">✦</span></div><div class="stat-value" id="statXP">0</div><div class="stat-note" data-i18n="statXPNote">Learning points</div></div>
-        <div class="stat"><div class="stat-head"><span data-i18n="statDays">Study days</span><span class="stat-icon">◷</span></div><div class="stat-value" id="statDays">0</div><div class="stat-note" data-i18n="statDaysNote">Days you practised</div></div>
-        <div class="stat"><div class="stat-head"><span data-i18n="statLessons">Lessons done</span><span class="stat-icon">✓</span></div><div class="stat-value" id="statLessons">0</div><div class="stat-note" data-i18n="statLessonsNote">Completed lessons</div></div>
-      </section>
-
-      <div class="home-grid">
-        <article class="panel word-panel">
-          <div class="word-top"><span class="level-chip" id="dailyLevel">A1 · DAILY WORD</span><span class="word-count" id="dailyCount">01 / 08</span></div>
-          <div class="word-title" id="dailyWord">Merhaba</div><div class="word-pos" id="dailyPos">Expression · Greeting</div>
-          <div class="translations"><div class="translation"><small data-i18n="english">English</small><strong id="dailyEn">Hello</strong></div><div class="translation"><small data-i18n="macedonian">Macedonian</small><strong id="dailyMk">Здраво</strong></div></div>
-          <div class="definition" id="dailyMeaning">A common greeting when meeting someone.</div>
-          <div class="example"><strong id="dailyExampleTr">Merhaba, nasılsın?</strong><span id="dailyExampleEn">Hello, how are you?</span><span id="dailyExampleMk">Здраво, како си?</span></div>
-          <div class="word-actions"><button class="btn btn-primary" id="btnSaveDaily" data-i18n="saveWord">Save word</button><button class="btn btn-light" id="btnSpeakDaily" data-i18n="listen">Listen</button><button class="btn btn-light" id="btnNextDaily" data-i18n="nextWord">Next word →</button></div>
-        </article>
-        <div class="side-stack">
-          <article class="mini-panel"><div class="mini-title"><span class="mini-icon">✦</span><span data-i18n="dailyGoal">Daily goal</span></div><p data-i18n="goalText">Save 3 words today to build your vocabulary habit.</p><div class="progress-line"><div class="progress-fill" id="goalProgress"></div></div><div class="progress-caption"><span id="goalCaption">0 / 3 words</span><span data-i18n="today">Today</span></div></article>
-          <article class="mini-panel"><div class="mini-title"><span class="mini-icon" style="background:#eaf8f2;color:#168768">⌁</span><span data-i18n="quickTip">Quick tip</span></div><p data-i18n="tipText">Say each new word aloud and use it in a short sentence. Repetition helps it stick.</p><button class="btn btn-soft btn-small" data-go="practice" data-i18n="tryFlashcards">Try flashcards</button></article>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-title">Aktif gün</span>
+            <span class="stat-tag">LOG</span>
+          </div>
+          <div class="stat-value" id="statDays">1</div>
+          <div class="stat-sub">Çalışma günü</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-title">Kazanılan XP</span>
+            <span class="stat-tag">XP</span>
+          </div>
+          <div class="stat-value" id="statXp">145</div>
+          <div class="stat-sub">Toplam puan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-title">Biten ders</span>
+            <span class="stat-tag">MOD</span>
+          </div>
+          <div class="stat-value" id="statLessons">4</div>
+          <div class="stat-sub">Tamamlanan modül</div>
         </div>
       </div>
-    </section>
 
-    <section id="page-words" class="page">
-      <div class="section-head"><div><div class="section-kicker" data-i18n="vocabKicker">BUILD YOUR VOCABULARY</div><h2 data-i18n="vocabTitle">Turkish word library</h2><p data-i18n="vocabText">Search Turkish words or their English and Macedonian meanings.</p></div><span class="level-chip" id="wordLevelLabel">A1</span></div>
-      <div class="panel">
-        <div class="search-row"><input id="wordSearch" class="search" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="Search a word or meaning..."><button id="clearSearch" class="btn btn-light" data-i18n="clear">Clear</button></div>
-        <div class="filter-row" id="wordFilters"><button class="filter-chip active" data-filter="all" data-i18n="allWords">All words</button><button class="filter-chip" data-filter="saved" data-i18n="onlySaved">Saved only</button></div>
-        <div class="section-head" style="margin:4px 0 12px"><p id="wordResultsLabel">8 words</p><span class="word-count" data-i18n="cefrLevel">CEFR LEVEL</span></div>
-        <div id="wordList" class="word-list"></div>
+      <div class="card">
+        <div class="word-card-header">
+          <span class="level-pill" id="cardLevelLabel">C2 WORD (1/8)</span>
+          <div class="card-actions-top">
+            <button type="button" class="btn-outline-sm accent-soft" id="btnAiNewWord">Yeni Kelime</button>
+            <button type="button" class="btn-outline-sm" id="btnNextWord">Sonraki</button>
+          </div>
+        </div>
+
+        <div class="word-main" id="wordTr">Müstesna</div>
+        <div class="word-pos" id="wordMeta">Sıfat · Akademik</div>
+
+        <div class="trilingual-grid">
+          <div class="lang-pill" id="pillMk">
+            <div class="lang-pill-label">Makedonca</div>
+            <div class="lang-pill-val" id="wordMk">Исклучителен (Isklučitelen)</div>
+          </div>
+          <div class="lang-pill" id="pillEn">
+            <div class="lang-pill-label">İngilizce</div>
+            <div class="lang-pill-val" id="wordEn">Exceptional</div>
+          </div>
+        </div>
+
+        <div class="definition-box" id="wordDef">
+          Benzerlerinden üstünlüğü veya farkıyla ayrılan, seçkin.
+        </div>
+
+        <div class="example-box">
+          <div class="example-tr" id="exTr">Bu yapının mimarisi müstesna bir örnektir.</div>
+          <div class="example-sub" id="exMk">Архитектурата на оваа градба е исклучителен пример.</div>
+          <div class="example-sub" id="exEn">The architecture of this building is an exceptional example.</div>
+        </div>
+
+        <div class="action-buttons">
+          <button type="button" class="btn-primary" id="btnSpeakWord">Dinle</button><button type="button" class="btn-secondary" id="btnSpeakSlow">Yavaş 0.75×</button>
+          <button type="button" class="btn-secondary" id="btnSaveWord">Kaydet</button>
+          <button type="button" class="btn-secondary" id="btnCopyWord">Kopyala</button>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <section id="page-practice" class="page">
-      <div class="section-head"><div><div class="section-kicker" data-i18n="practiceKicker">LEARN BY DOING</div><h2 data-i18n="practiceTitle">Practice room</h2><p data-i18n="practiceText">Review words with flashcards and complete short grammar lessons.</p></div></div>
-      <div class="practice-grid">
-        <article class="panel"><div class="section-head" style="margin:0 0 13px"><div><h2 data-i18n="flashcards">Flashcards</h2><p data-i18n="flashcardHint">Tap the card to reveal the answer.</p></div><span class="level-chip" id="flashLevel">A1</span></div>
-          <button class="flashcard-wrap" id="flashcardButton" aria-label="Flip flashcard"><div class="flashcard" id="flashcard"><div class="flash-face"><span class="flash-label" data-i18n="turkishWord">TURKISH WORD</span><div class="flash-word" id="flashWord">Merhaba</div><span class="flash-hint" data-i18n="tapReveal">Tap to reveal meaning</span></div><div class="flash-face flash-back"><span class="flash-label" data-i18n="meaning">MEANING</span><div class="flash-translation" id="flashEn">Hello</div><div class="flash-example" id="flashExample">Merhaba, nasılsın?</div></div></div></button>
-          <div class="flash-controls"><button class="btn btn-light" id="flashPrev" data-i18n="previous">← Previous</button><button class="btn btn-primary" id="flashNext" data-i18n="nextCard">Next card →</button></div>
-        </article>
-        <article class="panel"><div class="section-head" style="margin:0 0 13px"><div><h2 data-i18n="grammarLessons">Grammar lessons</h2><p data-i18n="grammarHint">Short topics for your selected level.</p></div></div><div class="lesson-list" id="lessonList"></div></article>
+    <div id="view-ai" class="view">
+      <div class="card">
+        <div class="section-title">
+          <span>Kelime & Çeviri</span>
+        </div>
+
+        <div class="ai-presets">
+          <button type="button" class="preset-chip" data-prompt="Bana C2 seviyesinde 5 akademik Türkçe kelime ver; Makedonca ve İngilizce karşılıklarıyla yaz.">C2 Kelimeler</button>
+          <button type="button" class="preset-chip" data-prompt="Günlük hayatta sık kullanılan 5 Makedonca ifadeyi Türkçe ve İngilizce karşılıklarıyla yaz.">Makedonca İfadeler</button>
+          <button type="button" class="preset-chip" data-prompt="Ekrandaki kelimeyi içeren bir cümle kur ve Türkçe, Makedonca, İngilizce olarak yaz.">Örnek Cümle</button>
+        </div>
+
+        <div class="chat-box" id="aiChatBox">
+          <div class="msg ai">Kelime veya cümle yaz; Türkçe, Makedonca ve İngilizce karşılıklarını göstereyim.</div>
+        </div>
+
+        <div class="search-bar" style="margin-bottom:0;">
+          <input type="text" id="aiPromptInput" class="input-field" placeholder="Kelime veya cümle yaz..." />
+          <button type="button" class="btn-primary" id="btnSendAi">Gönder</button>
+        </div>
       </div>
-      <div class="section-head"><div><div class="section-kicker" data-i18n="writingKicker">PUT IT INTO WORDS</div><h2 data-i18n="writingTitle">Writing practice</h2><p data-i18n="writingText">Write a few sentences in Turkish. Your draft stays on this device.</p></div></div>
-      <article class="panel writing-box"><div class="lesson-top"><div><div class="word-row-meta" data-i18n="writingPrompt">TODAY'S PROMPT</div><h3 id="writingPromptText" style="font-size:15px;margin:3px 0 13px">Kendini tanıt. (Introduce yourself.)</h3></div><button class="btn btn-light btn-small" id="newPrompt" data-i18n="anotherPrompt">Another prompt</button></div><textarea id="writingDraft" data-i18n-placeholder="writingPlaceholder" placeholder="Write your Turkish sentences here..."></textarea><div class="writing-meta"><span id="wordCount">0 words</span><button class="btn btn-primary btn-small" id="saveDraft" data-i18n="saveDraft">Save draft</button></div></article>
-    </section>
+    </div>
 
-    <section id="page-quiz" class="page">
-      <div class="section-head"><div><div class="section-kicker" data-i18n="quizKicker">CHECK WHAT YOU KNOW</div><h2 data-i18n="quizTitle">Quick vocabulary quiz</h2><p data-i18n="quizText">Choose the correct meaning of the Turkish word.</p></div></div>
-      <article class="panel quiz-card">
-        <div class="word-top"><span class="level-chip" id="quizLevel">A1 · QUIZ</span><span class="word-count" id="quizCounter">1 / 10</span></div>
-        <div class="quiz-progress"><span id="quizProgress"></span></div>
-        <div class="quiz-question" data-i18n="chooseMeaning">CHOOSE THE CORRECT MEANING</div><div class="quiz-word" id="quizWord">Merhaba</div>
-        <div class="quiz-options" id="quizOptions"></div><div class="quiz-feedback" id="quizFeedback" aria-live="polite"></div>
-        <div class="quiz-footer"><span class="word-count" id="quizScore">0 correct</span><button class="btn btn-primary" id="nextQuestion" disabled data-i18n="nextQuestion">Next question →</button></div>
-      </article>
-    </section>
+    <div id="view-practice" class="view">
+      <div class="card">
+        <div class="section-title"><span>Akıllı Kelime Tekrarı</span><span class="stat-tag" id="dueCount">0 hazır</span></div>
+        <p class="muted">Kaydettiğin kelimelerden tekrar zamanı gelenler önce gösterilir.</p>
+        <div class="practice-word" id="reviewFront">Tekrar için defterine kelime ekle</div>
+        <div id="reviewBack" class="definition-box" hidden></div>
+        <div class="mini-actions"><button id="btnReveal">Cevabı göster</button><button id="btnAgain" disabled>Tekrar sor</button><button id="btnKnown" disabled>Hatırladım</button><button id="btnEasy" disabled>Çok kolay</button></div>
+      </div>
+      <div class="card">
+        <div class="section-title"><span>Türkçe Ekler ve Ünlü Uyumu</span></div>
+        <p id="grammarQuestion">“Ev” kelimesine bulunma hâli eki getir: Ev…</p>
+        <div id="grammarOptions" class="mini-actions"></div><p id="grammarFeedback" class="muted"></p>
+      </div>
+      <div class="card">
+        <div class="section-title"><span>Yazma Pratiği</span><button id="btnWritingTopic" class="btn-outline-sm">Yeni konu</button></div>
+        <p id="writingTopic">Kendini tanıt.</p><div class="writing-hints" id="writingHints">İpuçları: ad · yaş · yaşadığın şehir · hobiler</div>
+        <textarea id="writingAnswer" class="text-area" placeholder="Türkçe cevabını buraya yaz..."></textarea>
+        <p class="muted" id="writingTemplate">Örnek başlangıç: Merhaba, benim adım ...</p>
+      </div>
+    </div>
 
-    <section id="page-saved" class="page">
-      <div class="section-head"><div><div class="section-kicker" data-i18n="notebookKicker">YOUR PERSONAL COLLECTION</div><h2 data-i18n="notebookTitle">My notebook</h2><p data-i18n="notebookText">Words you save are kept in this browser on this device.</p></div><button class="btn btn-light btn-small" id="exportSaved" data-i18n="export">Export</button></div>
-      <article class="panel"><div class="section-head" style="margin:0 0 12px"><h2 style="font-size:15px"><span data-i18n="savedWords">Saved words</span> · <span id="savedCount">0</span></h2><button class="btn btn-danger btn-small" id="clearSaved" data-i18n="clearAll">Clear all</button></div><div class="notebook-list" id="savedList"></div></article>
-    </section>
-    <footer class="footer" data-i18n="footer">Your progress is saved locally in this browser. No account required.</footer>
-  </main>
+    <div id="view-quiz" class="view">
+      <div class="card">
+        <div class="section-title">
+          <span>Seviye Testi (<span id="quizLevelTag">C2</span>)</span>
+          <button type="button" class="btn-outline-sm accent-soft" id="btnNewQuiz">Yeni Soru</button>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;" id="quizPromptText">
+          Doğru karşılığı seç:
+        </p>
+        <div class="word-main" id="quizWord" style="font-size:26px; margin-bottom:14px;">Tezahür</div>
+        <div id="quizOptions"></div>
+        <div id="quizFeedback" style="font-size:13px; margin-top:10px; font-weight:600;"></div>
+      </div>
+    </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <div class="modal-backdrop" id="wordModal" role="dialog" aria-modal="true" aria-labelledby="modalWord"><div class="modal"><div class="word-top"><span class="level-chip" id="modalLevel">A1</span><button class="icon-btn" id="closeModal" aria-label="Close">×</button></div><h2 id="modalWord" style="font-size:29px;margin-top:13px">Merhaba</h2><p id="modalPos">Expression · Greeting</p><div class="translations"><div class="translation"><small>English</small><strong id="modalEn"></strong></div><div class="translation"><small>Macedonian</small><strong id="modalMk"></strong></div></div><div class="definition" id="modalMeaning"></div><div class="example"><strong id="modalExampleTr"></strong><span id="modalExampleEn"></span><span id="modalExampleMk"></span></div><div class="modal-actions"><button class="btn btn-light" id="modalSpeak" data-i18n="listen">Listen</button><button class="btn btn-primary" id="modalSave" data-i18n="saveWord">Save word</button></div></div></div>
+    <div id="view-saved" class="view">
+      <div class="card">
+        <div class="section-title">
+          <span>Defterim (<span id="savedCountHeader">0</span>)</span>
+          <button type="button" class="btn-outline-sm" id="btnExportSaved">Dışa aktar</button><button type="button" class="btn-outline-sm" id="btnImportSaved">İçe aktar</button><input id="importFile" type="file" accept="application/json,.json" hidden />
+        </div>
+        <div id="savedListContainer">
+          <p style="font-size:13px; color:var(--text-muted);">Henüz kaydedilmiş kelime yok.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button type="button" class="nav-btn active" id="nav-home" data-view="home">
+      <span class="nav-icon">📚</span>
+      <span>Çalışma</span>
+    </button>
+    <button type="button" class="nav-btn" id="nav-ai" data-view="ai">
+      <span class="nav-icon">✨</span>
+      <span>Asistan</span>
+    </button>
+    <button type="button" class="nav-btn" id="nav-practice" data-view="practice"><span class="nav-icon">🧠</span><span>Pratik</span></button>
+    <button type="button" class="nav-btn" id="nav-quiz" data-view="quiz">
+      <span class="nav-icon">🎯</span>
+      <span>Quiz</span>
+    </button>
+    <button type="button" class="nav-btn" id="nav-saved" data-view="saved">
+      <span class="nav-icon">🔖</span>
+      <span>Defterim</span>
+    </button>
+  </nav>
+
+  <div class="modal-backdrop" id="apiModal">
+    <div class="modal">
+      <div class="section-title">
+        <span>Anahtar</span>
+        <button type="button" class="btn-outline-sm" id="btnCloseKey">Kapat</button>
+      </div>
+      <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:12px;">
+        Anahtar yalnızca bu tarayıcıda saklanır.
+      </p>
+      <input type="password" id="apiKeyInput" class="input-field" style="width:100%; margin-bottom:12px;" placeholder="Anahtarı yapıştır..." autocomplete="off" />
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button type="button" class="btn-secondary" id="btnClearKey">Sil</button>
+        <button type="button" class="btn-primary" id="btnSaveKey">Kaydet</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-  (() => {
-    'use strict';
-    const WORDS = {
-      A1:[
-        {tr:'Merhaba',en:'Hello',mk:'Здраво',pos:'Expression · Greeting',meaning:'A common greeting when meeting someone.',exTr:'Merhaba, nasılsın?',exEn:'Hello, how are you?',exMk:'Здраво, како си?'},
-        {tr:'Teşekkür ederim',en:'Thank you',mk:'Благодарам',pos:'Expression · Politeness',meaning:'A polite expression used to show gratitude.',exTr:'Yardımın için teşekkür ederim.',exEn:'Thank you for your help.',exMk:'Ти благодарам за помошта.'},
-        {tr:'Lütfen',en:'Please',mk:'Ве молам',pos:'Expression · Politeness',meaning:'A polite word used when making a request.',exTr:'Bir bardak su, lütfen.',exEn:'A glass of water, please.',exMk:'Една чаша вода, ве молам.'},
-        {tr:'Su',en:'Water',mk:'Вода',pos:'Noun · Everyday life',meaning:'The clear liquid that people drink.',exTr:'Her sabah su içiyorum.',exEn:'I drink water every morning.',exMk:'Пијам вода секое утро.'},
-        {tr:'Kitap',en:'Book',mk:'Книга',pos:'Noun · Education',meaning:'A set of written or printed pages.',exTr:'Bu kitap çok ilginç.',exEn:'This book is very interesting.',exMk:'Оваа книга е многу интересна.'},
-        {tr:'Ev',en:'House / Home',mk:'Куќа / Дом',pos:'Noun · Places',meaning:'A place where someone lives.',exTr:'Evimiz okula yakın.',exEn:'Our home is near the school.',exMk:'Нашиот дом е близу до училиштето.'},
-        {tr:'Arkadaş',en:'Friend',mk:'Пријател',pos:'Noun · People',meaning:'A person you know well and like.',exTr:'Arkadaşımla konuşuyorum.',exEn:'I am talking with my friend.',exMk:'Разговарам со мојот пријател.'},
-        {tr:'Öğrenmek',en:'To learn',mk:'Да учи',pos:'Verb · Education',meaning:'To gain knowledge or a new skill.',exTr:'Türkçe öğrenmek istiyorum.',exEn:'I want to learn Turkish.',exMk:'Сакам да учам турски.'}
-      ],
-      A2:[
-        {tr:'Deneyim',en:'Experience',mk:'Искуство',pos:'Noun · Everyday life',meaning:'Knowledge or skill gained by doing something.',exTr:'Yeni bir yerde yaşamak güzel bir deneyim.',exEn:'Living in a new place is a good experience.',exMk:'Живеењето на ново место е убаво искуство.'},
-        {tr:'Geliştirmek',en:'To improve',mk:'Да подобри',pos:'Verb · Progress',meaning:'To make something better.',exTr:'Her gün pratik yaparak Türkçemi geliştiriyorum.',exEn:'I improve my Turkish by practising every day.',exMk:'Го подобрувам турскиот со секојдневно вежбање.'},
-        {tr:'Alışveriş',en:'Shopping',mk:'Купување',pos:'Noun · Daily life',meaning:'The activity of buying things from shops.',exTr:'Hafta sonu alışveriş yapacağız.',exEn:'We will go shopping at the weekend.',exMk:'За викенд ќе одиме на пазарување.'},
-        {tr:'Davet',en:'Invitation',mk:'Покана',pos:'Noun · Social life',meaning:'A request asking someone to come somewhere.',exTr:'Davetin için çok teşekkürler.',exEn:'Thank you very much for your invitation.',exMk:'Ти благодарам многу за поканата.'},
-        {tr:'Ulaşmak',en:'To reach',mk:'Да стигне / Да достигне',pos:'Verb · Travel',meaning:'To arrive at a place or achieve something.',exTr:'Otobüsle merkeze kolayca ulaşabilirsin.',exEn:'You can easily reach the centre by bus.',exMk:'Можеш лесно да стигнеш до центарот со автобус.'},
-        {tr:'Karar vermek',en:'To decide',mk:'Да одлучи',pos:'Verb phrase · Everyday life',meaning:'To choose what you will do after thinking.',exTr:'Henüz karar vermedim.',exEn:'I have not decided yet.',exMk:'Сè уште не сум одлучил.'}
-      ],
-      B1:[
-        {tr:'Önyargı',en:'Prejudice',mk:'Предрасуда',pos:'Noun · Society',meaning:'An opinion formed without enough knowledge or experience.',exTr:'İnsanları tanımadan önyargılı olmamalıyız.',exEn:'We should not judge people before getting to know them.',exMk:'Не треба да имаме предрасуди пред да ги запознаеме луѓето.'},
-        {tr:'Sürdürülebilir',en:'Sustainable',mk:'Одржлив',pos:'Adjective · Environment',meaning:'Able to continue for a long time without causing harm.',exTr:'Sürdürülebilir çözümler bulmalıyız.',exEn:'We should find sustainable solutions.',exMk:'Треба да најдеме одржливи решенија.'},
-        {tr:'Fırsat',en:'Opportunity',mk:'Можност',pos:'Noun · General',meaning:'A suitable time or situation to do something.',exTr:'Bu fırsatı değerlendirmek istiyorum.',exEn:'I want to make use of this opportunity.',exMk:'Сакам да ја искористам оваа можност.'},
-        {tr:'Alışkanlık',en:'Habit',mk:'Навика',pos:'Noun · Daily life',meaning:'Something that you do regularly, often without thinking.',exTr:'Kitap okumak güzel bir alışkanlıktır.',exEn:'Reading books is a good habit.',exMk:'Читањето книги е добра навика.'},
-        {tr:'Açıklamak',en:'To explain',mk:'Да објасни',pos:'Verb · Communication',meaning:'To make an idea or situation easier to understand.',exTr:'Bu konuyu bir kez daha açıklar mısın?',exEn:'Could you explain this topic once more?',exMk:'Можеш ли уште еднаш да ја објасниш оваа тема?'},
-        {tr:'Karşılaştırmak',en:'To compare',mk:'Да спореди',pos:'Verb · Study',meaning:'To examine two or more things to find similarities and differences.',exTr:'İki metni karşılaştırdık.',exEn:'We compared the two texts.',exMk:'Ги споредивме двата текста.'}
-      ],
-      B2:[
-        {tr:'Çelişki',en:'Contradiction',mk:'Противречност',pos:'Noun · Logic',meaning:'A situation where two statements or facts do not agree.',exTr:'Açıklamasında bir çelişki var.',exEn:'There is a contradiction in the explanation.',exMk:'Во објаснувањето има противречност.'},
-        {tr:'İstikrar',en:'Stability',mk:'Стабилност',pos:'Noun · General',meaning:'The quality of staying steady and not changing suddenly.',exTr:'Başarı için istikrar önemlidir.',exEn:'Stability is important for success.',exMk:'Стабилноста е важна за успех.'},
-        {tr:'Varsayım',en:'Assumption',mk:'Претпоставка',pos:'Noun · Reasoning',meaning:'Something accepted as true without complete proof.',exTr:'Bu varsayımı test etmemiz gerekiyor.',exEn:'We need to test this assumption.',exMk:'Треба да ја провериме оваа претпоставка.'},
-        {tr:'Kapsamlı',en:'Comprehensive',mk:'Сеопфатен',pos:'Adjective · Academic',meaning:'Including many details or all important parts.',exTr:'Kapsamlı bir araştırma yaptılar.',exEn:'They conducted comprehensive research.',exMk:'Тие спроведоа сеопфатно истражување.'},
-        {tr:'Kaçınılmaz',en:'Inevitable',mk:'Неизбежен',pos:'Adjective · General',meaning:'Certain to happen and impossible to avoid.',exTr:'Bazı değişiklikler kaçınılmazdır.',exEn:'Some changes are inevitable.',exMk:'Некои промени се неизбежни.'},
-        {tr:'Değerlendirmek',en:'To evaluate',mk:'Да оцени',pos:'Verb · Academic',meaning:'To judge the quality, importance or value of something.',exTr:'Sonuçları dikkatlice değerlendirmeliyiz.',exEn:'We should evaluate the results carefully.',exMk:'Треба внимателно да ги оцениме резултатите.'}
-      ],
-      C1:[
-        {tr:'Yadsımak',en:'To deny',mk:'Да негира',pos:'Verb · Academic',meaning:'To refuse to accept or acknowledge a fact.',exTr:'Bu gerçeği yadsımak mümkün değil.',exEn:'It is impossible to deny this fact.',exMk:'Невозможно е да се негира овој факт.'},
-        {tr:'Öngörü',en:'Foresight',mk:'Предвидување',pos:'Noun · Analysis',meaning:'The ability to predict what may happen in the future.',exTr:'İyi bir öngörü planlamayı kolaylaştırır.',exEn:'Good foresight makes planning easier.',exMk:'Доброто предвидување го олеснува планирањето.'},
-        {tr:'Yetkinlik',en:'Competence',mk:'Компетентност',pos:'Noun · Academic',meaning:'The ability to do something well and effectively.',exTr:'Bu görev belirli bir teknik yetkinlik gerektiriyor.',exEn:'This task requires a certain technical competence.',exMk:'Оваа задача бара одредена техничка компетентност.'},
-        {tr:'Tutarlı',en:'Consistent',mk:'Доследен',pos:'Adjective · Reasoning',meaning:'Logical and in agreement with itself; not contradictory.',exTr:'Tutarlı bir açıklama yaptı.',exEn:'They gave a consistent explanation.',exMk:'Тој даде доследно објаснување.'},
-        {tr:'Belirsizlik',en:'Uncertainty',mk:'Неизвесност',pos:'Noun · General',meaning:'A state in which something is not known or certain.',exTr:'Belirsizlik insanları endişelendirebilir.',exEn:'Uncertainty can make people anxious.',exMk:'Неизвесноста може да ги загрижи луѓето.'},
-        {tr:'Gereksinim',en:'Requirement / Need',mk:'Потреба / Услов',pos:'Noun · Formal',meaning:'Something that is needed or necessary.',exTr:'Projenin temel gereksinimlerini belirledik.',exEn:'We identified the basic requirements of the project.',exMk:'Ги утврдивме основните барања на проектот.'}
-      ],
-      C2:[
-        {tr:'Müstesna',en:'Exceptional',mk:'Исклучителен',pos:'Adjective · Literary',meaning:'Unusually good or rare; clearly different from others.',exTr:'Bu yapının mimarisi müstesna bir örnektir.',exEn:'The architecture of this building is an exceptional example.',exMk:'Архитектурата на оваа градба е исклучителен пример.'},
-        {tr:'Tezahür',en:'Manifestation',mk:'Манифестација',pos:'Noun · Formal',meaning:'The visible appearance or expression of an idea or quality.',exTr:'Bu değişim günlük yaşamda da tezahür ediyor.',exEn:'This change is also manifesting itself in daily life.',exMk:'Оваа промена се манифестира и во секојдневниот живот.'},
-        {tr:'Müphem',en:'Ambiguous / Unclear',mk:'Нејасен / Двосмислен',pos:'Adjective · Literary',meaning:'Not expressed clearly; open to more than one interpretation.',exTr:'Müphem ifadeler yanlış anlamalara yol açabilir.',exEn:'Ambiguous expressions can lead to misunderstandings.',exMk:'Нејасните изрази можат да доведат до недоразбирања.'},
-        {tr:'Mütekabiliyet',en:'Reciprocity',mk:'Реципроцитет',pos:'Noun · Law',meaning:'A relationship in which each side gives or does the same in return.',exTr:'Anlaşma mütekabiliyet ilkesine dayanıyor.',exEn:'The agreement is based on the principle of reciprocity.',exMk:'Договорот се заснова на принципот на реципроцитет.'},
-        {tr:'İstihza',en:'Irony / Mockery',mk:'Иронија / Потсмев',pos:'Noun · Literary',meaning:'A subtly mocking or ironic way of expressing something.',exTr:'Yazarın üslubunda ince bir istihza var.',exEn:'There is subtle irony in the writer’s style.',exMk:'Во стилот на писателот има суптилна иронија.'},
-        {tr:'Vukuf',en:'Profound knowledge',mk:'Длабоко познавање',pos:'Noun · Formal',meaning:'Deep knowledge or understanding of a subject.',exTr:'Konuya olan vukufu hemen fark edildi.',exEn:'Their profound knowledge of the subject was immediately noticed.',exMk:'Неговото длабоко познавање на темата веднаш беше забележано.'}
-      ]
-    };
+    (function () {
+      const GEMINI_MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash"];
 
-    const LESSONS = {
-      A1:[['Vowel harmony','Turkish suffixes often change their vowels to match the word.'],['Personal pronouns','Learn ben, sen, o, biz, siz and onlar.'],['Present continuous','Use -yor to talk about actions happening now.']],
-      A2:[['Past tense: -di','Use -di / -dı / -du / -dü for a definite past event.'],['Future tense: -acak','Use -acak / -ecek for future plans and predictions.'],['Plural and cases','Review plural -lar/-ler and common noun endings.']],
-      B1:[['Because and although','Connect ideas with çünkü, bu yüzden, rağmen and -dığı için.'],['Necessity: -malı','Use -malı / -meli to express what should or must be done.'],['Reported past: -miş','Use -miş for information learned indirectly or inferred.']],
-      B2:[['Conditional: -se','Use -sa / -se to describe conditions and possible results.'],['Passive voice','Form passive verbs with -ıl, -il, -ul or -ül where appropriate.'],['Relative clauses','Use -an/-en and -dığı structures to describe nouns.']],
-      C1:[['Concessive structures','Practise -mesine rağmen and her ne kadar … olsa da.'],['Nominalisation','Turn verbs into nouns with -ma/-me and -ış/-iş forms.'],['Formal connectors','Use bununla birlikte, nitekim and dolayısıyla precisely.']],
-      C2:[['Nuance and register','Choose words that fit formal, literary and everyday contexts.'],['Idiomatic expressions','Understand figurative meaning beyond literal translation.'],['Complex sentence rhythm','Combine clauses naturally without losing clarity.']]
-    };
-    const PROMPTS = ['Kendini tanıt. (Introduce yourself.)','En sevdiğin mevsimi anlat. (Describe your favourite season.)','Geçen hafta sonu ne yaptığını yaz. (Write what you did last weekend.)','Gelecek yıl için hedeflerini anlat. (Describe your goals for next year.)','İyi bir arkadaşın özelliklerini açıkla. (Describe the qualities of a good friend.)'];
+      const WORD_BANK = {
+        A1: [
+          { tr: "Merhaba", pos: "İfade · Günlük", mk: "Здраво (Zdravo)", en: "Hello", def: "Karşılaşmada kullanılan selamlama sözü.", exTr: "Merhaba, bugün nasılsın?", exMk: "Здраво, како си денес?", exEn: "Hello, how are you today?" },
+          { tr: "Teşekkür ederim", pos: "İfade · Günlük", mk: "Благодарам (Blagodaram)", en: "Thank you", def: "Yardım veya iyilik için teşekkür ifadesi.", exTr: "Yardımın için teşekkür ederim.", exMk: "Ти благодарам за помошта.", exEn: "Thank you for your help." },
+          { tr: "Öğrenci", pos: "İsim · Okul", mk: "Ученик (Učenik)", en: "Student", def: "Okulda veya üniversitede okuyan kişi.", exTr: "Bugün okulda ders çalıştım.", exMk: "Денес учев на училиште.", exEn: "I studied at school today." },
+          { tr: "Günaydın", pos: "İfade · Selamlaşma", mk: "Добро утро (Dobro utro)", en: "Good morning", def: "Sabah kullanılan selamlama.", exTr: "Günaydın, nasılsınız?", exMk: "Добро утро, како сте?", exEn: "Good morning, how are you?" },
+          { tr: "Hoşça kal", pos: "İfade · Selamlaşma", mk: "Довидување (Doviduvanje)", en: "Goodbye", def: "Ayrılırken söylenen ifade.", exTr: "Yarın görüşürüz, hoşça kal.", exMk: "Се гледаме утре, довидување.", exEn: "See you tomorrow, goodbye." },
+          { tr: "Su", pos: "İsim · Yemek", mk: "Вода (Voda)", en: "Water", def: "İçilen temel sıvı.", exTr: "Bir bardak su alabilir miyim?", exMk: "Може ли една чаша вода?", exEn: "Can I have a glass of water?" },
+          { tr: "Ekmek", pos: "İsim · Yemek", mk: "Леб (Leb)", en: "Bread", def: "Unla yapılan temel yiyecek.", exTr: "Marketten ekmek aldım.", exMk: "Купив леб од продавница.", exEn: "I bought bread from the shop." },
+          { tr: "Havaalanı", pos: "İsim · Seyahat", mk: "Аеродром (Aerodrom)", en: "Airport", def: "Uçakların kalktığı ve indiği yer.", exTr: "Havaalanına nasıl gidebilirim?", exMk: "Како можам да стигнам до аеродромот?", exEn: "How can I get to the airport?" },
+          { tr: "Bilet", pos: "İsim · Seyahat", mk: "Билет (Bilet)", en: "Ticket", def: "Yolculuk veya etkinlik için belge.", exTr: "Bir otobüs bileti istiyorum.", exMk: "Сакам еден автобуски билет.", exEn: "I would like a bus ticket." },
+          { tr: "Ne kadar?", pos: "İfade · Alışveriş", mk: "Колку чини? (Kolku čini?)", en: "How much?", def: "Fiyat sormak için kullanılır.", exTr: "Bu çanta ne kadar?", exMk: "Колку чини оваа торба?", exEn: "How much is this bag?" },
+          { tr: "Pahalı", pos: "Sıfat · Alışveriş", mk: "Скапо (Skapo)", en: "Expensive", def: "Fiyatı yüksek olan.", exTr: "Bu telefon çok pahalı.", exMk: "Овој телефон е многу скап.", exEn: "This phone is very expensive." }
+        ],
+        A2: [
+          { tr: "Deneyim", pos: "İsim · Genel", mk: "Искуство (Iskustvo)", en: "Experience", def: "Yaşanarak veya çalışarak edinilen bilgi ve birikim.", exTr: "Yeni bir yerde yaşamak farklı bir deneyim.", exMk: "Живеењето на ново место е ново искуство.", exEn: "Living in a new place is a new experience." },
+          { tr: "Geliştirmek", pos: "Fiil · Genel", mk: "Подобрува (Podobruva)", en: "To improve", def: "Daha iyi ve güçlü duruma getirmek.", exTr: "Her gün çalışarak dilimi geliştiriyorum.", exMk: "Со вежбање секој ден го подобрувам јазикот.", exEn: "I improve my language by practicing every day." }
+        ],
+        B1: [
+          { tr: "Önyargı", pos: "İsim · Genel", mk: "Предрасуда (Predrasuda)", en: "Prejudice", def: "Tanımadan veya araştırmadan edinilen peşin yargı.", exTr: "İnsanları tanımadan önyargılı olmamalıyız.", exMk: "Не треба да имаме предрасуди пред да ги запознаеме луѓето.", exEn: "We should not have prejudices before getting to know people." },
+          { tr: "Sürdürülebilir", pos: "Sıfat · Genel", mk: "Одржлив (Održliv)", en: "Sustainable", def: "Uzun süre aksamadan devam ettirilebilen.", exTr: "Düzenli çalışma uzun vadede sürdürülebilir olmalıdır.", exMk: "Редовната работа треба да биде одржлива на долг рок.", exEn: "Regular study should be sustainable in the long run." }
+        ],
+        B2: [
+          { tr: "Çelişki", pos: "İsim · Mantık", mk: "Противречност (Protivrečnost)", en: "Contradiction", def: "İki söz veya durumun birbirine uymaması.", exTr: "Söyledikleri ile yaptıkları arasında çelişki var.", exMk: "Има противречност меѓу она што го зборува и она што го прави.", exEn: "There is a contradiction between what is said and what is done." },
+          { tr: "İstikrar", pos: "İsim · Genel", mk: "Стабилност (Stabilnost)", en: "Stability", def: "Denge ve süreklilik durumu.", exTr: "İstikrarlı çalışmak sonucu değiştirir.", exMk: "Стабилната работа го менува резултатот.", exEn: "Consistent effort changes the result." }
+        ],
+        C1: [
+          { tr: "Yadsımak", pos: "Fiil · Akademik", mk: "Негира (Negira)", en: "To deny", def: "Açık bir gerçeği inkâr etmek.", exTr: "Bu gerçeği kimse yadsıyamaz.", exMk: "Никој не може да ја негира оваа вистина.", exEn: "No one can deny this truth." },
+          { tr: "Öngörü", pos: "İsim · Analiz", mk: "Предвидување (Predviduvanje)", en: "Foresight", def: "İleride olacak durumu önceden kestirebilme.", exTr: "Güçlü öngörü planlamayı kolaylaştırır.", exMk: "Доброто предвидување го олеснува планирањето.", exEn: "Strong foresight makes planning easier." },
+          { tr: "Yetkinlik", pos: "İsim · Akademik", mk: "Компетентност (Kompetentnost)", en: "Competence", def: "Bir işi hakkıyla yapabilme yeterliliği.", exTr: "Metin analizi dil yetkinliği gerektirir.", exMk: "Анализата на текст бара јазична компетентност.", exEn: "Text analysis requires language competence." }
+        ],
+        C2: [
+          { tr: "Müstesna", pos: "Sıfat · Akademik", mk: "Исклучителен (Isklučitelen)", en: "Exceptional", def: "Benzerlerinden üstünlüğü veya farkıyla ayrılan, seçkin.", exTr: "Bu yapının mimarisi müstesna bir örnektir.", exMk: "Архитектурата на оваа градба е исклучителен пример.", exEn: "The architecture of this building is an exceptional example." },
+          { tr: "Tezahür", pos: "İsim · Felsefe", mk: "Манифестација (Manifestacija)", en: "Manifestation", def: "Soyut bir durumun somut biçimde ortaya çıkması.", exTr: "Değişim önce sanatta ve dilde tezahür eder.", exMk: "Промената прво се манифестира во уметноста и јазикот.", exEn: "Change first manifests in art and language." },
+          { tr: "Müphem", pos: "Sıfat · Edebi", mk: "Нејасен (Nejasen)", en: "Ambiguous", def: "Belirsiz, anlamı tam net olmayan.", exTr: "Müphem ifadeler yanlış anlamaya yol açar.", exMk: "Нејасните изрази доведуваат до недоразбирање.", exEn: "Ambiguous expressions lead to misunderstanding." },
+          { tr: "Mütekabiliyet", pos: "İsim · Hukuk", mk: "Реципроцитет (Reciprocitet)", en: "Reciprocity", def: "Karşılıklı olma ve aynı şekilde davranma ilkesi.", exTr: "Anlaşmalar mütekabiliyet esasına dayanır.", exMk: "Договорите се засноваат на реципроцитет.", exEn: "Agreements are based on reciprocity." },
+          { tr: "İstihza", pos: "İsim · Edebiyat", mk: "Иронија (Ironija)", en: "Subtle irony", def: "İnce ve alaycı bir anlatım biçimi.", exTr: "Metinde ince bir istihza göze çarpıyor.", exMk: "Во текстот се забележува суптилна иронија.", exEn: "Subtle irony stands out in the text." },
+          { tr: "Vukuf", pos: "İsim · Akademik", mk: "Познавање (Poznavanje)", en: "Profound mastery", def: "Bir konuya derinlemesine hâkim olma.", exTr: "Konuya olan vukufu soruları net yanıtlamasını sağladı.", exMk: "Познавањето на темата му овозможи јасно да одговори.", exEn: "His mastery of the subject allowed clear answers." },
+          { tr: "Tevatür", pos: "İsim · Tarih", mk: "Гласина (Glasina)", en: "Hearsay", def: "Kesinliği doğrulanmamış, ağızdan ağıza yayılan söz.", exTr: "Kesin kanıt olmadan tevatürlere güvenilmez.", exMk: "Без цврст доказ не се верува на гласини.", exEn: "Without solid proof, hearsay is unreliable." },
+          { tr: "İktibas", pos: "İsim · Akademik", mk: "Цитат (Citat)", en: "Citation / Excerpt", def: "Başka bir kaynaktan yapılan alıntı.", exTr: "Her iktibasın kaynağı açıkça yazılmalıdır.", exMk: "Изворот на секој цитат треба јасно да се наведе.", exEn: "The source of every citation should be clearly stated." }
+        ]
+      };
 
-    const LEVEL_LABELS = {
-      en:['A1 · Beginner','A2 · Elementary','B1 · Intermediate','B2 · Upper intermediate','C1 · Advanced','C2 · Proficient'],
-      tr:['A1 · Başlangıç','A2 · Temel','B1 · Orta','B2 · Orta üstü','C1 · İleri','C2 · Yetkin'],
-      mk:['A1 · Почетно','A2 · Основно','B1 · Средно','B2 · Повисоко средно','C1 · Напредно','C2 · Високо ниво']
-    };
-    const I18N = {
-      en:{brandSub:'A practical Turkish learning space',navHome:'Home',navWords:'Words',navPractice:'Practice',navQuiz:'Quiz',navSaved:'Notebook',heroEyebrow:'YOUR TURKISH JOURNEY',heroTitle:'A little Turkish, every day.',heroText:'Build your vocabulary, practise useful grammar and track your progress from A1 to C2.',exploreWords:'Explore words',startPractice:'Start practice',statSaved:'Saved words',statSavedNote:'In your notebook',statXP:'Total XP',statXPNote:'Learning points',statDays:'Study days',statDaysNote:'Days you practised',statLessons:'Lessons done',statLessonsNote:'Completed lessons',english:'English',macedonian:'Macedonian',saveWord:'Save word',listen:'Listen',nextWord:'Next word →',dailyGoal:'Daily goal',goalText:'Save 3 words today to build your vocabulary habit.',today:'Today',quickTip:'Quick tip',tipText:'Say each new word aloud and use it in a short sentence. Repetition helps it stick.',tryFlashcards:'Try flashcards',vocabKicker:'BUILD YOUR VOCABULARY',vocabTitle:'Turkish word library',vocabText:'Search Turkish words or their English and Macedonian meanings.',searchPlaceholder:'Search a word or meaning...',clear:'Clear',allWords:'All words',onlySaved:'Saved only',cefrLevel:'CEFR LEVEL',practiceKicker:'LEARN BY DOING',practiceTitle:'Practice room',practiceText:'Review words with flashcards and complete short grammar lessons.',flashcards:'Flashcards',flashcardHint:'Tap the card to reveal the answer.',turkishWord:'TURKISH WORD',tapReveal:'Tap to reveal meaning',meaning:'MEANING',previous:'← Previous',nextCard:'Next card →',grammarLessons:'Grammar lessons',grammarHint:'Short topics for your selected level.',writingKicker:'PUT IT INTO WORDS',writingTitle:'Writing practice',writingText:'Write a few sentences in Turkish. Your draft stays on this device.',writingPrompt:"TODAY'S PROMPT",anotherPrompt:'Another prompt',writingPlaceholder:'Write your Turkish sentences here...',saveDraft:'Save draft',quizKicker:'CHECK WHAT YOU KNOW',quizTitle:'Quick vocabulary quiz',quizText:'Choose the correct meaning of the Turkish word.',chooseMeaning:'CHOOSE THE CORRECT MEANING',nextQuestion:'Next question →',notebookKicker:'YOUR PERSONAL COLLECTION',notebookTitle:'My notebook',notebookText:'Words you save are kept in this browser on this device.',export:'Export',savedWords:'Saved words',clearAll:'Clear all',footer:'Your progress is saved locally in this browser. No account required.',words:'words',correct:'correct',emptyWords:'No words match your search.',emptySaved:'Your notebook is empty. Save a word to see it here.',saved:'Saved ✓',removed:'Removed from notebook.',added:'Word saved to your notebook! +10 XP',alreadySaved:'This word is already saved.',copied:'Copied to clipboard.',copyFailed:'Could not copy automatically. Select and copy the text.',listeningUnavailable:'Speech is not available in this browser.',lessonDone:'Completed ✓',markDone:'Mark complete',lessonReward:'Lesson completed! +20 XP',quizRight:'Correct! +10 XP',quizWrong:'Not quite. Correct answer: ',quizFinished:'Quiz complete!',next:'Next',startAgain:'Try again',draftSaved:'Draft saved on this device.',draftRestored:'Your previous draft was restored.',exportEmpty:'There are no saved words to export.',clearConfirm:'Remove all saved words?',clearAllDone:'Notebook cleared.',todayWords:'words today',wordRemoved:'Word removed.',levelDaily:'DAILY WORD',quizTag:'QUIZ',noSpeech:'Speech synthesis is not supported here.',searchTip:'Try searching in Turkish, English or Macedonian.',savedOnlyEmpty:'No saved words at this level.',wordCount:'words',studyDay:'Study day recorded.'},
-      tr:{brandSub:'Türkçe öğrenmek için pratik alan',navHome:'Ana sayfa',navWords:'Kelimeler',navPractice:'Pratik',navQuiz:'Test',navSaved:'Defterim',heroEyebrow:'TÜRKÇE YOLCULUĞUN',heroTitle:'Her gün biraz Türkçe.',heroText:'Kelime hazineni geliştir, dil bilgisi çalış ve A1’den C2’ye ilerlemeni takip et.',exploreWords:'Kelimeleri keşfet',startPractice:'Pratiğe başla',statSaved:'Kayıtlı kelime',statSavedNote:'Kelime defterinde',statXP:'Toplam XP',statXPNote:'Öğrenme puanı',statDays:'Çalışma günü',statDaysNote:'Pratik yaptığın gün',statLessons:'Biten ders',statLessonsNote:'Tamamlanan dersler',english:'İngilizce',macedonian:'Makedonca',saveWord:'Kelimeyi kaydet',listen:'Dinle',nextWord:'Sonraki kelime →',dailyGoal:'Günlük hedef',goalText:'Kelime alışkanlığı kazanmak için bugün 3 kelime kaydet.',today:'Bugün',quickTip:'Küçük bir ipucu',tipText:'Her yeni kelimeyi sesli söyle ve kısa bir cümlede kullan. Tekrar etmek öğrenmeyi kolaylaştırır.',tryFlashcards:'Kartları dene',vocabKicker:'KELİME HAZİNENİ GELİŞTİR',vocabTitle:'Türkçe kelime kütüphanesi',vocabText:'Türkçe kelimeyi veya İngilizce ve Makedonca karşılığını ara.',searchPlaceholder:'Kelime veya anlam ara...',clear:'Temizle',allWords:'Tüm kelimeler',onlySaved:'Yalnızca kayıtlı',cefrLevel:'SEVİYE',practiceKicker:'YAPARAK ÖĞREN',practiceTitle:'Pratik alanı',practiceText:'Kelime kartlarıyla tekrar yap ve kısa dil bilgisi derslerini tamamla.',flashcards:'Kelime kartları',flashcardHint:'Anlamı görmek için karta dokun.',turkishWord:'TÜRKÇE KELİME',tapReveal:'Anlamı görmek için dokun',meaning:'ANLAMI',previous:'← Önceki',nextCard:'Sonraki kart →',grammarLessons:'Dil bilgisi dersleri',grammarHint:'Seçtiğin seviyeye uygun kısa konular.',writingKicker:'KENDİNİ İFADE ET',writingTitle:'Yazma çalışması',writingText:'Türkçe birkaç cümle yaz. Taslağın bu cihazda saklanır.',writingPrompt:'BUGÜNÜN KONUSU',anotherPrompt:'Başka konu',writingPlaceholder:'Türkçe cümlelerini buraya yaz...',saveDraft:'Taslağı kaydet',quizKicker:'BİLGİNİ KONTROL ET',quizTitle:'Hızlı kelime testi',quizText:'Türkçe kelimenin doğru anlamını seç.',chooseMeaning:'DOĞRU ANLAMI SEÇ',nextQuestion:'Sonraki soru →',notebookKicker:'KİŞİSEL KELİME KOLEKSİYONUN',notebookTitle:'Kelime defterim',notebookText:'Kaydettiğin kelimeler bu cihazdaki tarayıcıda saklanır.',export:'Dışa aktar',savedWords:'Kayıtlı kelimeler',clearAll:'Tümünü sil',footer:'İlerlemen bu tarayıcıda yerel olarak saklanır. Hesap gerekmez.',words:'kelime',correct:'doğru',emptyWords:'Aramana uygun kelime bulunamadı.',emptySaved:'Defterin boş. Burada görmek için kelime kaydet.',saved:'Kaydedildi ✓',removed:'Defterden çıkarıldı.',added:'Kelime defterine kaydedildi! +10 XP',alreadySaved:'Bu kelime zaten kayıtlı.',copied:'Panoya kopyalandı.',copyFailed:'Otomatik kopyalanamadı. Metni seçip kopyala.',listeningUnavailable:'Bu tarayıcıda sesli okuma kullanılamıyor.',lessonDone:'Tamamlandı ✓',markDone:'Tamamla',lessonReward:'Ders tamamlandı! +20 XP',quizRight:'Doğru! +10 XP',quizWrong:'Tam değil. Doğru cevap: ',quizFinished:'Test tamamlandı!',next:'Sonraki',startAgain:'Yeniden dene',draftSaved:'Taslak bu cihaza kaydedildi.',draftRestored:'Önceki taslağın geri yüklendi.',exportEmpty:'Dışa aktarılacak kelime yok.',clearConfirm:'Tüm kayıtlı kelimeler silinsin mi?',clearAllDone:'Kelime defteri temizlendi.',todayWords:'bugün kelime',wordRemoved:'Kelime silindi.',levelDaily:'GÜNÜN KELİMESİ',quizTag:'TEST',noSpeech:'Bu tarayıcı sesli okumayı desteklemiyor.',searchTip:'Türkçe, İngilizce veya Makedonca arayabilirsin.',savedOnlyEmpty:'Bu seviyede kayıtlı kelime yok.',wordCount:'kelime',studyDay:'Çalışma günün kaydedildi.'},
-      mk:{brandSub:'Практичен простор за учење турски',navHome:'Почетна',navWords:'Зборови',navPractice:'Вежбање',navQuiz:'Квиз',navSaved:'Тетратка',heroEyebrow:'ТВОЕТО ТУРСКО ПАТУВАЊЕ',heroTitle:'По малку турски, секој ден.',heroText:'Збогати го речникот, вежбај граматика и следи го напредокот од A1 до C2.',exploreWords:'Разгледај зборови',startPractice:'Почни со вежбање',statSaved:'Зачувани зборови',statSavedNote:'Во твојата тетратка',statXP:'Вкупно XP',statXPNote:'Поени за учење',statDays:'Денови на учење',statDaysNote:'Денови кога вежбаше',statLessons:'Завршени лекции',statLessonsNote:'Комплетирани лекции',english:'Англиски',macedonian:'Македонски',saveWord:'Зачувај збор',listen:'Слушај',nextWord:'Следен збор →',dailyGoal:'Дневна цел',goalText:'Зачувај 3 зборови денес за да создадеш навика.',today:'Денес',quickTip:'Брз совет',tipText:'Изговори го секој нов збор на глас и употреби го во кратка реченица. Повторувањето помага.',tryFlashcards:'Пробај картички',vocabKicker:'ЗБОГАТИ ГО РЕЧНИКОТ',vocabTitle:'Турска библиотека на зборови',vocabText:'Пребарај турски збор или негово значење на англиски и македонски.',searchPlaceholder:'Пребарај збор или значење...',clear:'Исчисти',allWords:'Сите зборови',onlySaved:'Само зачувани',cefrLevel:'НИВО',practiceKicker:'УЧИ ПРЕКУ ВЕЖБАЊЕ',practiceTitle:'Простор за вежбање',practiceText:'Повторувај зборови со картички и завршувај кратки лекции по граматика.',flashcards:'Картички',flashcardHint:'Допрете ја картичката за да го видите одговорот.',turkishWord:'ТУРСКИ ЗБОР',tapReveal:'Допрете за значење',meaning:'ЗНАЧЕЊЕ',previous:'← Претходно',nextCard:'Следна картичка →',grammarLessons:'Лекции по граматика',grammarHint:'Кратки теми за избраното ниво.',writingKicker:'ИЗРАЗИ СЕ СО ЗБОРОВИ',writingTitle:'Вежбање пишување',writingText:'Напиши неколку реченици на турски. Нацртот се чува на овој уред.',writingPrompt:'ДЕНЕШНА ТЕМА',anotherPrompt:'Друга тема',writingPlaceholder:'Напиши ги турските реченици тука...',saveDraft:'Зачувај нацрт',quizKicker:'ПРОВЕРИ ГО ЗНАЕЊЕТО',quizTitle:'Брз квиз со зборови',quizText:'Избери го точниот превод на турскиот збор.',chooseMeaning:'ИЗБЕРИ ГО ТОЧНОТО ЗНАЧЕЊЕ',nextQuestion:'Следно прашање →',notebookKicker:'ТВОЈА ЛИЧНА ЗБИРКА',notebookTitle:'Моја тетратка',notebookText:'Зачуваните зборови се чуваат во прелистувачот на овој уред.',export:'Извези',savedWords:'Зачувани зборови',clearAll:'Избриши сè',footer:'Напредокот се чува локално во овој прелистувач. Не е потребна сметка.',words:'зборови',correct:'точни',emptyWords:'Нема зборови што одговараат на пребарувањето.',emptySaved:'Тетратката е празна. Зачувај збор за да се појави тука.',saved:'Зачувано ✓',removed:'Отстрането од тетратката.',added:'Зборот е зачуван! +10 XP',alreadySaved:'Овој збор е веќе зачуван.',copied:'Копирано во таблата.',copyFailed:'Автоматското копирање не успеа. Избери и копирај го текстот.',listeningUnavailable:'Говорот не е достапен во овој прелистувач.',lessonDone:'Завршено ✓',markDone:'Заврши',lessonReward:'Лекцијата е завршена! +20 XP',quizRight:'Точно! +10 XP',quizWrong:'Не баш. Точниот одговор е: ',quizFinished:'Квизот е завршен!',next:'Следно',startAgain:'Обиди се повторно',draftSaved:'Нацртот е зачуван на овој уред.',draftRestored:'Претходниот нацрт е вратен.',exportEmpty:'Нема зачувани зборови за извоз.',clearConfirm:'Да се избришат сите зачувани зборови?',clearAllDone:'Тетратката е исчистена.',todayWords:'зборови денес',wordRemoved:'Зборот е избришан.',levelDaily:'ЗБОР НА ДЕНОТ',quizTag:'КВИЗ',noSpeech:'Овој прелистувач не поддржува говор.',searchTip:'Пребарувај на турски, англиски или македонски.',savedOnlyEmpty:'Нема зачувани зборови на ова ниво.',wordCount:'зборови',studyDay:'Денот за учење е зачуван.'}
-    };
+      function readStorage(key, fallback) {
+        try {
+          const v = localStorage.getItem(key);
+          return v === null ? fallback : v;
+        } catch (_) {
+          return fallback;
+        }
+      }
 
-    const $ = id => document.getElementById(id);
-    const storage = {
-      get(key, fallback){try{const v=localStorage.getItem('linguatr_'+key);return v===null?fallback:JSON.parse(v)}catch{return fallback}},
-      set(key,value){try{localStorage.setItem('linguatr_'+key,JSON.stringify(value));return true}catch{return false}}
-    };
-    const state={level:storage.get('level','A1'),lang:storage.get('lang','en'),saved:storage.get('saved',[]),xp:storage.get('xp',0),completed:storage.get('completed',[]),days:storage.get('days',[]),dailySaved:storage.get('dailySaved',{}),draft:storage.get('draft',''),quizIndex:0,quizScore:0,quizAnswered:false,quizQuestions:[],flashIndex:0,flashFlipped:false,dailyOffset:0,wordFilter:'all',modalWord:null};
-    if(!WORDS[state.level])state.level='A1';if(!I18N[state.lang])state.lang='en';
-    const t=key=>(I18N[state.lang]&&I18N[state.lang][key])||I18N.en[key]||key;
-    const allWords=()=>WORDS[state.level].map((w,i)=>({...w,level:state.level,index:i}));
-    const keyOf=w=>`${w.level||state.level}:${w.tr}`;
-    const todayKey=()=>new Date().toISOString().slice(0,10);
-    const safeText=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    let toastTimer;
-    function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2300)}
-    function persist(){storage.set('level',state.level);storage.set('lang',state.lang);storage.set('saved',state.saved);storage.set('xp',state.xp);storage.set('completed',state.completed);storage.set('days',state.days);storage.set('dailySaved',state.dailySaved);storage.set('draft',state.draft);updateStats()}
-    function recordStudy(){const d=todayKey();if(!state.days.includes(d)){state.days.push(d);state.days=state.days.slice(-365)}persist()}
-    function updateStats(){ $('statSaved').textContent=state.saved.length;$('statXP').textContent=state.xp;$('statDays').textContent=state.days.length;$('statLessons').textContent=state.completed.length;const count=state.dailySaved[todayKey()]||0;$('goalProgress').style.width=`${Math.min(100,count/3*100)}%`;$('goalCaption').textContent=`${count} / 3 ${t('todayWords')}`; }
-    function applyLanguage(){document.documentElement.lang=state.lang;document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(t(k))el.textContent=t(k)});document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder)});$('uiLanguage').value=state.lang;[...$('levelSelect').options].forEach((option,i)=>{option.textContent=LEVEL_LABELS[state.lang][i]});$('levelSelect').value=state.level;renderAll()}
-    function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${name}`));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===name));window.scrollTo({top:0,behavior:'smooth'});if(name==='quiz'&&!state.quizQuestions.length)newQuiz()}
-    function dailyWord(){const list=allWords();const day=Math.floor(Date.now()/86400000);return list[(day+state.dailyOffset)%list.length]}
-    function isSaved(w){return state.saved.some(x=>x.tr===w.tr&&(x.level||state.level)===(w.level||state.level))}
-    function updateDaily(){const list=allWords(),w=dailyWord(),idx=list.findIndex(x=>x.tr===w.tr);$('dailyLevel').textContent=`${state.level} · ${t('levelDaily')}`;$('dailyCount').textContent=`${String(idx+1).padStart(2,'0')} / ${String(list.length).padStart(2,'0')}`;$('dailyWord').textContent=w.tr;$('dailyPos').textContent=w.pos;$('dailyEn').textContent=w.en;$('dailyMk').textContent=w.mk;$('dailyMeaning').textContent=w.meaning;$('dailyExampleTr').textContent=w.exTr;$('dailyExampleEn').textContent=w.exEn;$('dailyExampleMk').textContent=w.exMk;$('btnSaveDaily').textContent=isSaved(w)?t('saved'):t('saveWord');$('wordLevelLabel').textContent=state.level;$('flashLevel').textContent=state.level;$('quizLevel').textContent=`${state.level} · ${t('quizTag')}`;}
-    function addSaved(w){if(isSaved(w)){toast(t('alreadySaved'));return}const item={...w};state.saved.unshift(item);state.xp+=10;const d=todayKey();state.dailySaved[d]=(state.dailySaved[d]||0)+1;recordStudy();persist();updateDaily();renderWords();renderSaved();toast(t('added'))}
-    function removeSaved(w){state.saved=state.saved.filter(x=>!(x.tr===w.tr&&(x.level||state.level)===(w.level||state.level)));persist();updateDaily();renderWords();renderSaved();toast(t('removed'))}
-    function renderWords(){const q=$('wordSearch').value.trim().toLocaleLowerCase('tr');let list=allWords();if(state.wordFilter==='saved')list=list.filter(isSaved);if(q)list=list.filter(w=>[w.tr,w.en,w.mk,w.meaning,w.pos].some(v=>v.toLocaleLowerCase().includes(q)));$('wordResultsLabel').textContent=`${list.length} ${t('words')}`;const host=$('wordList');if(!list.length){host.innerHTML=`<div class="empty">${state.wordFilter==='saved'?t('savedOnlyEmpty'):t('emptyWords')}</div>`;return}host.innerHTML=list.map(w=>`<article class="word-row"><div class="word-row-main"><div class="word-row-meta">${safeText(w.level)} · ${safeText(w.pos)}</div><h3>${safeText(w.tr)}</h3><p>${safeText(w.en)} · ${safeText(w.mk)}</p></div><div class="word-row-actions"><button class="icon-btn" data-open-word="${safeText(w.tr)}" aria-label="Study ${safeText(w.tr)}">↗</button><button class="icon-btn ${isSaved(w)?'saved':''}" data-save-word="${safeText(w.tr)}" aria-label="Save ${safeText(w.tr)}">${isSaved(w)?'✓':'＋'}</button></div></article>`).join('')}
-    function renderSaved(){ $('savedCount').textContent=state.saved.length;const host=$('savedList');if(!state.saved.length){host.innerHTML=`<div class="empty">${t('emptySaved')}</div>`;return}host.innerHTML=state.saved.map(w=>`<div class="saved-row"><div><div class="word-row-meta">${safeText(w.level||'A1')}</div><strong>${safeText(w.tr)}</strong><p>${safeText(w.en)} · ${safeText(w.mk)}</p></div><div class="word-row-actions"><button class="icon-btn" data-open-word="${safeText(w.tr)}" data-level="${safeText(w.level||'A1')}" aria-label="Study ${safeText(w.tr)}">↗</button><button class="icon-btn" data-remove-word="${safeText(w.tr)}" data-level="${safeText(w.level||'A1')}" aria-label="Remove ${safeText(w.tr)}">×</button></div></div>`).join('')}
-    function renderLessons(){const host=$('lessonList');const items=LESSONS[state.level];host.innerHTML=items.map((pair,i)=>{const id=`${state.level}:${i}`;const done=state.completed.includes(id);return `<div class="lesson ${done?'done':''}"><div class="lesson-top"><div><h3>${safeText(pair[0])}</h3><p>${safeText(pair[1])}</p></div><button class="btn ${done?'btn-light':'btn-soft'} btn-small" data-lesson="${i}" ${done?'disabled':''}>${done?t('lessonDone'):t('markDone')}</button></div></div>`}).join('')}
-    function updateFlashcard(){const list=allWords();if(state.flashIndex>=list.length)state.flashIndex=0;if(state.flashIndex<0)state.flashIndex=list.length-1;const w=list[state.flashIndex];$('flashWord').textContent=w.tr;$('flashEn').textContent=`${w.en} · ${w.mk}`;$('flashExample').textContent=w.exTr;$('flashcard').classList.toggle('flipped',state.flashFlipped)}
-    function showWordModal(w){state.modalWord=w;$('modalLevel').textContent=w.level||state.level;$('modalWord').textContent=w.tr;$('modalPos').textContent=w.pos;$('modalEn').textContent=w.en;$('modalMk').textContent=w.mk;$('modalMeaning').textContent=w.meaning;$('modalExampleTr').textContent=w.exTr;$('modalExampleEn').textContent=w.exEn;$('modalExampleMk').textContent=w.exMk;$('modalSave').textContent=isSaved(w)?t('saved'):t('saveWord');$('wordModal').classList.add('open')}
-    function findWord(tr,level){const L=level||state.level;return (WORDS[L]||[]).find(w=>w.tr===tr)?{...(WORDS[L].find(w=>w.tr===tr)),level:L}:null}
-    function speak(w){if(!('speechSynthesis'in window)||!('SpeechSynthesisUtterance'in window)){toast(t('noSpeech'));return}try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.tr+'. '+w.exTr);u.lang='tr-TR';u.rate=.9;window.speechSynthesis.speak(u)}catch{toast(t('noSpeech'))}}
-    async function copyText(text){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);toast(t('copied'));return}const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();toast(ok?t('copied'):t('copyFailed'))}catch{toast(t('copyFailed'))}}
-    function newQuiz(){const pool=allWords();state.quizQuestions=[];const shuffled=[...pool].sort(()=>Math.random()-.5);const chosen=shuffled.slice(0,Math.min(10,shuffled.length));state.quizQuestions=chosen.map(w=>{const others=pool.filter(x=>x.tr!==w.tr).sort(()=>Math.random()-.5).slice(0,3);const options=[w,...others].sort(()=>Math.random()-.5);return {word:w,options,correct:options.findIndex(x=>x.tr===w.tr)}});state.quizIndex=0;state.quizScore=0;state.quizAnswered=false;renderQuiz()}
-    function renderQuiz(){const total=state.quizQuestions.length;if(!total)return;const q=state.quizQuestions[state.quizIndex];$('quizCounter').textContent=`${state.quizIndex+1} / ${total}`;$('quizProgress').style.width=`${(state.quizIndex/total)*100}%`;$('quizWord').textContent=q.word.tr;$('quizOptions').innerHTML=q.options.map((w,i)=>`<button class="quiz-option" data-answer="${i}">${safeText(w.en)} <span style="color:#8992a7;font-size:11px">· ${safeText(w.mk)}</span></button>`).join('');$('quizFeedback').textContent='';$('quizFeedback').style.color='';$('nextQuestion').disabled=true;$('nextQuestion').textContent=state.quizIndex===total-1?t('startAgain'):t('nextQuestion');$('quizScore').textContent=`${state.quizScore} ${t('correct')}`;$('quizProgress').style.width=`${(state.quizIndex/total)*100}%`;state.quizAnswered=false}
-    function answerQuiz(i){if(state.quizAnswered)return;state.quizAnswered=true;const q=state.quizQuestions[state.quizIndex];const buttons=[...$('quizOptions').querySelectorAll('button')];buttons.forEach((b,n)=>{b.disabled=true;if(n===q.correct)b.classList.add('correct');if(n===i&&i!==q.correct)b.classList.add('wrong')});if(i===q.correct){state.quizScore++;state.xp+=10;recordStudy();$('quizFeedback').textContent=t('quizRight');$('quizFeedback').style.color='var(--green)'}else{$('quizFeedback').textContent=t('quizWrong')+q.word.en;$('quizFeedback').style.color='var(--red)'}persist();$('quizScore').textContent=`${state.quizScore} ${t('correct')}`;$('nextQuestion').disabled=false}
-    function nextQuiz(){if(state.quizIndex>=state.quizQuestions.length-1){toast(`${t('quizFinished')} ${state.quizScore}/${state.quizQuestions.length}`);newQuiz();return}state.quizIndex++;renderQuiz()}
-    function updateWritingCount(){const words=$('writingDraft').value.trim().split(/\s+/).filter(Boolean).length;$('wordCount').textContent=`${words} ${t('wordCount')}`}
-    function renderAll(){updateStats();updateDaily();renderWords();renderSaved();renderLessons();updateFlashcard();$('writingDraft').value=state.draft||'';updateWritingCount();if(state.quizQuestions.length)renderQuiz()}
+      function writeStorage(key, val) {
+        try {
+          localStorage.setItem(key, val);
+        } catch (_) {}
+      }
 
-    document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
-    document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.go)));
-    $('uiLanguage').addEventListener('change',e=>{state.lang=e.target.value;persist();applyLanguage()});
-    $('levelSelect').addEventListener('change',e=>{state.level=e.target.value;state.flashIndex=0;state.flashFlipped=false;state.quizQuestions=[];persist();renderAll()});
-    $('btnSaveDaily').addEventListener('click',()=>addSaved(dailyWord()));$('btnSpeakDaily').addEventListener('click',()=>speak(dailyWord()));$('btnNextDaily').addEventListener('click',()=>{state.dailyOffset++;updateDaily()});
-    $('wordSearch').addEventListener('input',renderWords);$('clearSearch').addEventListener('click',()=>{$('wordSearch').value='';renderWords()});
-    $('wordFilters').addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b)return;state.wordFilter=b.dataset.filter;document.querySelectorAll('.filter-chip').forEach(x=>x.classList.toggle('active',x===b));renderWords()});
-    $('wordList').addEventListener('click',e=>{const save=e.target.closest('[data-save-word]'),open=e.target.closest('[data-open-word]');if(save){const w=findWord(save.dataset.saveWord);if(w){if(isSaved(w))removeSaved(w);else addSaved(w)}}else if(open){const w=findWord(open.dataset.openWord);if(w)showWordModal(w)}});
-    $('savedList').addEventListener('click',e=>{const rm=e.target.closest('[data-remove-word]'),op=e.target.closest('[data-open-word]');if(rm){const w=findWord(rm.dataset.removeWord,rm.dataset.level);if(w)removeSaved(w)}else if(op){const w=findWord(op.dataset.openWord,op.dataset.level);if(w)showWordModal(w)}});
-    $('flashcardButton').addEventListener('click',()=>{state.flashFlipped=!state.flashFlipped;updateFlashcard()});$('flashNext').addEventListener('click',()=>{state.flashIndex++;state.flashFlipped=false;updateFlashcard();recordStudy()});$('flashPrev').addEventListener('click',()=>{state.flashIndex--;state.flashFlipped=false;updateFlashcard()});
-    $('lessonList').addEventListener('click',e=>{const b=e.target.closest('[data-lesson]');if(!b)return;const id=`${state.level}:${b.dataset.lesson}`;if(!state.completed.includes(id)){state.completed.push(id);state.xp+=20;recordStudy();renderLessons();toast(t('lessonReward'))}});
-    $('quizOptions').addEventListener('click',e=>{const b=e.target.closest('[data-answer]');if(b)answerQuiz(Number(b.dataset.answer))});$('nextQuestion').addEventListener('click',nextQuiz);
-    $('writingDraft').addEventListener('input',()=>{state.draft=$('writingDraft').value;updateWritingCount()});$('saveDraft').addEventListener('click',()=>{state.draft=$('writingDraft').value;persist();toast(t('draftSaved'))});$('newPrompt').addEventListener('click',()=>{const current=$('writingPromptText').textContent;const options=PROMPTS.filter(p=>p!==current);$('writingPromptText').textContent=options[Math.floor(Math.random()*options.length)]});
-    $('exportSaved').addEventListener('click',()=>{if(!state.saved.length){toast(t('exportEmpty'));return}const text=state.saved.map(w=>`${w.tr} (${w.level}) | ${w.en} | ${w.mk} | ${w.meaning}`).join('\n');copyText(text)});
-    $('clearSaved').addEventListener('click',()=>{if(!state.saved.length)return;if(window.confirm(t('clearConfirm'))){state.saved=[];persist();renderAll();toast(t('clearAllDone'))}});
-    $('closeModal').addEventListener('click',()=>$('wordModal').classList.remove('open'));$('wordModal').addEventListener('click',e=>{if(e.target===$('wordModal'))$('wordModal').classList.remove('open')});$('modalSpeak').addEventListener('click',()=>{if(state.modalWord)speak(state.modalWord)});$('modalSave').addEventListener('click',()=>{if(state.modalWord){if(isSaved(state.modalWord))removeSaved(state.modalWord);else addSaved(state.modalWord);$('modalSave').textContent=isSaved(state.modalWord)?t('saved'):t('saveWord')}});document.addEventListener('keydown',e=>{if(e.key==='Escape')$('wordModal').classList.remove('open')});
+      let parsedSaved = [];
+      try {
+        parsedSaved = JSON.parse(readStorage("lex_saved", "[]")) || [];
+      } catch (_) {
+        parsedSaved = [];
+      }
 
-    $('writingDraft').value=state.draft||'';if(state.draft)toast(t('draftRestored'));applyLanguage();
-  })();
+      const state = {
+        level: "C2",
+        index: 0,
+        xp: parseInt(readStorage("lex_xp", "145"), 10) || 145,
+        days: parseInt(readStorage("lex_days", "1"), 10) || 1,
+        lessons: parseInt(readStorage("lex_lessons", "4"), 10) || 4,
+        saved: parsedSaved,
+        review: JSON.parse(readStorage("lex_review", "{}")),
+        reviewIndex: 0,
+        apiKey: readStorage("lex_gemini_key", "")
+      };
+
+      let toastTimer = null;
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        if (!t) return;
+        t.textContent = msg;
+        t.classList.add("show");
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+      }
+
+      function updateStatsUI() {
+        document.getElementById("statSaved").textContent = state.saved.length;
+        document.getElementById("statDays").textContent = state.days;
+        document.getElementById("statXp").textContent = state.xp;
+        document.getElementById("statLessons").textContent = state.lessons;
+        document.getElementById("savedCountHeader").textContent = state.saved.length;
+      }
+
+      function saveState() {
+        writeStorage("lex_xp", String(state.xp));
+        writeStorage("lex_days", String(state.days));
+        writeStorage("lex_lessons", String(state.lessons));
+        writeStorage("lex_saved", JSON.stringify(state.saved));
+        writeStorage("lex_review", JSON.stringify(state.review || {}));
+        updateStatsUI();
+      }
+
+      function getCurrentList() {
+        const all = WORD_BANK[state.level] || WORD_BANK.C2;
+        const cat = document.getElementById("categorySelect")?.value || "all";
+        if (cat === "all") return all;
+        return all.filter(w => (w.pos || "").includes(cat));
+      }
+
+      function renderCurrentWord() {
+        const list = getCurrentList();
+        if (!list.length) { document.getElementById("wordTr").textContent = "Bu kategoride henüz kelime yok"; document.getElementById("cardLevelLabel").textContent = state.level + " · 0 kelime"; return; }
+        if (state.index >= list.length || state.index < 0) state.index = 0;
+        const item = list[state.index];
+        const focus = document.getElementById("focusSelect").value;
+
+        document.getElementById("cardLevelLabel").textContent = `${state.level} WORD (${state.index + 1}/${list.length})`;
+        document.getElementById("wordTr").textContent = item.tr;
+        document.getElementById("wordMeta").textContent = item.pos;
+        document.getElementById("wordMk").textContent = item.mk;
+        document.getElementById("wordEn").textContent = item.en;
+        document.getElementById("wordDef").textContent = item.def;
+        document.getElementById("exTr").textContent = item.exTr;
+        document.getElementById("exMk").textContent = item.exMk;
+        document.getElementById("exEn").textContent = item.exEn;
+
+        document.getElementById("pillMk").style.display = (focus === "all" || focus === "mk") ? "block" : "none";
+        document.getElementById("pillEn").style.display = (focus === "all" || focus === "en") ? "block" : "none";
+        document.getElementById("exMk").style.display = (focus === "all" || focus === "mk") ? "block" : "none";
+        document.getElementById("exEn").style.display = (focus === "all" || focus === "en") ? "block" : "none";
+
+        const isSaved = state.saved.some(w => w.tr.toLowerCase() === item.tr.toLowerCase());
+        const btnSave = document.getElementById("btnSaveWord");
+        btnSave.textContent = isSaved ? "Kaydedildi ✓" : "Kaydet";
+        btnSave.classList.toggle("saved", isSaved);
+      }
+
+      function nextWord() {
+        const list = getCurrentList();
+        state.index = (state.index + 1) % list.length;
+        state.xp += 5;
+        saveState();
+        renderCurrentWord();
+      }
+
+      function speakWord(rate = 0.95) {
+        const item = getCurrentList()[state.index];
+        if (!item) return;
+        if (!("speechSynthesis" in window)) return;
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(`${item.tr}. ${item.exTr}`);
+          utter.lang = "tr-TR";
+          utter.rate = rate;
+          window.speechSynthesis.speak(utter);
+        } catch (_) {}
+      }
+
+      function renderSavedList() {
+        const container = document.getElementById("savedListContainer");
+        if (!state.saved.length) {
+          container.innerHTML = `<p style="font-size:13px; color:var(--text-muted);">Henüz kaydedilmiş kelime yok.</p>`;
+          return;
+        }
+        container.innerHTML = state.saved.map((w, idx) => `
+          <div class="saved-item">
+            <div>
+              <div style="font-weight:700; font-size:15px;">${w.tr} <span class="stat-tag">${w.level || "C2"}</span></div>
+              <div style="font-size:12.5px; color:var(--text-muted);">${w.mk} · ${w.en}</div>
+              <div style="font-size:12px; color:#9ca3af; margin-top:2px;">${w.def}</div>
+            </div>
+            <button type="button" class="btn-outline-sm btn-remove-saved" data-idx="${idx}">Sil</button>
+          </div>
+        `).join("");
+
+        container.querySelectorAll(".btn-remove-saved").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const idx = parseInt(btn.getAttribute("data-idx"), 10);
+            state.saved.splice(idx, 1);
+            saveState();
+            renderSavedList();
+            renderCurrentWord();
+          });
+        });
+      }
+
+      function toggleSaveCurrentWord() {
+        const item = getCurrentList()[state.index];
+        const idx = state.saved.findIndex(w => w.tr.toLowerCase() === item.tr.toLowerCase());
+        if (idx > -1) {
+          state.saved.splice(idx, 1);
+          showToast("Defterden çıkarıldı.");
+        } else {
+          state.saved.unshift({ ...item, level: state.level });
+          state.xp += 10;
+          showToast("Deftere kaydedildi (+10 XP)");
+        }
+        saveState();
+        renderCurrentWord();
+        renderSavedList();
+      }
+
+      function copyCurrentWord() {
+        const item = getCurrentList()[state.index];
+        const text = `${item.tr} (${state.level})
+MK: ${item.mk}
+EN: ${item.en}
+Anlam: ${item.def}
+Örnek: ${item.exTr}`;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => showToast("Kopyalandı.")).catch(() => showToast("Kopyalandı."));
+        } else {
+          showToast("Kopyalandı.");
+        }
+      }
+
+      function openApiModal() {
+        document.getElementById("apiKeyInput").value = state.apiKey || "";
+        document.getElementById("apiModal").classList.add("open");
+      }
+
+      function closeApiModal() {
+        document.getElementById("apiModal").classList.remove("open");
+      }
+
+      async function callGemini(promptText, systemPrompt = "", jsonMode = false) {
+        const key = (state.apiKey || "").trim();
+        if (!key) {
+          openApiModal();
+          throw new Error("Önce Anahtar butonuna basıp anahtarını gir.");
+        }
+
+        let lastError = null;
+        for (const model of GEMINI_MODELS) {
+          try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+            const body = {
+              contents: [{ role: "user", parts: [{ text: promptText }] }],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 1024
+              }
+            };
+            if (systemPrompt) {
+              body.systemInstruction = { parts: [{ text: systemPrompt }] };
+            }
+            if (jsonMode) {
+              body.generationConfig.responseMimeType = "application/json";
+            }
+
+            const res = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(body)
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+              lastError = (data && data.error && data.error.message) ? data.error.message : `HTTP ${res.status}`;
+              continue;
+            }
+            const text = data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+            if (text) return text;
+          } catch (err) {
+            lastError = err.message || "Bağlantı hatası";
+          }
+        }
+        throw new Error(lastError || "Bağlantı hatası.");
+      }
+
+      async function generateAiWord() {
+        const btn = document.getElementById("btnAiNewWord");
+        const origText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<span class="loader"></span>`;
+
+        const existing = getCurrentList().map(w => w.tr).join(", ");
+        const levelRule = state.level === "C2"
+          ? "Gerçek C2 seviyesinde üst düzey bir Türkçe kelime üret. Basit günlük kelimeler verme."
+          : `CEFR ${state.level} seviyesine uygun bir Türkçe kelime üret.`;
+
+        const prompt = `${levelRule}
+Şu listede olmayan yeni bir kelime seç: [${existing}].
+Sadece JSON döndür:
+{
+  "tr": "Türkçe kelime",
+  "pos": "Tür · Alan",
+  "mk": "Makedonca Kiril (Latin okunuş)",
+  "en": "İngilizce karşılık",
+  "def": "Kısa Türkçe anlam",
+  "exTr": "Türkçe örnek cümle",
+  "exMk": "Makedonca örnek cümle",
+  "exEn": "İngilizce örnek cümle"
+}`;
+
+        try {
+          const raw = await callGemini(prompt, "Türkçe, Makedonca ve İngilizce kelime üreticisisin.", true);
+          const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+          if (parsed && parsed.tr && parsed.mk && parsed.en) {
+            WORD_BANK[state.level].push(parsed);
+            state.index = WORD_BANK[state.level].length - 1;
+            state.xp += 15;
+            saveState();
+            renderCurrentWord();
+            showToast("Yeni kelime eklendi (+15 XP)");
+          }
+        } catch (e) {
+          showToast(String(e.message || "Hata").slice(0, 60));
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = origText;
+        }
+      }
+
+      async function sendAiChat(customText) {
+        const input = document.getElementById("aiPromptInput");
+        const text = (typeof customText === "string" ? customText : input.value).trim();
+        if (!text) return;
+
+        const box = document.getElementById("aiChatBox");
+        const btn = document.getElementById("btnSendAi");
+
+        const userDiv = document.createElement("div");
+        userDiv.className = "msg user";
+        userDiv.textContent = text;
+        box.appendChild(userDiv);
+
+        if (typeof customText !== "string") input.value = "";
+        btn.disabled = true;
+
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "msg ai";
+        aiDiv.innerHTML = `<span class="loader"></span>`;
+        box.appendChild(aiDiv);
+        box.scrollTop = box.scrollHeight;
+
+        const currentWord = getCurrentList()[state.index];
+        const sys = `Türkçe, Makedonca ve İngilizce dil asistanısın. Seviye: ${state.level}. Aktif kelime: "${currentWord.tr}" (${currentWord.mk} / ${currentWord.en}). Kısa, net ve doğrudan yanıt ver.`;
+
+        try {
+          const reply = await callGemini(text, sys, false);
+          aiDiv.textContent = reply;
+          state.xp += 10;
+          saveState();
+        } catch (e) {
+          aiDiv.textContent = e.message;
+        } finally {
+          btn.disabled = false;
+          box.scrollTop = box.scrollHeight;
+        }
+      }
+
+      async function loadQuizQuestion() {
+        const btn = document.getElementById("btnNewQuiz");
+        const qWord = document.getElementById("quizWord");
+        const qOpts = document.getElementById("quizOptions");
+        const qFeed = document.getElementById("quizFeedback");
+
+        btn.disabled = true;
+        qFeed.textContent = "";
+        qOpts.innerHTML = `<div style="padding:12px 0; color:var(--text-muted);"><span class="loader"></span></div>`;
+
+        try {
+          const prompt = `CEFR ${state.level} seviyesinde Türkçe kelime sorusu hazırla. Sadece JSON döndür:
+{
+  "word": "Türkçe kelime",
+  "question": "Doğru karşılığı seç:",
+  "options": ["Seçenek 1", "Seçenek 2", "Seçenek 3", "Seçenek 4"],
+  "correctIndex": 0,
+  "explanation": "Kısa açıklama"
+}`;
+          const raw = await callGemini(prompt, "Kelime testi hazırlayıcısısın.", true);
+          const q = JSON.parse(raw.replace(/```json|```/g, "").trim());
+          qWord.textContent = q.word;
+          document.getElementById("quizPromptText").textContent = q.question || "Doğru karşılığı seç:";
+          qOpts.innerHTML = "";
+
+          q.options.forEach((opt, i) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "quiz-option";
+            b.textContent = opt;
+            b.addEventListener("click", () => {
+              const allBtns = qOpts.querySelectorAll(".quiz-option");
+              allBtns.forEach(x => { x.disabled = true; });
+              if (i === q.correctIndex) {
+                b.classList.add("correct");
+                qFeed.style.color = "var(--success)";
+                qFeed.textContent = "Doğru (+25 XP) — " + (q.explanation || "");
+                state.xp += 25;
+                state.lessons += 1;
+                saveState();
+              } else {
+                b.classList.add("wrong");
+                if (allBtns[q.correctIndex]) allBtns[q.correctIndex].classList.add("correct");
+                qFeed.style.color = "var(--danger)";
+                qFeed.textContent = q.explanation || "";
+              }
+            });
+            qOpts.appendChild(b);
+          });
+        } catch (_) {
+          const list = getCurrentList();
+          const target = list[Math.floor(Math.random() * list.length)];
+          qWord.textContent = target.tr;
+          qOpts.innerHTML = "";
+          const choices = [
+            `${target.en} · ${target.mk}`,
+            "Ambiguous · Нејасен (Nejasen)",
+            "Reciprocity · Реципроцитет (Reciprocitet)",
+            "Foresight · Предвидување (Predviduvanje)"
+          ].sort(() => Math.random() - 0.5);
+
+          choices.forEach(c => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "quiz-option";
+            b.textContent = c;
+            b.addEventListener("click", () => {
+              qOpts.querySelectorAll(".quiz-option").forEach(x => { x.disabled = true; });
+              if (c.startsWith(target.en)) {
+                b.classList.add("correct");
+                qFeed.style.color = "var(--success)";
+                qFeed.textContent = "Doğru (+25 XP)";
+                state.xp += 25;
+                saveState();
+              } else {
+                b.classList.add("wrong");
+                qFeed.style.color = "var(--danger)";
+                qFeed.textContent = `${target.en} · ${target.mk}`;
+              }
+            });
+            qOpts.appendChild(b);
+          });
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      const grammarItems = [
+        {q:"“Ev” kelimesine bulunma hâli eki getir: Ev…", a:["evde","evda","evta"], c:0, why:"Ev kelimesindeki ince ünlü nedeniyle -de kullanılır."},
+        {q:"“Okul” kelimesine bulunma hâli eki getir: Okul…", a:["okulde","okulda","okulta"], c:1, why:"Son ünlü kalın olduğu için -da kullanılır."},
+        {q:"“Kitap” kelimesine yönelme hâli eki getir: Kitap…", a:["kitaba","kitape","kitapta"], c:0, why:"Kitap kelimesinde son ünlü kalındır; -a gelir."},
+        {q:"“Göl” kelimesine bulunma hâli eki getir: Göl…", a:["gölde","gölda","gölta"], c:0, why:"İnce ünlü ve yumuşak ünsüz: -de."}
+      ]; let grammarIndex=0;
+      function renderGrammar(){ const q=grammarItems[grammarIndex%grammarItems.length]; document.getElementById("grammarQuestion").textContent=q.q; const box=document.getElementById("grammarOptions"); box.innerHTML=""; document.getElementById("grammarFeedback").textContent=""; q.a.forEach((a,i)=>{const b=document.createElement("button");b.textContent=a;b.onclick=()=>{document.getElementById("grammarFeedback").textContent=(i===q.c?"Doğru! ":"Tekrar dene. Doğru cevap: ")+q.a[q.c]+" — "+q.why;if(i===q.c){state.xp+=5;saveState();setTimeout(()=>{grammarIndex++;renderGrammar();},1300);}};box.appendChild(b);}); }
+      function dueReviews(){const now=Date.now();return state.saved.filter(w=>!state.review[w.tr] || (state.review[w.tr].due||0)<=now);}
+      function renderReview(){const due=dueReviews();document.getElementById("dueCount").textContent=due.length+" hazır";const w=due[0]||state.saved[0];const front=document.getElementById("reviewFront"),back=document.getElementById("reviewBack");back.hidden=true;back.textContent="";["btnAgain","btnKnown","btnEasy"].forEach(id=>document.getElementById(id).disabled=!w);document.getElementById("btnReveal").disabled=!w;if(!w){front.textContent="Tekrar için defterine kelime ekle";return;}state.currentReview=w;front.textContent=w.tr;back.textContent=(w.en||"")+" · "+(w.mk||"")+" — "+(w.def||"")+"\n"+(w.exTr||"");}
+      function revealReview(){if(!state.currentReview)return;document.getElementById("reviewBack").hidden=false;}
+      function rateReview(kind){const w=state.currentReview;if(!w)return;const days=kind==="again"?0:kind==="known"?1:4;state.review[w.tr]={due:Date.now()+days*86400000,last:kind};writeStorage("lex_review",JSON.stringify(state.review));renderReview();}
+      const writingTopics=[{t:"Kendini tanıt.",h:"ad · yaş · yaşadığın şehir · hobiler",s:"Merhaba, benim adım ..."},{t:"En sevdiğin yemeği anlat.",h:"yemek · malzemeler · tat · ne zaman yersin",s:"En sevdiğim yemek ... çünkü ..."},{t:"Bir hafta sonu planını anlat.",h:"cumartesi · pazar · arkadaşlar · etkinlik",s:"Bu hafta sonu ... yapmayı planlıyorum."},{t:"Yaşadığın şehri tanıt.",h:"ulaşım · parklar · sevdiğin yer · hava",s:"Yaşadığım şehir ..."}];let writingIndex=0;
+      function nextWritingTopic(){writingIndex=(writingIndex+1)%writingTopics.length;const x=writingTopics[writingIndex];document.getElementById("writingTopic").textContent=x.t;document.getElementById("writingHints").textContent="İpuçları: "+x.h;document.getElementById("writingTemplate").textContent="Örnek başlangıç: "+x.s;}
+
+      function switchView(name) {
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        const targetView = document.getElementById("view-" + name);
+        const targetNav = document.getElementById("nav-" + name);
+        if (targetView) targetView.classList.add("active");
+        if (targetNav) targetNav.classList.add("active");
+
+        if (name === "practice") { renderReview(); renderGrammar(); }
+        if (name === "quiz" && !document.getElementById("quizOptions").children.length) {
+          loadQuizQuestion();
+        }
+        if (name === "saved") {
+          renderSavedList();
+        }
+      }
+
+      // Bind all events cleanly
+      document.getElementById("levelSelect").addEventListener("change", () => {
+        state.level = document.getElementById("levelSelect").value;
+        state.index = 0;
+        document.getElementById("quizLevelTag").textContent = state.level;
+        renderCurrentWord();
+      });
+
+      document.getElementById("focusSelect").addEventListener("change", renderCurrentWord);
+      document.getElementById("btnNextWord").addEventListener("click", nextWord);
+      document.getElementById("btnAiNewWord").addEventListener("click", generateAiWord);
+      document.getElementById("btnSpeakWord").addEventListener("click", speakWord);
+      document.getElementById("btnSaveWord").addEventListener("click", toggleSaveCurrentWord);
+      document.getElementById("btnCopyWord").addEventListener("click", copyCurrentWord);
+
+      document.querySelectorAll(".preset-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          sendAiChat(chip.getAttribute("data-prompt") || "");
+        });
+      });
+
+      document.getElementById("btnSendAi").addEventListener("click", () => sendAiChat());
+      document.getElementById("aiPromptInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendAiChat();
+      });
+
+      document.getElementById("btnNewQuiz").addEventListener("click", loadQuizQuestion);
+
+      document.getElementById("btnExportSaved").addEventListener("click", () => {
+        const payload = { version: 1, saved: state.saved, xp: state.xp, days: state.days, lessons: state.lessons, review: state.review };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+        const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href=url; a.download="turkce-ogrenme-yedek.json"; a.click(); URL.revokeObjectURL(url);
+      });
+      document.getElementById("btnImportSaved").addEventListener("click", () => document.getElementById("importFile").click());
+      document.getElementById("importFile").addEventListener("change", async e => {
+        const file=e.target.files[0]; if(!file) return;
+        try { const data=JSON.parse(await file.text()); if(!Array.isArray(data.saved)) throw new Error("Geçersiz yedek");
+          const merged=[...state.saved]; data.saved.forEach(w=>{if(w && w.tr && !merged.some(x=>x.tr.toLowerCase()===w.tr.toLowerCase())) merged.push(w);});
+          state.saved=merged; state.review={...state.review,...(data.review||{})}; state.xp=Math.max(state.xp,Number(data.xp)||0); saveState(); writeStorage("lex_review",JSON.stringify(state.review)); renderSavedList(); showToast("Yedek içe aktarıldı.");
+        } catch(err){ showToast("Dosya okunamadı veya geçersiz."); } e.target.value="";
+      });
+
+      document.getElementById("categorySelect").addEventListener("change", () => { state.index=0; renderCurrentWord(); });
+      document.getElementById("btnSpeakSlow").addEventListener("click", () => speakWord(0.75));
+      document.getElementById("btnReveal").addEventListener("click", revealReview);
+      document.getElementById("btnAgain").addEventListener("click", () => rateReview("again"));
+      document.getElementById("btnKnown").addEventListener("click", () => rateReview("known"));
+      document.getElementById("btnEasy").addEventListener("click", () => rateReview("easy"));
+      document.getElementById("btnWritingTopic").addEventListener("click", nextWritingTopic);
+
+
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const v = btn.getAttribute("data-view");
+          if (v) switchView(v);
+        });
+      });
+
+      document.getElementById("btnOpenKey").addEventListener("click", openApiModal);
+      document.getElementById("btnCloseKey").addEventListener("click", closeApiModal);
+
+      document.getElementById("btnSaveKey").addEventListener("click", () => {
+        const val = document.getElementById("apiKeyInput").value.trim();
+        if (!val) {
+          showToast("Anahtar gir.");
+          return;
+        }
+        state.apiKey = val;
+        writeStorage("lex_gemini_key", val);
+        closeApiModal();
+        showToast("Kaydedildi.");
+      });
+
+      document.getElementById("btnClearKey").addEventListener("click", () => {
+        state.apiKey = "";
+        writeStorage("lex_gemini_key", "");
+        document.getElementById("apiKeyInput").value = "";
+        showToast("Silindi.");
+      });
+
+      updateStatsUI();
+      renderCurrentWord();
+      renderSavedList();
+    })();
   </script>
 </body>
 </html>
