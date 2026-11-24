@@ -438,17 +438,9 @@
       gap: 10px;
     }
 
-    .view { display: none; }
-    .mini-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-    .mini-actions button, .topic-chip { background:var(--surface-2); color:var(--text); border:1px solid var(--border-light); border-radius:10px; padding:9px 12px; font-size:12px; font-weight:650; }
-    .topic-chip.active { background:var(--primary-soft); border-color:var(--primary); }
-    .practice-word { font-size:28px; font-weight:800; margin:12px 0; }
-    .muted { color:var(--text-muted); font-size:12px; }
-    .progress-line { height:7px; background:var(--surface-3); border-radius:9px; overflow:hidden; margin-top:8px; }
-    .progress-line span { display:block; height:100%; width:0; background:var(--primary); }
-    .writing-hints { color:var(--text-muted); font-size:12px; margin:8px 0; line-height:1.8; }
-    .text-area { width:100%; min-height:100px; background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:12px; font:inherit; }
-
+    .view {
+      display: none;
+    }
 
     .view.active {
       display: block;
@@ -577,9 +569,6 @@
           <option value="C1">C1 · İleri</option>
           <option value="C2" selected>C2 · Akademik</option>
         </select>
-        <select id="categorySelect" class="select-box">
-          <option value="all">Tüm kategoriler</option><option value="Selamlaşma">Selamlaşma</option><option value="Yemek">Yemek</option><option value="Seyahat">Seyahat</option><option value="Alışveriş">Alışveriş</option><option value="Günlük hayat">Günlük hayat</option><option value="Okul">Okul</option>
-        </select>
         <select id="focusSelect" class="select-box">
           <option value="all">TR · MK · EN</option>
           <option value="mk">Makedonca (MK)</option>
@@ -656,7 +645,7 @@
         </div>
 
         <div class="action-buttons">
-          <button type="button" class="btn-primary" id="btnSpeakWord">Dinle</button><button type="button" class="btn-secondary" id="btnSpeakSlow">Yavaş 0.75×</button>
+          <button type="button" class="btn-primary" id="btnSpeakWord">Dinle</button>
           <button type="button" class="btn-secondary" id="btnSaveWord">Kaydet</button>
           <button type="button" class="btn-secondary" id="btnCopyWord">Kopyala</button>
         </div>
@@ -686,27 +675,6 @@
       </div>
     </div>
 
-    <div id="view-practice" class="view">
-      <div class="card">
-        <div class="section-title"><span>Akıllı Kelime Tekrarı</span><span class="stat-tag" id="dueCount">0 hazır</span></div>
-        <p class="muted">Kaydettiğin kelimelerden tekrar zamanı gelenler önce gösterilir.</p>
-        <div class="practice-word" id="reviewFront">Tekrar için defterine kelime ekle</div>
-        <div id="reviewBack" class="definition-box" hidden></div>
-        <div class="mini-actions"><button id="btnReveal">Cevabı göster</button><button id="btnAgain" disabled>Tekrar sor</button><button id="btnKnown" disabled>Hatırladım</button><button id="btnEasy" disabled>Çok kolay</button></div>
-      </div>
-      <div class="card">
-        <div class="section-title"><span>Türkçe Ekler ve Ünlü Uyumu</span></div>
-        <p id="grammarQuestion">“Ev” kelimesine bulunma hâli eki getir: Ev…</p>
-        <div id="grammarOptions" class="mini-actions"></div><p id="grammarFeedback" class="muted"></p>
-      </div>
-      <div class="card">
-        <div class="section-title"><span>Yazma Pratiği</span><button id="btnWritingTopic" class="btn-outline-sm">Yeni konu</button></div>
-        <p id="writingTopic">Kendini tanıt.</p><div class="writing-hints" id="writingHints">İpuçları: ad · yaş · yaşadığın şehir · hobiler</div>
-        <textarea id="writingAnswer" class="text-area" placeholder="Türkçe cevabını buraya yaz..."></textarea>
-        <p class="muted" id="writingTemplate">Örnek başlangıç: Merhaba, benim adım ...</p>
-      </div>
-    </div>
-
     <div id="view-quiz" class="view">
       <div class="card">
         <div class="section-title">
@@ -726,7 +694,7 @@
       <div class="card">
         <div class="section-title">
           <span>Defterim (<span id="savedCountHeader">0</span>)</span>
-          <button type="button" class="btn-outline-sm" id="btnExportSaved">Dışa aktar</button><button type="button" class="btn-outline-sm" id="btnImportSaved">İçe aktar</button><input id="importFile" type="file" accept="application/json,.json" hidden />
+          <button type="button" class="btn-outline-sm" id="btnExportSaved">Kopyala</button>
         </div>
         <div id="savedListContainer">
           <p style="font-size:13px; color:var(--text-muted);">Henüz kaydedilmiş kelime yok.</p>
@@ -744,7 +712,6 @@
       <span class="nav-icon">✨</span>
       <span>Asistan</span>
     </button>
-    <button type="button" class="nav-btn" id="nav-practice" data-view="practice"><span class="nav-icon">🧠</span><span>Pratik</span></button>
     <button type="button" class="nav-btn" id="nav-quiz" data-view="quiz">
       <span class="nav-icon">🎯</span>
       <span>Quiz</span>
@@ -774,21 +741,13 @@
 
   <script>
     (function () {
-      const GEMINI_MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash"];
+      const GEMINI_MODELS = ["gemini-3.8-flash"];
 
       const WORD_BANK = {
         A1: [
           { tr: "Merhaba", pos: "İfade · Günlük", mk: "Здраво (Zdravo)", en: "Hello", def: "Karşılaşmada kullanılan selamlama sözü.", exTr: "Merhaba, bugün nasılsın?", exMk: "Здраво, како си денес?", exEn: "Hello, how are you today?" },
           { tr: "Teşekkür ederim", pos: "İfade · Günlük", mk: "Благодарам (Blagodaram)", en: "Thank you", def: "Yardım veya iyilik için teşekkür ifadesi.", exTr: "Yardımın için teşekkür ederim.", exMk: "Ти благодарам за помошта.", exEn: "Thank you for your help." },
-          { tr: "Öğrenci", pos: "İsim · Okul", mk: "Ученик (Učenik)", en: "Student", def: "Okulda veya üniversitede okuyan kişi.", exTr: "Bugün okulda ders çalıştım.", exMk: "Денес учев на училиште.", exEn: "I studied at school today." },
-          { tr: "Günaydın", pos: "İfade · Selamlaşma", mk: "Добро утро (Dobro utro)", en: "Good morning", def: "Sabah kullanılan selamlama.", exTr: "Günaydın, nasılsınız?", exMk: "Добро утро, како сте?", exEn: "Good morning, how are you?" },
-          { tr: "Hoşça kal", pos: "İfade · Selamlaşma", mk: "Довидување (Doviduvanje)", en: "Goodbye", def: "Ayrılırken söylenen ifade.", exTr: "Yarın görüşürüz, hoşça kal.", exMk: "Се гледаме утре, довидување.", exEn: "See you tomorrow, goodbye." },
-          { tr: "Su", pos: "İsim · Yemek", mk: "Вода (Voda)", en: "Water", def: "İçilen temel sıvı.", exTr: "Bir bardak su alabilir miyim?", exMk: "Може ли една чаша вода?", exEn: "Can I have a glass of water?" },
-          { tr: "Ekmek", pos: "İsim · Yemek", mk: "Леб (Leb)", en: "Bread", def: "Unla yapılan temel yiyecek.", exTr: "Marketten ekmek aldım.", exMk: "Купив леб од продавница.", exEn: "I bought bread from the shop." },
-          { tr: "Havaalanı", pos: "İsim · Seyahat", mk: "Аеродром (Aerodrom)", en: "Airport", def: "Uçakların kalktığı ve indiği yer.", exTr: "Havaalanına nasıl gidebilirim?", exMk: "Како можам да стигнам до аеродромот?", exEn: "How can I get to the airport?" },
-          { tr: "Bilet", pos: "İsim · Seyahat", mk: "Билет (Bilet)", en: "Ticket", def: "Yolculuk veya etkinlik için belge.", exTr: "Bir otobüs bileti istiyorum.", exMk: "Сакам еден автобуски билет.", exEn: "I would like a bus ticket." },
-          { tr: "Ne kadar?", pos: "İfade · Alışveriş", mk: "Колку чини? (Kolku čini?)", en: "How much?", def: "Fiyat sormak için kullanılır.", exTr: "Bu çanta ne kadar?", exMk: "Колку чини оваа торба?", exEn: "How much is this bag?" },
-          { tr: "Pahalı", pos: "Sıfat · Alışveriş", mk: "Скапо (Skapo)", en: "Expensive", def: "Fiyatı yüksek olan.", exTr: "Bu telefon çok pahalı.", exMk: "Овој телефон е многу скап.", exEn: "This phone is very expensive." }
+          { tr: "Öğrenci", pos: "İsim · Okul", mk: "Ученик (Učenik)", en: "Student", def: "Okulda veya üniversitede okuyan kişi.", exTr: "Bugün okulda ders çalıştım.", exMk: "Денес учев на училиште.", exEn: "I studied at school today." }
         ],
         A2: [
           { tr: "Deneyim", pos: "İsim · Genel", mk: "Искуство (Iskustvo)", en: "Experience", def: "Yaşanarak veya çalışarak edinilen bilgi ve birikim.", exTr: "Yeni bir yerde yaşamak farklı bir deneyim.", exMk: "Живеењето на ново место е ново искуство.", exEn: "Living in a new place is a new experience." },
@@ -848,8 +807,6 @@
         days: parseInt(readStorage("lex_days", "1"), 10) || 1,
         lessons: parseInt(readStorage("lex_lessons", "4"), 10) || 4,
         saved: parsedSaved,
-        review: JSON.parse(readStorage("lex_review", "{}")),
-        reviewIndex: 0,
         apiKey: readStorage("lex_gemini_key", "")
       };
 
@@ -876,20 +833,15 @@
         writeStorage("lex_days", String(state.days));
         writeStorage("lex_lessons", String(state.lessons));
         writeStorage("lex_saved", JSON.stringify(state.saved));
-        writeStorage("lex_review", JSON.stringify(state.review || {}));
         updateStatsUI();
       }
 
       function getCurrentList() {
-        const all = WORD_BANK[state.level] || WORD_BANK.C2;
-        const cat = document.getElementById("categorySelect")?.value || "all";
-        if (cat === "all") return all;
-        return all.filter(w => (w.pos || "").includes(cat));
+        return WORD_BANK[state.level] || WORD_BANK.C2;
       }
 
       function renderCurrentWord() {
         const list = getCurrentList();
-        if (!list.length) { document.getElementById("wordTr").textContent = "Bu kategoride henüz kelime yok"; document.getElementById("cardLevelLabel").textContent = state.level + " · 0 kelime"; return; }
         if (state.index >= list.length || state.index < 0) state.index = 0;
         const item = list[state.index];
         const focus = document.getElementById("focusSelect").value;
@@ -923,15 +875,14 @@
         renderCurrentWord();
       }
 
-      function speakWord(rate = 0.95) {
+      function speakWord() {
         const item = getCurrentList()[state.index];
-        if (!item) return;
         if (!("speechSynthesis" in window)) return;
         try {
           window.speechSynthesis.cancel();
           const utter = new SpeechSynthesisUtterance(`${item.tr}. ${item.exTr}`);
           utter.lang = "tr-TR";
-          utter.rate = rate;
+          utter.rate = 0.95;
           window.speechSynthesis.speak(utter);
         } catch (_) {}
       }
@@ -1013,7 +964,7 @@ Anlam: ${item.def}
         let lastError = null;
         for (const model of GEMINI_MODELS) {
           try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
             const body = {
               contents: [{ role: "user", parts: [{ text: promptText }] }],
               generationConfig: {
@@ -1030,7 +981,7 @@ Anlam: ${item.def}
 
             const res = await fetch(url, {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-Type": "application/json", "x-goog-api-key": key },
               body: JSON.stringify(body)
             });
 
@@ -1217,20 +1168,6 @@ Sadece JSON döndür:
         }
       }
 
-      const grammarItems = [
-        {q:"“Ev” kelimesine bulunma hâli eki getir: Ev…", a:["evde","evda","evta"], c:0, why:"Ev kelimesindeki ince ünlü nedeniyle -de kullanılır."},
-        {q:"“Okul” kelimesine bulunma hâli eki getir: Okul…", a:["okulde","okulda","okulta"], c:1, why:"Son ünlü kalın olduğu için -da kullanılır."},
-        {q:"“Kitap” kelimesine yönelme hâli eki getir: Kitap…", a:["kitaba","kitape","kitapta"], c:0, why:"Kitap kelimesinde son ünlü kalındır; -a gelir."},
-        {q:"“Göl” kelimesine bulunma hâli eki getir: Göl…", a:["gölde","gölda","gölta"], c:0, why:"İnce ünlü ve yumuşak ünsüz: -de."}
-      ]; let grammarIndex=0;
-      function renderGrammar(){ const q=grammarItems[grammarIndex%grammarItems.length]; document.getElementById("grammarQuestion").textContent=q.q; const box=document.getElementById("grammarOptions"); box.innerHTML=""; document.getElementById("grammarFeedback").textContent=""; q.a.forEach((a,i)=>{const b=document.createElement("button");b.textContent=a;b.onclick=()=>{document.getElementById("grammarFeedback").textContent=(i===q.c?"Doğru! ":"Tekrar dene. Doğru cevap: ")+q.a[q.c]+" — "+q.why;if(i===q.c){state.xp+=5;saveState();setTimeout(()=>{grammarIndex++;renderGrammar();},1300);}};box.appendChild(b);}); }
-      function dueReviews(){const now=Date.now();return state.saved.filter(w=>!state.review[w.tr] || (state.review[w.tr].due||0)<=now);}
-      function renderReview(){const due=dueReviews();document.getElementById("dueCount").textContent=due.length+" hazır";const w=due[0]||state.saved[0];const front=document.getElementById("reviewFront"),back=document.getElementById("reviewBack");back.hidden=true;back.textContent="";["btnAgain","btnKnown","btnEasy"].forEach(id=>document.getElementById(id).disabled=!w);document.getElementById("btnReveal").disabled=!w;if(!w){front.textContent="Tekrar için defterine kelime ekle";return;}state.currentReview=w;front.textContent=w.tr;back.textContent=(w.en||"")+" · "+(w.mk||"")+" — "+(w.def||"")+"\n"+(w.exTr||"");}
-      function revealReview(){if(!state.currentReview)return;document.getElementById("reviewBack").hidden=false;}
-      function rateReview(kind){const w=state.currentReview;if(!w)return;const days=kind==="again"?0:kind==="known"?1:4;state.review[w.tr]={due:Date.now()+days*86400000,last:kind};writeStorage("lex_review",JSON.stringify(state.review));renderReview();}
-      const writingTopics=[{t:"Kendini tanıt.",h:"ad · yaş · yaşadığın şehir · hobiler",s:"Merhaba, benim adım ..."},{t:"En sevdiğin yemeği anlat.",h:"yemek · malzemeler · tat · ne zaman yersin",s:"En sevdiğim yemek ... çünkü ..."},{t:"Bir hafta sonu planını anlat.",h:"cumartesi · pazar · arkadaşlar · etkinlik",s:"Bu hafta sonu ... yapmayı planlıyorum."},{t:"Yaşadığın şehri tanıt.",h:"ulaşım · parklar · sevdiğin yer · hava",s:"Yaşadığım şehir ..."}];let writingIndex=0;
-      function nextWritingTopic(){writingIndex=(writingIndex+1)%writingTopics.length;const x=writingTopics[writingIndex];document.getElementById("writingTopic").textContent=x.t;document.getElementById("writingHints").textContent="İpuçları: "+x.h;document.getElementById("writingTemplate").textContent="Örnek başlangıç: "+x.s;}
-
       function switchView(name) {
         document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
         document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
@@ -1239,7 +1176,6 @@ Sadece JSON döndür:
         if (targetView) targetView.classList.add("active");
         if (targetNav) targetNav.classList.add("active");
 
-        if (name === "practice") { renderReview(); renderGrammar(); }
         if (name === "quiz" && !document.getElementById("quizOptions").children.length) {
           loadQuizQuestion();
         }
@@ -1277,27 +1213,18 @@ Sadece JSON döndür:
       document.getElementById("btnNewQuiz").addEventListener("click", loadQuizQuestion);
 
       document.getElementById("btnExportSaved").addEventListener("click", () => {
-        const payload = { version: 1, saved: state.saved, xp: state.xp, days: state.days, lessons: state.lessons, review: state.review };
-        const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
-        const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href=url; a.download="turkce-ogrenme-yedek.json"; a.click(); URL.revokeObjectURL(url);
+        if (!state.saved.length) {
+          showToast("Kelime yok.");
+          return;
+        }
+        const txt = state.saved.map(w => `${w.tr} | ${w.mk} | ${w.en} — ${w.def}`).join("
+");
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(txt).then(() => showToast("Kopyalandı.")).catch(() => showToast("Kopyalandı."));
+        } else {
+          showToast("Kopyalandı.");
+        }
       });
-      document.getElementById("btnImportSaved").addEventListener("click", () => document.getElementById("importFile").click());
-      document.getElementById("importFile").addEventListener("change", async e => {
-        const file=e.target.files[0]; if(!file) return;
-        try { const data=JSON.parse(await file.text()); if(!Array.isArray(data.saved)) throw new Error("Geçersiz yedek");
-          const merged=[...state.saved]; data.saved.forEach(w=>{if(w && w.tr && !merged.some(x=>x.tr.toLowerCase()===w.tr.toLowerCase())) merged.push(w);});
-          state.saved=merged; state.review={...state.review,...(data.review||{})}; state.xp=Math.max(state.xp,Number(data.xp)||0); saveState(); writeStorage("lex_review",JSON.stringify(state.review)); renderSavedList(); showToast("Yedek içe aktarıldı.");
-        } catch(err){ showToast("Dosya okunamadı veya geçersiz."); } e.target.value="";
-      });
-
-      document.getElementById("categorySelect").addEventListener("change", () => { state.index=0; renderCurrentWord(); });
-      document.getElementById("btnSpeakSlow").addEventListener("click", () => speakWord(0.75));
-      document.getElementById("btnReveal").addEventListener("click", revealReview);
-      document.getElementById("btnAgain").addEventListener("click", () => rateReview("again"));
-      document.getElementById("btnKnown").addEventListener("click", () => rateReview("known"));
-      document.getElementById("btnEasy").addEventListener("click", () => rateReview("easy"));
-      document.getElementById("btnWritingTopic").addEventListener("click", nextWritingTopic);
-
 
       document.querySelectorAll(".nav-btn").forEach(btn => {
         btn.addEventListener("click", () => {
