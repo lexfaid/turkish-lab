@@ -725,13 +725,13 @@
   <div class="modal-backdrop" id="apiModal">
     <div class="modal">
       <div class="section-title">
-        <span>Anahtar</span>
+        <span>OpenRouter API Anahtarı</span>
         <button type="button" class="btn-outline-sm" id="btnCloseKey">Kapat</button>
       </div>
       <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:12px;">
-        Anahtar yalnızca bu tarayıcıda saklanır.
+        OpenRouter API anahtarın bu tarayıcıda saklanır. GitHub dosyasına eklenmez.
       </p>
-      <input type="password" id="apiKeyInput" class="input-field" style="width:100%; margin-bottom:12px;" placeholder="Anahtarı yapıştır..." autocomplete="off" />
+      <input type="password" id="apiKeyInput" class="input-field" style="width:100%; margin-bottom:12px;" placeholder="OpenRouter API anahtarını yapıştır..." autocomplete="off" />
       <div style="display:flex; gap:8px; justify-content:flex-end;">
         <button type="button" class="btn-secondary" id="btnClearKey">Sil</button>
         <button type="button" class="btn-primary" id="btnSaveKey">Kaydet</button>
@@ -741,7 +741,7 @@
 
   <script>
     (function () {
-      const GEMINI_MODELS = ["gemini-3.8-flash"];
+      const OPENROUTER_MODEL = "openai/gpt-4o";
 
       const WORD_BANK = {
         A1: [
@@ -807,7 +807,7 @@
         days: parseInt(readStorage("lex_days", "1"), 10) || 1,
         lessons: parseInt(readStorage("lex_lessons", "4"), 10) || 4,
         saved: parsedSaved,
-        apiKey: readStorage("lex_gemini_key", "")
+        apiKey: readStorage("lex_openrouter_key", "")
       };
 
       let toastTimer = null;
@@ -954,49 +954,50 @@ Anlam: ${item.def}
         document.getElementById("apiModal").classList.remove("open");
       }
 
-      async function callGemini(promptText, systemPrompt = "", jsonMode = false) {
+      async function callOpenRouter(promptText, systemPrompt = "", jsonMode = false) {
         const key = (state.apiKey || "").trim();
         if (!key) {
           openApiModal();
-          throw new Error("Önce Anahtar butonuna basıp anahtarını gir.");
+          throw new Error("Önce OpenRouter API anahtarını gir.");
         }
 
-        let lastError = null;
-        for (const model of GEMINI_MODELS) {
-          try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
-            const body = {
-              contents: [{ role: "user", parts: [{ text: promptText }] }],
-              generationConfig: {
-                temperature: 0.7,
-                maxOutputTokens: 1024
-              }
-            };
-            if (systemPrompt) {
-              body.systemInstruction = { parts: [{ text: systemPrompt }] };
-            }
-            if (jsonMode) {
-              body.generationConfig.responseMimeType = "application/json";
-            }
+        const messages = [];
+        if (systemPrompt) messages.push({ role: "system", content: systemPrompt });
+        messages.push({ role: "user", content: promptText });
 
-            const res = await fetch(url, {
-              method: "POST",
-              headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-              body: JSON.stringify(body)
-            });
+        const body = {
+          model: OPENROUTER_MODEL,
+          messages,
+          temperature: 0.7,
+          max_tokens: 1200
+        };
+        if (jsonMode) body.response_format = { type: "json_object" };
 
-            const data = await res.json();
-            if (!res.ok) {
-              lastError = (data && data.error && data.error.message) ? data.error.message : `HTTP ${res.status}`;
-              continue;
-            }
-            const text = data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
-            if (text) return text;
-          } catch (err) {
-            lastError = err.message || "Bağlantı hatası";
-          }
+        const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${key}`,
+            "HTTP-Referer": "https://lexfaid.github.io/turkish-lab/",
+            "X-Title": "Turkish Lab",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(body)
+        });
+
+        let data;
+        try {
+          data = await res.json();
+        } catch (_) {
+          throw new Error(`OpenRouter geçersiz yanıt verdi (HTTP ${res.status}).`);
         }
-        throw new Error(lastError || "Bağlantı hatası.");
+        if (!res.ok) {
+          throw new Error(data?.error?.message || `OpenRouter API hatası (HTTP ${res.status}).`);
+        }
+        const content = data?.choices?.[0]?.message?.content;
+        if (typeof content !== "string" || !content.trim()) {
+          throw new Error("OpenRouter boş yanıt döndürdü.");
+        }
+        return content;
       }
 
       async function generateAiWord() {
@@ -1025,7 +1026,7 @@ Sadece JSON döndür:
 }`;
 
         try {
-          const raw = await callGemini(prompt, "Türkçe, Makedonca ve İngilizce kelime üreticisisin.", true);
+          const raw = await callOpenRouter(prompt, "Türkçe, Makedonca ve İngilizce kelime üreticisisin.", true);
           const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
           if (parsed && parsed.tr && parsed.mk && parsed.en) {
             WORD_BANK[state.level].push(parsed);
@@ -1069,7 +1070,7 @@ Sadece JSON döndür:
         const sys = `Türkçe, Makedonca ve İngilizce dil asistanısın. Seviye: ${state.level}. Aktif kelime: "${currentWord.tr}" (${currentWord.mk} / ${currentWord.en}). Kısa, net ve doğrudan yanıt ver.`;
 
         try {
-          const reply = await callGemini(text, sys, false);
+          const reply = await callOpenRouter(text, sys, false);
           aiDiv.textContent = reply;
           state.xp += 10;
           saveState();
@@ -1100,7 +1101,7 @@ Sadece JSON döndür:
   "correctIndex": 0,
   "explanation": "Kısa açıklama"
 }`;
-          const raw = await callGemini(prompt, "Kelime testi hazırlayıcısısın.", true);
+          const raw = await callOpenRouter(prompt, "Kelime testi hazırlayıcısısın.", true);
           const q = JSON.parse(raw.replace(/```json|```/g, "").trim());
           qWord.textContent = q.word;
           document.getElementById("quizPromptText").textContent = q.question || "Doğru karşılığı seç:";
@@ -1242,14 +1243,14 @@ Sadece JSON döndür:
           return;
         }
         state.apiKey = val;
-        writeStorage("lex_gemini_key", val);
+        writeStorage("lex_openrouter_key", val);
         closeApiModal();
         showToast("Kaydedildi.");
       });
 
       document.getElementById("btnClearKey").addEventListener("click", () => {
         state.apiKey = "";
-        writeStorage("lex_gemini_key", "");
+        writeStorage("lex_openrouter_key", "");
         document.getElementById("apiKeyInput").value = "";
         showToast("Silindi.");
       });
