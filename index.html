@@ -554,15 +554,14 @@
     <div class="header">
       <div class="header-top">
         <h1>Türkçe Çalışma Alanı</h1>
-        <button class="btn-key-subtle" onclick="openApiModal()">Anahtar</button>
+        <button type="button" class="btn-key-subtle" id="btnOpenKey">Anahtar</button>
       </div>
       <p>Seviye seçerek Türkçe, Makedonca ve İngilizce kelime çalış.</p>
     </div>
 
-    <!-- VIEW 1: ANA EKRAN -->
     <div id="view-home" class="view active">
       <div class="controls-row">
-        <select id="levelSelect" class="select-box" onchange="onLevelChange()">
+        <select id="levelSelect" class="select-box">
           <option value="A1">A1 · Başlangıç</option>
           <option value="A2">A2 · Temel</option>
           <option value="B1">B1 · Orta</option>
@@ -570,7 +569,7 @@
           <option value="C1">C1 · İleri</option>
           <option value="C2" selected>C2 · Akademik</option>
         </select>
-        <select id="focusSelect" class="select-box" onchange="renderCurrentWord()">
+        <select id="focusSelect" class="select-box">
           <option value="all">TR · MK · EN</option>
           <option value="mk">Makedonca (MK)</option>
           <option value="en">İngilizce (EN)</option>
@@ -616,8 +615,8 @@
         <div class="word-card-header">
           <span class="level-pill" id="cardLevelLabel">C2 WORD (1/8)</span>
           <div class="card-actions-top">
-            <button class="btn-outline-sm accent-soft" id="btnAiNewWord" onclick="generateAiWord()">Yeni Kelime</button>
-            <button class="btn-outline-sm" onclick="nextWord()">Sonraki</button>
+            <button type="button" class="btn-outline-sm accent-soft" id="btnAiNewWord">Yeni Kelime</button>
+            <button type="button" class="btn-outline-sm" id="btnNextWord">Sonraki</button>
           </div>
         </div>
 
@@ -631,29 +630,28 @@
           </div>
           <div class="lang-pill" id="pillEn">
             <div class="lang-pill-label">İngilizce</div>
-            <div class="lang-pill-val" id="wordEn">Exceptional / Extraordinary</div>
+            <div class="lang-pill-val" id="wordEn">Exceptional</div>
           </div>
         </div>
 
         <div class="definition-box" id="wordDef">
-          Kural dışı olan, benzerlerinden üstünlüğü veya farklılığı ile ayrılan, seçkin.
+          Benzerlerinden üstünlüğü veya farkıyla ayrılan, seçkin.
         </div>
 
         <div class="example-box">
-          <div class="example-tr" id="exTr">Bu tarihi yapının mimarisi, döneminin müstesna örneklerinden biridir.</div>
-          <div class="example-sub" id="exMk">Архитектурата на оваа историска градба е еден од исклучителните примери на своето време.</div>
-          <div class="example-sub" id="exEn">The architecture of this historical building is one of the exceptional examples of its era.</div>
+          <div class="example-tr" id="exTr">Bu yapının mimarisi müstesna bir örnektir.</div>
+          <div class="example-sub" id="exMk">Архитектурата на оваа градба е исклучителен пример.</div>
+          <div class="example-sub" id="exEn">The architecture of this building is an exceptional example.</div>
         </div>
 
         <div class="action-buttons">
-          <button class="btn-primary" onclick="speakWord()">Dinle</button>
-          <button class="btn-secondary" id="btnSaveWord" onclick="toggleSaveCurrentWord()">Kaydet</button>
-          <button class="btn-secondary" onclick="copyCurrentWord()">Kopyala</button>
+          <button type="button" class="btn-primary" id="btnSpeakWord">Dinle</button>
+          <button type="button" class="btn-secondary" id="btnSaveWord">Kaydet</button>
+          <button type="button" class="btn-secondary" id="btnCopyWord">Kopyala</button>
         </div>
       </div>
     </div>
 
-    <!-- VIEW 2: ASİSTAN -->
     <div id="view-ai" class="view">
       <div class="card">
         <div class="section-title">
@@ -661,9 +659,9 @@
         </div>
 
         <div class="ai-presets">
-          <button class="preset-chip" onclick="sendPreset('Bana C2 seviyesinde 5 akademik Türkçe kelime ver; Makedonca ve İngilizce karşılıklarıyla yaz.')">C2 Kelimeler</button>
-          <button class="preset-chip" onclick="sendPreset('Günlük hayatta sık kullanılan 5 Makedonca ifadeyi Türkçe ve İngilizce karşılıklarıyla yaz.')">Makedonca İfadeler</button>
-          <button class="preset-chip" onclick="sendPreset('Ekrandaki kelimeyi içeren bir cümle kur ve Türkçe, Makedonca, İngilizce olarak yaz.')">Örnek Cümle</button>
+          <button type="button" class="preset-chip" data-prompt="Bana C2 seviyesinde 5 akademik Türkçe kelime ver; Makedonca ve İngilizce karşılıklarıyla yaz.">C2 Kelimeler</button>
+          <button type="button" class="preset-chip" data-prompt="Günlük hayatta sık kullanılan 5 Makedonca ifadeyi Türkçe ve İngilizce karşılıklarıyla yaz.">Makedonca İfadeler</button>
+          <button type="button" class="preset-chip" data-prompt="Ekrandaki kelimeyi içeren bir cümle kur ve Türkçe, Makedonca, İngilizce olarak yaz.">Örnek Cümle</button>
         </div>
 
         <div class="chat-box" id="aiChatBox">
@@ -671,18 +669,17 @@
         </div>
 
         <div class="search-bar" style="margin-bottom:0;">
-          <input type="text" id="aiPromptInput" class="input-field" placeholder="Kelime veya cümle yaz..." onkeydown="if(event.key==='Enter') sendAiChat()" />
-          <button class="btn-primary" id="btnSendAi" onclick="sendAiChat()">Gönder</button>
+          <input type="text" id="aiPromptInput" class="input-field" placeholder="Kelime veya cümle yaz..." />
+          <button type="button" class="btn-primary" id="btnSendAi">Gönder</button>
         </div>
       </div>
     </div>
 
-    <!-- VIEW 3: QUIZ -->
     <div id="view-quiz" class="view">
       <div class="card">
         <div class="section-title">
           <span>Seviye Testi (<span id="quizLevelTag">C2</span>)</span>
-          <button class="btn-outline-sm accent-soft" id="btnNewQuiz" onclick="loadQuizQuestion()">Yeni Soru</button>
+          <button type="button" class="btn-outline-sm accent-soft" id="btnNewQuiz">Yeni Soru</button>
         </div>
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;" id="quizPromptText">
           Doğru karşılığı seç:
@@ -693,12 +690,11 @@
       </div>
     </div>
 
-    <!-- VIEW 4: DEFTERİM -->
     <div id="view-saved" class="view">
       <div class="card">
         <div class="section-title">
           <span>Defterim (<span id="savedCountHeader">0</span>)</span>
-          <button class="btn-outline-sm" onclick="exportSavedWords()">Kopyala</button>
+          <button type="button" class="btn-outline-sm" id="btnExportSaved">Kopyala</button>
         </div>
         <div id="savedListContainer">
           <p style="font-size:13px; color:var(--text-muted);">Henüz kaydedilmiş kelime yok.</p>
@@ -708,252 +704,313 @@
   </div>
 
   <nav class="bottom-nav">
-    <button class="nav-btn active" id="nav-home" onclick="switchView('home')">
+    <button type="button" class="nav-btn active" id="nav-home" data-view="home">
       <span class="nav-icon">📚</span>
       <span>Çalışma</span>
     </button>
-    <button class="nav-btn" id="nav-ai" onclick="switchView('ai')">
+    <button type="button" class="nav-btn" id="nav-ai" data-view="ai">
       <span class="nav-icon">✨</span>
       <span>Asistan</span>
     </button>
-    <button class="nav-btn" id="nav-quiz" onclick="switchView('quiz')">
+    <button type="button" class="nav-btn" id="nav-quiz" data-view="quiz">
       <span class="nav-icon">🎯</span>
       <span>Quiz</span>
     </button>
-    <button class="nav-btn" id="nav-saved" onclick="switchView('saved')">
+    <button type="button" class="nav-btn" id="nav-saved" data-view="saved">
       <span class="nav-icon">🔖</span>
       <span>Defterim</span>
     </button>
   </nav>
 
-  <!-- KEY MODAL (Saved strictly in browser localStorage) -->
   <div class="modal-backdrop" id="apiModal">
     <div class="modal">
       <div class="section-title">
         <span>Anahtar</span>
-        <button class="btn-outline-sm" onclick="closeApiModal()">Kapat</button>
+        <button type="button" class="btn-outline-sm" id="btnCloseKey">Kapat</button>
       </div>
       <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:12px;">
         Anahtar yalnızca bu tarayıcıda saklanır.
       </p>
       <input type="password" id="apiKeyInput" class="input-field" style="width:100%; margin-bottom:12px;" placeholder="Anahtarı yapıştır..." autocomplete="off" />
       <div style="display:flex; gap:8px; justify-content:flex-end;">
-        <button class="btn-secondary" onclick="clearSavedApiKey()">Sil</button>
-        <button class="btn-primary" onclick="saveApiKey()">Kaydet</button>
+        <button type="button" class="btn-secondary" id="btnClearKey">Sil</button>
+        <button type="button" class="btn-primary" id="btnSaveKey">Kaydet</button>
       </div>
     </div>
   </div>
 
   <script>
-    const GEMINI_MODELS = ["gemini-3.5-flash-lite", "gemini-2.5-flash-lite", "gemini-2.5-flash"];
+    (function () {
+      const GEMINI_MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash"];
 
-    const WORD_BANK = {
-      A1: [
-        { tr: "Merhaba", pos: "İfade · Günlük", mk: "Здраво (Zdravo)", en: "Hello", def: "Karşılaşmada kullanılan selamlama sözü.", exTr: "Merhaba, bugün nasılsın?", exMk: "Здраво, како си денес?", exEn: "Hello, how are you today?" },
-        { tr: "Teşekkür ederim", pos: "İfade · Günlük", mk: "Благодарам (Blagodaram)", en: "Thank you", def: "Yardım veya iyilik için teşekkür ifadesi.", exTr: "Yardımın için teşekkür ederim.", exMk: "Ти благодарам за помошта.", exEn: "Thank you for your help." },
-        { tr: "Öğrenci", pos: "İsim · Okul", mk: "Ученик (Učenik)", en: "Student", def: "Okulda veya üniversitede okuyan kişi.", exTr: "Bugün okulda ders çalıştım.", exMk: "Денес учев на училиште.", exEn: "I studied at school today." }
-      ],
-      A2: [
-        { tr: "Deneyim", pos: "İsim · Genel", mk: "Искуство (Iskustvo)", en: "Experience", def: "Yaşanarak veya çalışarak edinilen bilgi ve birikim.", exTr: "Yeni bir yerde yaşamak farklı bir deneyim.", exMk: "Живеењето на ново место е ново искуство.", exEn: "Living in a new place is a new experience." },
-        { tr: "Geliştirmek", pos: "Fiil · Genel", mk: "Подобрува (Podobruva)", en: "To improve", def: "Daha iyi ve güçlü duruma getirmek.", exTr: "Her gün çalışarak dilimi geliştiriyorum.", exMk: "Со вежбање секој ден го подобрувам јазикот.", exEn: "I improve my language by practicing every day." }
-      ],
-      B1: [
-        { tr: "Önyargı", pos: "İsim · Genel", mk: "Предрасуда (Predrasuda)", en: "Prejudice", def: "Tanımadan veya araştırmadan edinilen peşin yargı.", exTr: "İnsanları tanımadan önyargılı olmamalıyız.", exMk: "Не треба да имаме предрасуди пред да ги запознаеме луѓето.", exEn: "We should not have prejudices before getting to know people." },
-        { tr: "Sürdürülebilir", pos: "Sıfat · Genel", mk: "Одржлив (Održliv)", en: "Sustainable", def: "Uzun süre aksamadan devam ettirilebilen.", exTr: "Düzenli çalışma uzun vadede sürdürülebilir olmalıdır.", exMk: "Редовната работа треба да биде одржлива на долг рок.", exEn: "Regular study should be sustainable in the long run." }
-      ],
-      B2: [
-        { tr: "Çelişki", pos: "İsim · Mantık", mk: "Противречност (Protivrečnost)", en: "Contradiction", def: "İki söz veya durumun birbirine uymaması.", exTr: "Söyledikleri ile yaptıkları arasında çelişki var.", exMk: "Има противречност меѓу она што го зборува и она што го прави.", exEn: "There is a contradiction between what is said and what is done." },
-        { tr: "İstikrar", pos: "İsim · Genel", mk: "Стабилност (Stabilnost)", en: "Stability", def: "Denge ve süreklilik durumu.", exTr: "İstikrarlı çalışmak sonucu değiştirir.", exMk: "Стабилната работа го менува резултатот.", exEn: "Consistent effort changes the result." }
-      ],
-      C1: [
-        { tr: "Yadsımak", pos: "Fiil · Akademik", mk: "Негира (Negira)", en: "To deny", def: "Açık bir gerçeği inkâr etmek.", exTr: "Bu gerçeği kimse yadsıyamaz.", exMk: "Никој не може да ја негира оваа вистина.", exEn: "No one can deny this truth." },
-        { tr: "Öngörü", pos: "İsim · Analiz", mk: "Предвидување (Predviduvanje)", en: "Foresight", def: "İleride olacak durumu önceden kestirebilme.", exTr: "Güçlü öngörü planlamayı kolaylaştırır.", exMk: "Доброто предвидување го олеснува планирањето.", exEn: "Strong foresight makes planning easier." },
-        { tr: "Yetkinlik", pos: "İsim · Akademik", mk: "Компетентност (Kompetentnost)", en: "Competence", def: "Bir işi hakkıyla yapabilme yeterliliği.", exTr: "Metin analizi dil yetkinliği gerektirir.", exMk: "Анализата на текст бара јазична компетентност.", exEn: "Text analysis requires language competence." }
-      ],
-      C2: [
-        { tr: "Müstesna", pos: "Sıfat · Akademik", mk: "Исклучителен (Isklučitelen)", en: "Exceptional", def: "Benzerlerinden üstünlüğü veya farkıyla ayrılan, seçkin.", exTr: "Bu yapının mimarisi müstesna bir örnektir.", exMk: "Архитектурата на оваа градба е исклучителен пример.", exEn: "The architecture of this building is an exceptional example." },
-        { tr: "Tezahür", pos: "İsim · Felsefe", mk: "Манифестација (Manifestacija)", en: "Manifestation", def: "Soyut bir durumun somut biçimde ortaya çıkması.", exTr: "Değişim önce sanatta ve dilde tezahür eder.", exMk: "Промената прво се манифестира во уметноста и јазикот.", exEn: "Change first manifests in art and language." },
-        { tr: "Müphem", pos: "Sıfat · Edebi", mk: "Нејасен (Nejasen)", en: "Ambiguous", def: "Belirsiz, anlamı tam net olmayan.", exTr: "Müphem ifadeler yanlış anlamaya yol açar.", exMk: "Нејасните изрази доведуваат до недоразбирање.", exEn: "Ambiguous expressions lead to misunderstanding." },
-        { tr: "Mütekabiliyet", pos: "İsim · Hukuk", mk: "Реципроцитет (Reciprocitet)", en: "Reciprocity", def: "Karşılıklı olma ve aynı şekilde davranma ilkesi.", exTr: "Anlaşmalar mütekabiliyet esasına dayanır.", exMk: "Договорите се засноваат на реципроцитет.", exEn: "Agreements are based on reciprocity." },
-        { tr: "İstihza", pos: "İsim · Edebiyat", mk: "Иронија (Ironija)", en: "Subtle irony", def: "İnce ve alaycı bir anlatım biçimi.", exTr: "Metinde ince bir istihza göze çarpıyor.", exMk: "Во текстот се забележува суптилна иронија.", exEn: "Subtle irony stands out in the text." },
-        { tr: "Vukuf", pos: "İsim · Akademik", mk: "Познавање (Poznavanje)", en: "Profound mastery", def: "Bir konuya derinlemesine hâkim olma.", exTr: "Konuya olan vukufu soruları net yanıtlamasını sağladı.", exMk: "Познавањето на темата му овозможи јасно да одговори.", exEn: "His mastery of the subject allowed clear answers." },
-        { tr: "Tevatür", pos: "İsim · Tarih", mk: "Гласина (Glasina)", en: "Hearsay", def: "Kesinliği doğrulanmamış, ağızdan ağıza yayılan söz.", exTr: "Kesin kanıt olmadan tevatürlere güvenilmez.", exMk: "Без цврст доказ не се верува на гласини.", exEn: "Without solid proof, hearsay is unreliable." },
-        { tr: "İktibas", pos: "İsim · Akademik", mk: "Цитат (Citat)", en: "Citation / Excerpt", def: "Başka bir kaynaktan yapılan alıntı.", exTr: "Her iktibasın kaynağı açıkça yazılmalıdır.", exMk: "Изворот на секој цитат треба јасно да се наведе.", exEn: "The source of every citation should be clearly stated." }
-      ]
-    };
+      const WORD_BANK = {
+        A1: [
+          { tr: "Merhaba", pos: "İfade · Günlük", mk: "Здраво (Zdravo)", en: "Hello", def: "Karşılaşmada kullanılan selamlama sözü.", exTr: "Merhaba, bugün nasılsın?", exMk: "Здраво, како си денес?", exEn: "Hello, how are you today?" },
+          { tr: "Teşekkür ederim", pos: "İfade · Günlük", mk: "Благодарам (Blagodaram)", en: "Thank you", def: "Yardım veya iyilik için teşekkür ifadesi.", exTr: "Yardımın için teşekkür ederim.", exMk: "Ти благодарам за помошта.", exEn: "Thank you for your help." },
+          { tr: "Öğrenci", pos: "İsim · Okul", mk: "Ученик (Učenik)", en: "Student", def: "Okulda veya üniversitede okuyan kişi.", exTr: "Bugün okulda ders çalıştım.", exMk: "Денес учев на училиште.", exEn: "I studied at school today." }
+        ],
+        A2: [
+          { tr: "Deneyim", pos: "İsim · Genel", mk: "Искуство (Iskustvo)", en: "Experience", def: "Yaşanarak veya çalışarak edinilen bilgi ve birikim.", exTr: "Yeni bir yerde yaşamak farklı bir deneyim.", exMk: "Живеењето на ново место е ново искуство.", exEn: "Living in a new place is a new experience." },
+          { tr: "Geliştirmek", pos: "Fiil · Genel", mk: "Подобрува (Podobruva)", en: "To improve", def: "Daha iyi ve güçlü duruma getirmek.", exTr: "Her gün çalışarak dilimi geliştiriyorum.", exMk: "Со вежбање секој ден го подобрувам јазикот.", exEn: "I improve my language by practicing every day." }
+        ],
+        B1: [
+          { tr: "Önyargı", pos: "İsim · Genel", mk: "Предрасуда (Predrasuda)", en: "Prejudice", def: "Tanımadan veya araştırmadan edinilen peşin yargı.", exTr: "İnsanları tanımadan önyargılı olmamalıyız.", exMk: "Не треба да имаме предрасуди пред да ги запознаеме луѓето.", exEn: "We should not have prejudices before getting to know people." },
+          { tr: "Sürdürülebilir", pos: "Sıfat · Genel", mk: "Одржлив (Održliv)", en: "Sustainable", def: "Uzun süre aksamadan devam ettirilebilen.", exTr: "Düzenli çalışma uzun vadede sürdürülebilir olmalıdır.", exMk: "Редовната работа треба да биде одржлива на долг рок.", exEn: "Regular study should be sustainable in the long run." }
+        ],
+        B2: [
+          { tr: "Çelişki", pos: "İsim · Mantık", mk: "Противречност (Protivrečnost)", en: "Contradiction", def: "İki söz veya durumun birbirine uymaması.", exTr: "Söyledikleri ile yaptıkları arasında çelişki var.", exMk: "Има противречност меѓу она што го зборува и она што го прави.", exEn: "There is a contradiction between what is said and what is done." },
+          { tr: "İstikrar", pos: "İsim · Genel", mk: "Стабилност (Stabilnost)", en: "Stability", def: "Denge ve süreklilik durumu.", exTr: "İstikrarlı çalışmak sonucu değiştirir.", exMk: "Стабилната работа го менува резултатот.", exEn: "Consistent effort changes the result." }
+        ],
+        C1: [
+          { tr: "Yadsımak", pos: "Fiil · Akademik", mk: "Негира (Negira)", en: "To deny", def: "Açık bir gerçeği inkâr etmek.", exTr: "Bu gerçeği kimse yadsıyamaz.", exMk: "Никој не може да ја негира оваа вистина.", exEn: "No one can deny this truth." },
+          { tr: "Öngörü", pos: "İsim · Analiz", mk: "Предвидување (Predviduvanje)", en: "Foresight", def: "İleride olacak durumu önceden kestirebilme.", exTr: "Güçlü öngörü planlamayı kolaylaştırır.", exMk: "Доброто предвидување го олеснува планирањето.", exEn: "Strong foresight makes planning easier." },
+          { tr: "Yetkinlik", pos: "İsim · Akademik", mk: "Компетентност (Kompetentnost)", en: "Competence", def: "Bir işi hakkıyla yapabilme yeterliliği.", exTr: "Metin analizi dil yetkinliği gerektirir.", exMk: "Анализата на текст бара јазична компетентност.", exEn: "Text analysis requires language competence." }
+        ],
+        C2: [
+          { tr: "Müstesna", pos: "Sıfat · Akademik", mk: "Исклучителен (Isklučitelen)", en: "Exceptional", def: "Benzerlerinden üstünlüğü veya farkıyla ayrılan, seçkin.", exTr: "Bu yapının mimarisi müstesna bir örnektir.", exMk: "Архитектурата на оваа градба е исклучителен пример.", exEn: "The architecture of this building is an exceptional example." },
+          { tr: "Tezahür", pos: "İsim · Felsefe", mk: "Манифестација (Manifestacija)", en: "Manifestation", def: "Soyut bir durumun somut biçimde ortaya çıkması.", exTr: "Değişim önce sanatta ve dilde tezahür eder.", exMk: "Промената прво се манифестира во уметноста и јазикот.", exEn: "Change first manifests in art and language." },
+          { tr: "Müphem", pos: "Sıfat · Edebi", mk: "Нејасен (Nejasen)", en: "Ambiguous", def: "Belirsiz, anlamı tam net olmayan.", exTr: "Müphem ifadeler yanlış anlamaya yol açar.", exMk: "Нејасните изрази доведуваат до недоразбирање.", exEn: "Ambiguous expressions lead to misunderstanding." },
+          { tr: "Mütekabiliyet", pos: "İsim · Hukuk", mk: "Реципроцитет (Reciprocitet)", en: "Reciprocity", def: "Karşılıklı olma ve aynı şekilde davranma ilkesi.", exTr: "Anlaşmalar mütekabiliyet esasına dayanır.", exMk: "Договорите се засноваат на реципроцитет.", exEn: "Agreements are based on reciprocity." },
+          { tr: "İstihza", pos: "İsim · Edebiyat", mk: "Иронија (Ironija)", en: "Subtle irony", def: "İnce ve alaycı bir anlatım biçimi.", exTr: "Metinde ince bir istihza göze çarpıyor.", exMk: "Во текстот се забележува суптилна иронија.", exEn: "Subtle irony stands out in the text." },
+          { tr: "Vukuf", pos: "İsim · Akademik", mk: "Познавање (Poznavanje)", en: "Profound mastery", def: "Bir konuya derinlemesine hâkim olma.", exTr: "Konuya olan vukufu soruları net yanıtlamasını sağladı.", exMk: "Познавањето на темата му овозможи јасно да одговори.", exEn: "His mastery of the subject allowed clear answers." },
+          { tr: "Tevatür", pos: "İsim · Tarih", mk: "Гласина (Glasina)", en: "Hearsay", def: "Kesinliği doğrulanmamış, ağızdan ağıza yayılan söz.", exTr: "Kesin kanıt olmadan tevatürlere güvenilmez.", exMk: "Без цврст доказ не се верува на гласини.", exEn: "Without solid proof, hearsay is unreliable." },
+          { tr: "İktibas", pos: "İsim · Akademik", mk: "Цитат (Citat)", en: "Citation / Excerpt", def: "Başka bir kaynaktan yapılan alıntı.", exTr: "Her iktibasın kaynağı açıkça yazılmalıdır.", exMk: "Изворот на секој цитат треба јасно да се наведе.", exEn: "The source of every citation should be clearly stated." }
+        ]
+      };
 
-    let state = {
-      level: "C2",
-      index: 0,
-      xp: parseInt(localStorage.getItem("lex_xp") || "145", 10),
-      days: parseInt(localStorage.getItem("lex_days") || "1", 10),
-      lessons: parseInt(localStorage.getItem("lex_lessons") || "4", 10),
-      saved: JSON.parse(localStorage.getItem("lex_saved") || "[]"),
-      apiKey: localStorage.getItem("lex_gemini_key") || ""
-    };
-
-    function showToast(msg) {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.classList.add("show");
-      setTimeout(() => t.classList.remove("show"), 2200);
-    }
-
-    function saveState() {
-      localStorage.setItem("lex_xp", state.xp);
-      localStorage.setItem("lex_days", state.days);
-      localStorage.setItem("lex_lessons", state.lessons);
-      localStorage.setItem("lex_saved", JSON.stringify(state.saved));
-      updateStatsUI();
-    }
-
-    function updateStatsUI() {
-      document.getElementById("statSaved").textContent = state.saved.length;
-      document.getElementById("statDays").textContent = state.days;
-      document.getElementById("statXp").textContent = state.xp;
-      document.getElementById("statLessons").textContent = state.lessons;
-      document.getElementById("savedCountHeader").textContent = state.saved.length;
-    }
-
-    function onLevelChange() {
-      state.level = document.getElementById("levelSelect").value;
-      state.index = 0;
-      document.getElementById("quizLevelTag").textContent = state.level;
-      renderCurrentWord();
-    }
-
-    function getCurrentList() {
-      return WORD_BANK[state.level] || WORD_BANK.C2;
-    }
-
-    function renderCurrentWord() {
-      const list = getCurrentList();
-      if (state.index >= list.length) state.index = 0;
-      const item = list[state.index];
-      const focus = document.getElementById("focusSelect").value;
-
-      document.getElementById("cardLevelLabel").textContent = `${state.level} WORD (${state.index + 1}/${list.length})`;
-      document.getElementById("wordTr").textContent = item.tr;
-      document.getElementById("wordMeta").textContent = item.pos;
-      document.getElementById("wordMk").textContent = item.mk;
-      document.getElementById("wordEn").textContent = item.en;
-      document.getElementById("wordDef").textContent = item.def;
-      document.getElementById("exTr").textContent = item.exTr;
-      document.getElementById("exMk").textContent = item.exMk;
-      document.getElementById("exEn").textContent = item.exEn;
-
-      document.getElementById("pillMk").style.display = (focus === "all" || focus === "mk") ? "block" : "none";
-      document.getElementById("pillEn").style.display = (focus === "all" || focus === "en") ? "block" : "none";
-      document.getElementById("exMk").style.display = (focus === "all" || focus === "mk") ? "block" : "none";
-      document.getElementById("exEn").style.display = (focus === "all" || focus === "en") ? "block" : "none";
-
-      const isSaved = state.saved.some(w => w.tr.toLowerCase() === item.tr.toLowerCase());
-      const btnSave = document.getElementById("btnSaveWord");
-      btnSave.textContent = isSaved ? "Kaydedildi ✓" : "Kaydet";
-      btnSave.classList.toggle("saved", isSaved);
-    }
-
-    function nextWord() {
-      const list = getCurrentList();
-      state.index = (state.index + 1) % list.length;
-      state.xp += 5;
-      saveState();
-      renderCurrentWord();
-    }
-
-    function speakWord() {
-      const item = getCurrentList()[state.index];
-      if (!("speechSynthesis" in window)) return;
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(`${item.tr}. ${item.exTr}`);
-      utter.lang = "tr-TR";
-      utter.rate = 0.95;
-      window.speechSynthesis.speak(utter);
-    }
-
-    function toggleSaveCurrentWord() {
-      const item = getCurrentList()[state.index];
-      const idx = state.saved.findIndex(w => w.tr.toLowerCase() === item.tr.toLowerCase());
-      if (idx > -1) {
-        state.saved.splice(idx, 1);
-        showToast("Defterden çıkarıldı.");
-      } else {
-        state.saved.unshift({ ...item, level: state.level });
-        state.xp += 10;
-        showToast("Deftere kaydedildi (+10 XP)");
+      function readStorage(key, fallback) {
+        try {
+          const v = localStorage.getItem(key);
+          return v === null ? fallback : v;
+        } catch (_) {
+          return fallback;
+        }
       }
-      saveState();
-      renderCurrentWord();
-      renderSavedList();
-    }
 
-    function copyCurrentWord() {
-      const item = getCurrentList()[state.index];
-      const text = `${item.tr} (${state.level})
+      function writeStorage(key, val) {
+        try {
+          localStorage.setItem(key, val);
+        } catch (_) {}
+      }
+
+      let parsedSaved = [];
+      try {
+        parsedSaved = JSON.parse(readStorage("lex_saved", "[]")) || [];
+      } catch (_) {
+        parsedSaved = [];
+      }
+
+      const state = {
+        level: "C2",
+        index: 0,
+        xp: parseInt(readStorage("lex_xp", "145"), 10) || 145,
+        days: parseInt(readStorage("lex_days", "1"), 10) || 1,
+        lessons: parseInt(readStorage("lex_lessons", "4"), 10) || 4,
+        saved: parsedSaved,
+        apiKey: readStorage("lex_gemini_key", "")
+      };
+
+      let toastTimer = null;
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        if (!t) return;
+        t.textContent = msg;
+        t.classList.add("show");
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+      }
+
+      function updateStatsUI() {
+        document.getElementById("statSaved").textContent = state.saved.length;
+        document.getElementById("statDays").textContent = state.days;
+        document.getElementById("statXp").textContent = state.xp;
+        document.getElementById("statLessons").textContent = state.lessons;
+        document.getElementById("savedCountHeader").textContent = state.saved.length;
+      }
+
+      function saveState() {
+        writeStorage("lex_xp", String(state.xp));
+        writeStorage("lex_days", String(state.days));
+        writeStorage("lex_lessons", String(state.lessons));
+        writeStorage("lex_saved", JSON.stringify(state.saved));
+        updateStatsUI();
+      }
+
+      function getCurrentList() {
+        return WORD_BANK[state.level] || WORD_BANK.C2;
+      }
+
+      function renderCurrentWord() {
+        const list = getCurrentList();
+        if (state.index >= list.length || state.index < 0) state.index = 0;
+        const item = list[state.index];
+        const focus = document.getElementById("focusSelect").value;
+
+        document.getElementById("cardLevelLabel").textContent = `${state.level} WORD (${state.index + 1}/${list.length})`;
+        document.getElementById("wordTr").textContent = item.tr;
+        document.getElementById("wordMeta").textContent = item.pos;
+        document.getElementById("wordMk").textContent = item.mk;
+        document.getElementById("wordEn").textContent = item.en;
+        document.getElementById("wordDef").textContent = item.def;
+        document.getElementById("exTr").textContent = item.exTr;
+        document.getElementById("exMk").textContent = item.exMk;
+        document.getElementById("exEn").textContent = item.exEn;
+
+        document.getElementById("pillMk").style.display = (focus === "all" || focus === "mk") ? "block" : "none";
+        document.getElementById("pillEn").style.display = (focus === "all" || focus === "en") ? "block" : "none";
+        document.getElementById("exMk").style.display = (focus === "all" || focus === "mk") ? "block" : "none";
+        document.getElementById("exEn").style.display = (focus === "all" || focus === "en") ? "block" : "none";
+
+        const isSaved = state.saved.some(w => w.tr.toLowerCase() === item.tr.toLowerCase());
+        const btnSave = document.getElementById("btnSaveWord");
+        btnSave.textContent = isSaved ? "Kaydedildi ✓" : "Kaydet";
+        btnSave.classList.toggle("saved", isSaved);
+      }
+
+      function nextWord() {
+        const list = getCurrentList();
+        state.index = (state.index + 1) % list.length;
+        state.xp += 5;
+        saveState();
+        renderCurrentWord();
+      }
+
+      function speakWord() {
+        const item = getCurrentList()[state.index];
+        if (!("speechSynthesis" in window)) return;
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(`${item.tr}. ${item.exTr}`);
+          utter.lang = "tr-TR";
+          utter.rate = 0.95;
+          window.speechSynthesis.speak(utter);
+        } catch (_) {}
+      }
+
+      function renderSavedList() {
+        const container = document.getElementById("savedListContainer");
+        if (!state.saved.length) {
+          container.innerHTML = `<p style="font-size:13px; color:var(--text-muted);">Henüz kaydedilmiş kelime yok.</p>`;
+          return;
+        }
+        container.innerHTML = state.saved.map((w, idx) => `
+          <div class="saved-item">
+            <div>
+              <div style="font-weight:700; font-size:15px;">${w.tr} <span class="stat-tag">${w.level || "C2"}</span></div>
+              <div style="font-size:12.5px; color:var(--text-muted);">${w.mk} · ${w.en}</div>
+              <div style="font-size:12px; color:#9ca3af; margin-top:2px;">${w.def}</div>
+            </div>
+            <button type="button" class="btn-outline-sm btn-remove-saved" data-idx="${idx}">Sil</button>
+          </div>
+        `).join("");
+
+        container.querySelectorAll(".btn-remove-saved").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const idx = parseInt(btn.getAttribute("data-idx"), 10);
+            state.saved.splice(idx, 1);
+            saveState();
+            renderSavedList();
+            renderCurrentWord();
+          });
+        });
+      }
+
+      function toggleSaveCurrentWord() {
+        const item = getCurrentList()[state.index];
+        const idx = state.saved.findIndex(w => w.tr.toLowerCase() === item.tr.toLowerCase());
+        if (idx > -1) {
+          state.saved.splice(idx, 1);
+          showToast("Defterden çıkarıldı.");
+        } else {
+          state.saved.unshift({ ...item, level: state.level });
+          state.xp += 10;
+          showToast("Deftere kaydedildi (+10 XP)");
+        }
+        saveState();
+        renderCurrentWord();
+        renderSavedList();
+      }
+
+      function copyCurrentWord() {
+        const item = getCurrentList()[state.index];
+        const text = `${item.tr} (${state.level})
 MK: ${item.mk}
 EN: ${item.en}
 Anlam: ${item.def}
 Örnek: ${item.exTr}`;
-      navigator.clipboard.writeText(text).then(() => showToast("Kopyalandı."));
-    }
-
-    async function callGemini(promptText, systemPrompt = "", jsonMode = false) {
-      const key = (state.apiKey || "").trim();
-      if (!key) {
-        openApiModal();
-        throw new Error("Anahtar girilmedi.");
-      }
-
-      let lastError = null;
-      for (const model of GEMINI_MODELS) {
-        try {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
-          const body = {
-            contents: [{ role: "user", parts: [{ text: promptText }] }],
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 1024
-            }
-          };
-          if (systemPrompt) {
-            body.systemInstruction = { parts: [{ text: systemPrompt }] };
-          }
-          if (jsonMode) {
-            body.generationConfig.responseMimeType = "application/json";
-          }
-
-          const res = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-          });
-
-          const data = await res.json();
-          if (!res.ok) {
-            lastError = data?.error?.message || `HTTP ${res.status}`;
-            continue;
-          }
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) return text;
-        } catch (err) {
-          lastError = err.message;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => showToast("Kopyalandı.")).catch(() => showToast("Kopyalandı."));
+        } else {
+          showToast("Kopyalandı.");
         }
       }
-      throw new Error(lastError || "Bağlantı hatası.");
-    }
 
-    async function generateAiWord() {
-      const btn = document.getElementById("btnAiNewWord");
-      const origText = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<span class="loader"></span>`;
+      function openApiModal() {
+        document.getElementById("apiKeyInput").value = state.apiKey || "";
+        document.getElementById("apiModal").classList.add("open");
+      }
 
-      const existing = getCurrentList().map(w => w.tr).join(", ");
-      const levelRule = state.level === "C2"
-        ? "Gerçek C2 seviyesinde üst düzey bir Türkçe kelime üret. Basit günlük kelimeler verme."
-        : `CEFR ${state.level} seviyesine uygun bir Türkçe kelime üret.`;
+      function closeApiModal() {
+        document.getElementById("apiModal").classList.remove("open");
+      }
 
-      const prompt = `${levelRule}
+      async function callGemini(promptText, systemPrompt = "", jsonMode = false) {
+        const key = (state.apiKey || "").trim();
+        if (!key) {
+          openApiModal();
+          throw new Error("Önce Anahtar butonuna basıp anahtarını gir.");
+        }
+
+        let lastError = null;
+        for (const model of GEMINI_MODELS) {
+          try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+            const body = {
+              contents: [{ role: "user", parts: [{ text: promptText }] }],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 1024
+              }
+            };
+            if (systemPrompt) {
+              body.systemInstruction = { parts: [{ text: systemPrompt }] };
+            }
+            if (jsonMode) {
+              body.generationConfig.responseMimeType = "application/json";
+            }
+
+            const res = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(body)
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+              lastError = (data && data.error && data.error.message) ? data.error.message : `HTTP ${res.status}`;
+              continue;
+            }
+            const text = data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+            if (text) return text;
+          } catch (err) {
+            lastError = err.message || "Bağlantı hatası";
+          }
+        }
+        throw new Error(lastError || "Bağlantı hatası.");
+      }
+
+      async function generateAiWord() {
+        const btn = document.getElementById("btnAiNewWord");
+        const origText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<span class="loader"></span>`;
+
+        const existing = getCurrentList().map(w => w.tr).join(", ");
+        const levelRule = state.level === "C2"
+          ? "Gerçek C2 seviyesinde üst düzey bir Türkçe kelime üret. Basit günlük kelimeler verme."
+          : `CEFR ${state.level} seviyesine uygun bir Türkçe kelime üret.`;
+
+        const prompt = `${levelRule}
 Şu listede olmayan yeni bir kelime seç: [${existing}].
 Sadece JSON döndür:
 {
@@ -967,80 +1024,75 @@ Sadece JSON döndür:
   "exEn": "İngilizce örnek cümle"
 }`;
 
-      try {
-        const raw = await callGemini(prompt, "Türkçe, Makedonca ve İngilizce kelime üreticisisin.", true);
-        const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-        if (parsed && parsed.tr && parsed.mk && parsed.en) {
-          WORD_BANK[state.level].push(parsed);
-          state.index = WORD_BANK[state.level].length - 1;
-          state.xp += 15;
-          saveState();
-          renderCurrentWord();
-          showToast("Yeni kelime eklendi (+15 XP)");
+        try {
+          const raw = await callGemini(prompt, "Türkçe, Makedonca ve İngilizce kelime üreticisisin.", true);
+          const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+          if (parsed && parsed.tr && parsed.mk && parsed.en) {
+            WORD_BANK[state.level].push(parsed);
+            state.index = WORD_BANK[state.level].length - 1;
+            state.xp += 15;
+            saveState();
+            renderCurrentWord();
+            showToast("Yeni kelime eklendi (+15 XP)");
+          }
+        } catch (e) {
+          showToast(String(e.message || "Hata").slice(0, 60));
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = origText;
         }
-      } catch (e) {
-        showToast(e.message.slice(0, 60));
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = origText;
       }
-    }
 
-    function sendPreset(text) {
-      document.getElementById("aiPromptInput").value = text;
-      sendAiChat();
-    }
+      async function sendAiChat(customText) {
+        const input = document.getElementById("aiPromptInput");
+        const text = (typeof customText === "string" ? customText : input.value).trim();
+        if (!text) return;
 
-    async function sendAiChat() {
-      const input = document.getElementById("aiPromptInput");
-      const text = input.value.trim();
-      if (!text) return;
+        const box = document.getElementById("aiChatBox");
+        const btn = document.getElementById("btnSendAi");
 
-      const box = document.getElementById("aiChatBox");
-      const btn = document.getElementById("btnSendAi");
+        const userDiv = document.createElement("div");
+        userDiv.className = "msg user";
+        userDiv.textContent = text;
+        box.appendChild(userDiv);
 
-      const userDiv = document.createElement("div");
-      userDiv.className = "msg user";
-      userDiv.textContent = text;
-      box.appendChild(userDiv);
+        if (typeof customText !== "string") input.value = "";
+        btn.disabled = true;
 
-      input.value = "";
-      btn.disabled = true;
-
-      const aiDiv = document.createElement("div");
-      aiDiv.className = "msg ai";
-      aiDiv.innerHTML = `<span class="loader"></span>`;
-      box.appendChild(aiDiv);
-      box.scrollTop = box.scrollHeight;
-
-      const currentWord = getCurrentList()[state.index];
-      const sys = `Türkçe, Makedonca ve İngilizce dil asistanısın. Seviye: ${state.level}. Aktif kelime: "${currentWord.tr}" (${currentWord.mk} / ${currentWord.en}). Kısa, net ve doğrudan yanıt ver.`;
-
-      try {
-        const reply = await callGemini(text, sys, false);
-        aiDiv.textContent = reply;
-        state.xp += 10;
-        saveState();
-      } catch (e) {
-        aiDiv.textContent = e.message;
-      } finally {
-        btn.disabled = false;
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "msg ai";
+        aiDiv.innerHTML = `<span class="loader"></span>`;
+        box.appendChild(aiDiv);
         box.scrollTop = box.scrollHeight;
+
+        const currentWord = getCurrentList()[state.index];
+        const sys = `Türkçe, Makedonca ve İngilizce dil asistanısın. Seviye: ${state.level}. Aktif kelime: "${currentWord.tr}" (${currentWord.mk} / ${currentWord.en}). Kısa, net ve doğrudan yanıt ver.`;
+
+        try {
+          const reply = await callGemini(text, sys, false);
+          aiDiv.textContent = reply;
+          state.xp += 10;
+          saveState();
+        } catch (e) {
+          aiDiv.textContent = e.message;
+        } finally {
+          btn.disabled = false;
+          box.scrollTop = box.scrollHeight;
+        }
       }
-    }
 
-    async function loadQuizQuestion() {
-      const btn = document.getElementById("btnNewQuiz");
-      const qWord = document.getElementById("quizWord");
-      const qOpts = document.getElementById("quizOptions");
-      const qFeed = document.getElementById("quizFeedback");
+      async function loadQuizQuestion() {
+        const btn = document.getElementById("btnNewQuiz");
+        const qWord = document.getElementById("quizWord");
+        const qOpts = document.getElementById("quizOptions");
+        const qFeed = document.getElementById("quizFeedback");
 
-      btn.disabled = true;
-      qFeed.textContent = "";
-      qOpts.innerHTML = `<div style="padding:12px 0; color:var(--text-muted);"><span class="loader"></span></div>`;
+        btn.disabled = true;
+        qFeed.textContent = "";
+        qOpts.innerHTML = `<div style="padding:12px 0; color:var(--text-muted);"><span class="loader"></span></div>`;
 
-      try {
-        const prompt = `CEFR ${state.level} seviyesinde Türkçe kelime sorusu hazırla. Sadece JSON döndür:
+        try {
+          const prompt = `CEFR ${state.level} seviyesinde Türkçe kelime sorusu hazırla. Sadece JSON döndür:
 {
   "word": "Türkçe kelime",
   "question": "Doğru karşılığı seç:",
@@ -1048,152 +1100,165 @@ Sadece JSON döndür:
   "correctIndex": 0,
   "explanation": "Kısa açıklama"
 }`;
-        const raw = await callGemini(prompt, "Kelime testi hazırlayıcısısın.", true);
-        const q = JSON.parse(raw.replace(/```json|```/g, "").trim());
-        qWord.textContent = q.word;
-        document.getElementById("quizPromptText").textContent = q.question || "Doğru karşılığı seç:";
-        qOpts.innerHTML = "";
+          const raw = await callGemini(prompt, "Kelime testi hazırlayıcısısın.", true);
+          const q = JSON.parse(raw.replace(/```json|```/g, "").trim());
+          qWord.textContent = q.word;
+          document.getElementById("quizPromptText").textContent = q.question || "Doğru karşılığı seç:";
+          qOpts.innerHTML = "";
 
-        q.options.forEach((opt, i) => {
-          const b = document.createElement("button");
-          b.className = "quiz-option";
-          b.textContent = opt;
-          b.onclick = () => {
-            const allBtns = qOpts.querySelectorAll(".quiz-option");
-            allBtns.forEach(x => x.disabled = true);
-            if (i === q.correctIndex) {
-              b.classList.add("correct");
-              qFeed.style.color = "var(--success)";
-              qFeed.textContent = "Doğru (+25 XP) — " + q.explanation;
-              state.xp += 25;
-              state.lessons += 1;
-              saveState();
-            } else {
-              b.classList.add("wrong");
-              allBtns[q.correctIndex].classList.add("correct");
-              qFeed.style.color = "var(--danger)";
-              qFeed.textContent = q.explanation;
-            }
-          };
-          qOpts.appendChild(b);
+          q.options.forEach((opt, i) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "quiz-option";
+            b.textContent = opt;
+            b.addEventListener("click", () => {
+              const allBtns = qOpts.querySelectorAll(".quiz-option");
+              allBtns.forEach(x => { x.disabled = true; });
+              if (i === q.correctIndex) {
+                b.classList.add("correct");
+                qFeed.style.color = "var(--success)";
+                qFeed.textContent = "Doğru (+25 XP) — " + (q.explanation || "");
+                state.xp += 25;
+                state.lessons += 1;
+                saveState();
+              } else {
+                b.classList.add("wrong");
+                if (allBtns[q.correctIndex]) allBtns[q.correctIndex].classList.add("correct");
+                qFeed.style.color = "var(--danger)";
+                qFeed.textContent = q.explanation || "";
+              }
+            });
+            qOpts.appendChild(b);
+          });
+        } catch (_) {
+          const list = getCurrentList();
+          const target = list[Math.floor(Math.random() * list.length)];
+          qWord.textContent = target.tr;
+          qOpts.innerHTML = "";
+          const choices = [
+            `${target.en} · ${target.mk}`,
+            "Ambiguous · Нејасен (Nejasen)",
+            "Reciprocity · Реципроцитет (Reciprocitet)",
+            "Foresight · Предвидување (Predviduvanje)"
+          ].sort(() => Math.random() - 0.5);
+
+          choices.forEach(c => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "quiz-option";
+            b.textContent = c;
+            b.addEventListener("click", () => {
+              qOpts.querySelectorAll(".quiz-option").forEach(x => { x.disabled = true; });
+              if (c.startsWith(target.en)) {
+                b.classList.add("correct");
+                qFeed.style.color = "var(--success)";
+                qFeed.textContent = "Doğru (+25 XP)";
+                state.xp += 25;
+                saveState();
+              } else {
+                b.classList.add("wrong");
+                qFeed.style.color = "var(--danger)";
+                qFeed.textContent = `${target.en} · ${target.mk}`;
+              }
+            });
+            qOpts.appendChild(b);
+          });
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      function switchView(name) {
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        const targetView = document.getElementById("view-" + name);
+        const targetNav = document.getElementById("nav-" + name);
+        if (targetView) targetView.classList.add("active");
+        if (targetNav) targetNav.classList.add("active");
+
+        if (name === "quiz" && !document.getElementById("quizOptions").children.length) {
+          loadQuizQuestion();
+        }
+        if (name === "saved") {
+          renderSavedList();
+        }
+      }
+
+      // Bind all events cleanly
+      document.getElementById("levelSelect").addEventListener("change", () => {
+        state.level = document.getElementById("levelSelect").value;
+        state.index = 0;
+        document.getElementById("quizLevelTag").textContent = state.level;
+        renderCurrentWord();
+      });
+
+      document.getElementById("focusSelect").addEventListener("change", renderCurrentWord);
+      document.getElementById("btnNextWord").addEventListener("click", nextWord);
+      document.getElementById("btnAiNewWord").addEventListener("click", generateAiWord);
+      document.getElementById("btnSpeakWord").addEventListener("click", speakWord);
+      document.getElementById("btnSaveWord").addEventListener("click", toggleSaveCurrentWord);
+      document.getElementById("btnCopyWord").addEventListener("click", copyCurrentWord);
+
+      document.querySelectorAll(".preset-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          sendAiChat(chip.getAttribute("data-prompt") || "");
         });
-      } catch (e) {
-        const list = getCurrentList();
-        const target = list[Math.floor(Math.random() * list.length)];
-        qWord.textContent = target.tr;
-        qOpts.innerHTML = "";
-        const choices = [
-          `${target.en} · ${target.mk}`,
-          "Ambiguous · Нејасен (Nejasen)",
-          "Reciprocity · Реципроцитет (Reciprocitet)",
-          "Foresight · Предвидување (Predviduvanje)"
-        ].sort(() => Math.random() - 0.5);
+      });
 
-        choices.forEach(c => {
-          const b = document.createElement("button");
-          b.className = "quiz-option";
-          b.textContent = c;
-          b.onclick = () => {
-            qOpts.querySelectorAll(".quiz-option").forEach(x => x.disabled = true);
-            if (c.startsWith(target.en)) {
-              b.classList.add("correct");
-              qFeed.style.color = "var(--success)";
-              qFeed.textContent = "Doğru (+25 XP)";
-              state.xp += 25;
-              saveState();
-            } else {
-              b.classList.add("wrong");
-              qFeed.style.color = "var(--danger)";
-              qFeed.textContent = `${target.en} · ${target.mk}`;
-            }
-          };
-          qOpts.appendChild(b);
-        });
-      } finally {
-        btn.disabled = false;
-      }
-    }
+      document.getElementById("btnSendAi").addEventListener("click", () => sendAiChat());
+      document.getElementById("aiPromptInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendAiChat();
+      });
 
-    function renderSavedList() {
-      const container = document.getElementById("savedListContainer");
-      if (!state.saved.length) {
-        container.innerHTML = `<p style="font-size:13px; color:var(--text-muted);">Henüz kaydedilmiş kelime yok.</p>`;
-        return;
-      }
-      container.innerHTML = state.saved.map((w, idx) => `
-        <div class="saved-item">
-          <div>
-            <div style="font-weight:700; font-size:15px;">${w.tr} <span class="stat-tag">${w.level || "C2"}</span></div>
-            <div style="font-size:12.5px; color:var(--text-muted);">${w.mk} · ${w.en}</div>
-            <div style="font-size:12px; color:#9ca3af; margin-top:2px;">${w.def}</div>
-          </div>
-          <button class="btn-outline-sm" onclick="removeSavedWord(${idx})">Sil</button>
-        </div>
-      `).join("");
-    }
+      document.getElementById("btnNewQuiz").addEventListener("click", loadQuizQuestion);
 
-    function removeSavedWord(idx) {
-      state.saved.splice(idx, 1);
-      saveState();
-      renderSavedList();
-      renderCurrentWord();
-    }
-
-    function exportSavedWords() {
-      if (!state.saved.length) {
-        showToast("Kelime yok.");
-        return;
-      }
-      const txt = state.saved.map(w => `${w.tr} | ${w.mk} | ${w.en} — ${w.def}`).join("
+      document.getElementById("btnExportSaved").addEventListener("click", () => {
+        if (!state.saved.length) {
+          showToast("Kelime yok.");
+          return;
+        }
+        const txt = state.saved.map(w => `${w.tr} | ${w.mk} | ${w.en} — ${w.def}`).join("
 ");
-      navigator.clipboard.writeText(txt).then(() => showToast("Kopyalandı."));
-    }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(txt).then(() => showToast("Kopyalandı.")).catch(() => showToast("Kopyalandı."));
+        } else {
+          showToast("Kopyalandı.");
+        }
+      });
 
-    function switchView(name) {
-      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-      document.getElementById("view-" + name).classList.add("active");
-      document.getElementById("nav-" + name).classList.add("active");
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const v = btn.getAttribute("data-view");
+          if (v) switchView(v);
+        });
+      });
 
-      if (name === "quiz" && !document.getElementById("quizOptions").children.length) {
-        loadQuizQuestion();
-      }
-      if (name === "saved") {
-        renderSavedList();
-      }
-    }
+      document.getElementById("btnOpenKey").addEventListener("click", openApiModal);
+      document.getElementById("btnCloseKey").addEventListener("click", closeApiModal);
 
-    function openApiModal() {
-      document.getElementById("apiKeyInput").value = state.apiKey;
-      document.getElementById("apiModal").classList.add("open");
-    }
+      document.getElementById("btnSaveKey").addEventListener("click", () => {
+        const val = document.getElementById("apiKeyInput").value.trim();
+        if (!val) {
+          showToast("Anahtar gir.");
+          return;
+        }
+        state.apiKey = val;
+        writeStorage("lex_gemini_key", val);
+        closeApiModal();
+        showToast("Kaydedildi.");
+      });
 
-    function closeApiModal() {
-      document.getElementById("apiModal").classList.remove("open");
-    }
+      document.getElementById("btnClearKey").addEventListener("click", () => {
+        state.apiKey = "";
+        writeStorage("lex_gemini_key", "");
+        document.getElementById("apiKeyInput").value = "";
+        showToast("Silindi.");
+      });
 
-    function saveApiKey() {
-      const val = document.getElementById("apiKeyInput").value.trim();
-      if (!val) {
-        showToast("Anahtar gir.");
-        return;
-      }
-      state.apiKey = val;
-      localStorage.setItem("lex_gemini_key", val);
-      closeApiModal();
-      showToast("Kaydedildi.");
-    }
-
-    function clearSavedApiKey() {
-      state.apiKey = "";
-      localStorage.removeItem("lex_gemini_key");
-      document.getElementById("apiKeyInput").value = "";
-      showToast("Silindi.");
-    }
-
-    updateStatsUI();
-    renderCurrentWord();
-    renderSavedList();
+      updateStatsUI();
+      renderCurrentWord();
+      renderSavedList();
+    })();
   </script>
 </body>
 </html>
